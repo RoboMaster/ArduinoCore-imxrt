@@ -207,6 +207,9 @@ usb_status_t USB_DeviceCdcVcomCallback(class_handle_t handle, uint32_t event, vo
         else
         {
         }
+
+        // 发送完成将发送完成标志位置1
+        s_waitForDataSend = 1;
     }
     break;
     case kUSB_DeviceCdcEventRecvResponse:
@@ -215,6 +218,9 @@ usb_status_t USB_DeviceCdcVcomCallback(class_handle_t handle, uint32_t event, vo
         {
             s_recvSize = epCbParam->length;
             error = kStatus_USB_Success;
+
+            // 与arduinoAPI的接口，USB收到消息后将其保存在自己的RingBuffer中
+            CDC_IRQHandel();
 
 #if defined(FSL_FEATURE_USB_KHCI_KEEP_ALIVE_ENABLED) && (FSL_FEATURE_USB_KHCI_KEEP_ALIVE_ENABLED > 0U) && \
     defined(USB_DEVICE_CONFIG_KEEP_ALIVE_MODE) && (USB_DEVICE_CONFIG_KEEP_ALIVE_MODE > 0U) &&             \
@@ -579,88 +585,55 @@ void vcom_cdc_init(void)
     /*Add one delay here to make the DP pull down long enough to allow host to detect the previous disconnection.*/
     SDK_DelayAtLeastUs(5000, SDK_DEVICE_MAXIMUM_CPU_CLOCK_FREQUENCY);
     USB_DeviceRun(s_cdcVcom.deviceHandle);
-
-    usb_echo("vcom_cdc_init !!!!");
-
-
-    uint8_t buff[512] = "hello vcom !!!";
-
-    vcom_write_buf(buff, 20);
-
-    PRINTF("buf:%d\r\n", buff);
 }
 
+// 给USBCDC.CPP调用
+//////////////////////////////////////////////////////////////
+
+// 由中断调用，将系统s_currRecvBuf中的数据读取出来传出去
 uint8_t vcom_get_recBuf(void *data)
 {
-    uint8_t length;
-    if (s_recvSize != 0)
+    uint8_t length = 0;
+    uint32_t usbOsaCurrentSr;
+
+    if ((0 != s_recvSize) && (USB_CANCELLED_TRANSFER_LENGTH != s_recvSize))
     {
-        uint8_t *ptr = data;
-        for (uint32_t i = 0; i < s_recvSize; i++)
+        // 进入临界区保证拷贝操作不会被打断
+        CDC_VCOM_BMEnterCritical(&usbOsaCurrentSr);
+        if ((0U != s_recvSize) && (USB_CANCELLED_TRANSFER_LENGTH != s_recvSize))
         {
-            *(ptr++) = s_currRecvBuf[i];
+            /* Copy Buffer to data */
+            memcpy(data, s_currRecvBuf, s_recvSize);
+            length = s_recvSize;
+            s_recvSize = 0;
         }
+        CDC_VCOM_BMExitCritical(usbOsaCurrentSr);
     }
-    length = s_recvSize;
-    s_recvSize = 0;
+
     return length;
 }
 
-uint32_t vcom_read(uint32_t length)
-{
-    usb_status_t error = kStatus_USB_Error;
-    if ((1 == s_cdcVcom.attach) && (1 == s_cdcVcom.startTransactions))
-    {
-        /* Schedule buffer for next receive event */
-        error = USB_DeviceCdcAcmRecv(s_cdcVcom.cdcAcmHandle, USB_CDC_VCOM_BULK_OUT_ENDPOINT, s_currRecvBuf, length);
-        if (kStatus_USB_Success != error)
-        {
-            return 0;
-        }
-    }
-    //TODO :此处有疑问，是否需要return1，是什么含义
-    return 1;
-}
-uint32_t vcom_read_buf(void *data, uint32_t length)
-{
-    usb_status_t error = kStatus_USB_Error;
-
-    if ((1 == s_cdcVcom.attach) && (1 == s_cdcVcom.startTransactions))
-    {
-        /* Schedule buffer for next receive event */
-        error = USB_DeviceCdcAcmRecv(s_cdcVcom.cdcAcmHandle, USB_CDC_VCOM_BULK_OUT_ENDPOINT, s_currRecvBuf, length);
-        if (kStatus_USB_Success != error)
-        {
-            return 0;
-        }
-    }
-
-    if (s_recvSize != 0)
-    {
-        uint8_t *ptr = data;
-
-        for (uint32_t i = 0; i < s_recvSize; i++)
-        {
-            *(ptr++) = s_currRecvBuf[i];
-        }
-    }
-    length = s_recvSize;
-    s_recvSize = 0;
-    return length;
-}
-
-status_t vcom_write_buf(void *data, uint32_t length)
+// USBCDC::write 调用 通过CDC发送数据
+status_t vcom_write_buf(void *data, uint32_t size)
 {
     if ((1 == s_cdcVcom.attach) && (1 == s_cdcVcom.startTransactions))
     {
+        usb_status_t error = kStatus_USB_Error;
+
         s_waitForDataSend = 0;
-        if (kStatus_USB_Success == USB_DeviceCdcAcmSend(s_cdcVcom.cdcAcmHandle, USB_CDC_VCOM_BULK_IN_ENDPOINT, (uint8_t *)data, length))
+
+        error = USB_DeviceCdcAcmSend(s_cdcVcom.cdcAcmHandle, USB_CDC_VCOM_BULK_IN_ENDPOINT, (uint8_t *)data, size);
+        if (error != kStatus_USB_Success)
         {
-            while (!s_waitForDataSend)
-            {
-            }
-            return 1;
+            /* Failure to send Data Handling code here */
+            return 0;
         }
+
+        // 等待本次发送完成，在发送中断中会将该标志位置1
+        // 没有该等待的话，内容会被覆盖导致发送不完成整
+        while (!s_waitForDataSend);
+
+        return 1;
     }
     return 0;
 }
@@ -669,87 +642,94 @@ status_t vcom_write_buf(void *data, uint32_t length)
 // {
 //     uint8_t buff[512];
 
-//     vcom_read_buf(buff, 512);
-
-//     if (s_recvSize != 0)
+//     if ((1U == s_cdcVcom.attach) && (1U == s_cdcVcom.startTransactions))
 //     {
-//         vcom_write_buf(buff, s_recvSize);
+//         uint8_t data[64];
+//         uint32_t length;
+//         length = vcom_get_recBuf(data);
 
-//         PRINTF("s_recving:%d\r\n", s_recvSize);
+//         vcom_read_buf(buff, 512);
 
-//         s_recvSize = 0;
+//         if (s_recvSize != 0)
+//         {
+//             vcom_write_buf(buff, s_recvSize);
+
+//             PRINTF("s_recving:%d\r\n", s_recvSize);
+
+//             s_recvSize = 0;
+//         }
 //     }
 // }
 
-void APPTask(void)
-{
-    usb_status_t error = kStatus_USB_Error;
-    uint32_t usbOsaCurrentSr;
+// void APPTask(void)
+// {
+//     usb_status_t error = kStatus_USB_Error;
+//     uint32_t usbOsaCurrentSr;
 
-    if ((1U == s_cdcVcom.attach) && (1U == s_cdcVcom.startTransactions))
-    {
-        /* Enter critical can not be added here because of the loop */
-        /* endpoint callback length is USB_CANCELLED_TRANSFER_LENGTH (0xFFFFFFFFU) when transfer is canceled */
-        if ((0 != s_recvSize) && (USB_CANCELLED_TRANSFER_LENGTH != s_recvSize))
-        {
-            /* The operating timing sequence has guaranteed there is no conflict to access the s_recvSize between USB
-               ISR and this task. Therefore, the following code of Enter/Exit ctitical mode is useless,
-               only to mention users the exclusive access of s_recvSize if users implement their own
-               application referred to this SDK demo */
-            CDC_VCOM_BMEnterCritical(&usbOsaCurrentSr);
-            if ((0U != s_recvSize) && (USB_CANCELLED_TRANSFER_LENGTH != s_recvSize))
-            {
-                /* Copy Buffer to Send Buff */
-                memcpy(s_currSendBuf, s_currRecvBuf, s_recvSize);
-                s_sendSize = s_recvSize;
-                s_recvSize = 0;
-            }
-            CDC_VCOM_BMExitCritical(usbOsaCurrentSr);
-        }
+//     if ((1U == s_cdcVcom.attach) && (1U == s_cdcVcom.startTransactions))
+//     {
+//         /* Enter critical can not be added here because of the loop */
+//         /* endpoint callback length is USB_CANCELLED_TRANSFER_LENGTH (0xFFFFFFFFU) when transfer is canceled */
+//         if ((0 != s_recvSize) && (USB_CANCELLED_TRANSFER_LENGTH != s_recvSize))
+//         {
+//             /* The operating timing sequence has guaranteed there is no conflict to access the s_recvSize between USB
+//                ISR and this task. Therefore, the following code of Enter/Exit ctitical mode is useless,
+//                only to mention users the exclusive access of s_recvSize if users implement their own
+//                application referred to this SDK demo */
+//             CDC_VCOM_BMEnterCritical(&usbOsaCurrentSr);
+//             if ((0U != s_recvSize) && (USB_CANCELLED_TRANSFER_LENGTH != s_recvSize))
+//             {
+//                 /* Copy Buffer to Send Buff */
+//                 memcpy(s_currSendBuf, s_currRecvBuf, s_recvSize);
+//                 s_sendSize = s_recvSize;
+//                 s_recvSize = 0;
+//             }
+//             CDC_VCOM_BMExitCritical(usbOsaCurrentSr);
+//         }
 
-        if (0U != s_sendSize)
-        {
-            uint32_t size = s_sendSize;
-            s_sendSize    = 0;
+//         if (0U != s_sendSize)
+//         {
+//             uint32_t size = s_sendSize;
+//             s_sendSize = 0;
 
-            error = USB_DeviceCdcAcmSend(s_cdcVcom.cdcAcmHandle, USB_CDC_VCOM_BULK_IN_ENDPOINT, s_currSendBuf, size);
+//             error = USB_DeviceCdcAcmSend(s_cdcVcom.cdcAcmHandle, USB_CDC_VCOM_BULK_IN_ENDPOINT, s_currSendBuf, size);
 
-            if (error != kStatus_USB_Success)
-            {
-                /* Failure to send Data Handling code here */
-            }
-        }
-#if defined(FSL_FEATURE_USB_KHCI_KEEP_ALIVE_ENABLED) && (FSL_FEATURE_USB_KHCI_KEEP_ALIVE_ENABLED > 0U) && \
-    defined(USB_DEVICE_CONFIG_KEEP_ALIVE_MODE) && (USB_DEVICE_CONFIG_KEEP_ALIVE_MODE > 0U) &&             \
-    defined(FSL_FEATURE_USB_KHCI_USB_RAM) && (FSL_FEATURE_USB_KHCI_USB_RAM > 0U)
-        if ((s_waitForDataReceive))
-        {
-            if (s_comOpen == 1)
-            {
-                /* Wait for all the packets been sent during opening the com port. Otherwise these packets may
-                 * wake up the system.
-                 */
-                usb_echo("Waiting to enter lowpower ...\r\n");
-                for (uint32_t i = 0U; i < 16000000U; ++i)
-                {
-                    __NOP(); /* delay */
-                }
+//             if (error != kStatus_USB_Success)
+//             {
+//                 /* Failure to send Data Handling code here */
+//             }
+//         }
+// #if defined(FSL_FEATURE_USB_KHCI_KEEP_ALIVE_ENABLED) && (FSL_FEATURE_USB_KHCI_KEEP_ALIVE_ENABLED > 0U) && \
+//     defined(USB_DEVICE_CONFIG_KEEP_ALIVE_MODE) && (USB_DEVICE_CONFIG_KEEP_ALIVE_MODE > 0U) &&             \
+//     defined(FSL_FEATURE_USB_KHCI_USB_RAM) && (FSL_FEATURE_USB_KHCI_USB_RAM > 0U)
+//         if ((s_waitForDataReceive))
+//         {
+//             if (s_comOpen == 1)
+//             {
+//                 /* Wait for all the packets been sent during opening the com port. Otherwise these packets may
+//                  * wake up the system.
+//                  */
+//                 usb_echo("Waiting to enter lowpower ...\r\n");
+//                 for (uint32_t i = 0U; i < 16000000U; ++i)
+//                 {
+//                     __NOP(); /* delay */
+//                 }
 
-                s_comOpen = 0;
-            }
-            usb_echo("Enter lowpower\r\n");
-            BOARD_DbgConsole_Deinit();
-            USB0->INTEN &= ~USB_INTEN_TOKDNEEN_MASK;
-            USB_EnterLowpowerMode();
+//                 s_comOpen = 0;
+//             }
+//             usb_echo("Enter lowpower\r\n");
+//             BOARD_DbgConsole_Deinit();
+//             USB0->INTEN &= ~USB_INTEN_TOKDNEEN_MASK;
+//             USB_EnterLowpowerMode();
 
-            s_waitForDataReceive = 0;
-            USB0->INTEN |= USB_INTEN_TOKDNEEN_MASK;
-            BOARD_DbgConsole_Init();
-            usb_echo("Exit  lowpower\r\n");
-        }
-#endif
-    }
-}
+//             s_waitForDataReceive = 0;
+//             USB0->INTEN |= USB_INTEN_TOKDNEEN_MASK;
+//             BOARD_DbgConsole_Init();
+//             usb_echo("Exit  lowpower\r\n");
+//         }
+// #endif
+//     }
+// }
 
 // #if defined(__CC_ARM) || (defined(__ARMCC_VERSION)) || defined(__GNUC__)
 // int main(void)
@@ -773,4 +753,48 @@ void APPTask(void)
 //         USB_DeviceTaskFn(s_cdcVcom.deviceHandle);
 // #endif
 //     }
+// }
+
+// // USBCDC::init USBCDC::read USBCDC::flush 调用
+// uint32_t vcom_read(uint32_t length)
+// {
+//     usb_status_t error = kStatus_USB_Error;
+//     if ((1 == s_cdcVcom.attach) && (1 == s_cdcVcom.startTransactions))
+//     {
+//         /* Schedule buffer for next receive event */
+//         error = USB_DeviceCdcAcmRecv(s_cdcVcom.cdcAcmHandle, USB_CDC_VCOM_BULK_OUT_ENDPOINT, s_currRecvBuf, length);
+//         if (kStatus_USB_Success != error)
+//         {
+//             return 0;
+//         }
+//     }
+//     // TODO :此处有疑问，是否需要return1，是什么含义
+//     return 1;
+// }
+// uint32_t vcom_read_buf(void *data, uint32_t length)
+// {
+//     usb_status_t error = kStatus_USB_Error;
+
+//     if ((1U == s_cdcVcom.attach) && (1U == s_cdcVcom.startTransactions))
+//     {
+//         /* Schedule buffer for next receive event */
+//         error = USB_DeviceCdcAcmRecv(s_cdcVcom.cdcAcmHandle, USB_CDC_VCOM_BULK_OUT_ENDPOINT, s_currRecvBuf, length);
+//         if (kStatus_USB_Success != error)
+//         {
+//             return 0;
+//         }
+//     }
+
+//     if (s_recvSize != 0)
+//     {
+//         uint8_t *ptr = data;
+
+//         for (uint32_t i = 0; i < s_recvSize; i++)
+//         {
+//             *(ptr++) = s_currRecvBuf[i];
+//         }
+//     }
+//     length = s_recvSize;
+//     s_recvSize = 0;
+//     return length;
 // }

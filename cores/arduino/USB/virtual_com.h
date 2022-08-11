@@ -115,16 +115,15 @@ typedef struct _usb_cdc_acm_info
 extern "C" {
 #endif
 
-
 void CDC_IRQHandel();
 uint32_t  CDC_available();
 
 void vcom_cdc_init(void);
-uint32_t vcom_read_buf(void* data, uint32_t length);
+// uint32_t vcom_read_buf(void* data, uint32_t length);
 status_t vcom_write_buf(void* data, uint32_t length);
-uint32_t vcom_read(uint32_t length);
+// uint32_t vcom_read(uint32_t length);
 uint8_t vcom_get_recBuf(void* data);
-void APPTask(void);
+// void APPTask(void);
 
 #if __cplusplus
 }

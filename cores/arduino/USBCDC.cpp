@@ -74,7 +74,7 @@ void USBCDC::begin(unsigned long baud, uint16_t config)
 
 void USBCDC::init(unsigned long baud, uint16_t config)
 {
-    vcom_read(_rb->availableForStore());
+    // vcom_read(_rb->availableForStore());
 }
 
 /**
@@ -111,7 +111,7 @@ int USBCDC::read(void)
         if (0 != _rb->available())
         {
             temp = _rb->read_char();
-            vcom_read(_rb->availableForStore());
+            // vcom_read(_rb->availableForStore());
             return temp;
         }
         else
@@ -129,7 +129,7 @@ int USBCDC::read(void)
 void USBCDC::flush(void)
 {
     _rb->clear();
-    vcom_read(_rb->availableForStore());
+    // vcom_read(_rb->availableForStore());
 }
 
 /**
@@ -139,6 +139,7 @@ void USBCDC::flush(void)
  */
 size_t USBCDC::write(uint8_t c)
 {
+    //TODO 未做错误参数传递
     vcom_write_buf(&c, 1);
     return 1;
 }
