@@ -56,11 +56,14 @@ compiler.cores.deprecated-avr-comp.path={runtime.platform.path}/cores/arduino/de
 # /tools/sdk/middleware/usb/phy
 
 # /usb/osa 没有找到
+
 compiler.cores.usb.include=-I{runtime.platform.path}/cores/arduino/USB -I{runtime.platform.path}/tools/sdk/middleware/usb/dcd -I{runtime.platform.path}/tools/sdk/middleware/usb/device -I{runtime.platform.path}/tools/sdk/middleware/usb/include -I{runtime.platform.path}/tools/sdk/middleware/usb/output/source/device -I{runtime.platform.path}/tools/sdk/middleware/usb/output/source/device/class -I{runtime.platform.path}/tools/sdk/middleware/usb/output/npw/device_config/ehci -I{runtime.platform.path}/tools/sdk/middleware/usb/phy
+
+compiler.cores.freertos.include=-I{runtime.platform.path}/cores/arduino/freertos_kernel -I{runtime.platform.path}/cores/arduino/freertos_kernel/include -I{runtime.platform.path}/cores/arduino/freertos_kernel/portable/GCC/ARM_CM4F
+
 compiler.sdk.include=-I{compiler.sdk.path} -I{compiler.sdk.path}/drivers -I{compiler.sdk.path}/utilities/debug_console -I{runtime.platform.path}/tools/sdk/components/serial_manager -I{runtime.platform.path}/tools/sdk/components/uart -I{runtime.platform.path}/tools/sdk/components/osa -I{runtime.platform.path}/tools/sdk/components/lists
 
-# -
-compiler.preproc.include={compiler.cores.usb.include} {compiler.sdk.include} -I{compiler.cores.path} -I{compiler.cores.deprecated.path} -I{compiler.cores.deprecated-avr-comp.path} -I{build.variant.path}/board -I{build.variant.path}/xip -I{build.variant.path}/drivers
+compiler.preproc.include={compiler.cores.usb.include} {compiler.cores.freertos.include} {compiler.sdk.include} -I{compiler.cores.path} -I{compiler.cores.deprecated.path} -I{compiler.cores.deprecated-avr-comp.path} -I{build.variant.path}/board -I{build.variant.path}/xip -I{build.variant.path}/drivers
 
 # Compile variables
 # -----------------
@@ -72,13 +75,13 @@ compiler.warning_flags.all=-Wall -Wextra
 
 compiler.path={runtime.tools.arm-none-eabi-gcc.path}/bin/
 compiler.c.cmd=arm-none-eabi-gcc
-compiler.c.flags=-mcpu={build.mcu} -mfpu={build.fpu} -c -Os {compiler.warning_flags} {compiler.warning_flags.more} -mthumb -mapcs -mfloat-abi=hard -std=gnu99 -ffunction-sections -fdata-sections -fno-common -ffreestanding -fno-builtin -nostdlib --param max-inline-insns-single=500 -MMD -D__SKETCH_NAME__="""{build.project_name}"""
+compiler.c.flags=-mcpu={build.mcu} -mfpu={build.fpu} -c -O0 {compiler.warning_flags} {compiler.warning_flags.more} -mthumb -mapcs -mfloat-abi=hard -std=gnu99 -ffunction-sections -fdata-sections -fno-common -ffreestanding -fno-builtin -nostdlib --param max-inline-insns-single=500 -MMD -D__SKETCH_NAME__="""{build.project_name}"""
 compiler.c.elf.cmd=arm-none-eabi-gcc
-compiler.c.elf.flags= -mcpu={build.mcu} -mfpu={build.fpu} -mfloat-abi=hard -Os -Wall -fno-common -ffunction-sections -fdata-sections -ffreestanding -fno-builtin -mthumb -mapcs -std=gnu99 -MMD -MP --specs=nano.specs --specs=nosys.specs -Xlinker --gc-sections  -static -z muldefs  
+compiler.c.elf.flags= -mcpu={build.mcu} -mfpu={build.fpu} -mfloat-abi=hard -O0 -Wall -fno-common -ffunction-sections -fdata-sections -ffreestanding -fno-builtin -mthumb -mapcs -std=gnu99 -MMD -MP --specs=nano.specs --specs=nosys.specs -Xlinker --gc-sections  -static -z muldefs  
 compiler.S.cmd=arm-none-eabi-gcc
 compiler.S.flags=-c -g -x assembler-with-cpp -MMD
 compiler.cpp.cmd=arm-none-eabi-g++
-compiler.cpp.flags=-mcpu={build.mcu} -mfpu={build.fpu} -c -Os {compiler.warning_flags} {compiler.warning_flags.more} -mthumb -mapcs  -mfloat-abi=hard -std=gnu++11 -fno-rtti -fno-exceptions -fno-threadsafe-statics -ffunction-sections -fdata-sections -fno-common -ffreestanding -fno-builtin -nostdlib --param max-inline-insns-single=500 -MMD -D__SKETCH_NAME__="""{build.project_name}"""
+compiler.cpp.flags=-mcpu={build.mcu} -mfpu={build.fpu} -c -O0 {compiler.warning_flags} {compiler.warning_flags.more} -mthumb -mapcs  -mfloat-abi=hard -std=gnu++11 -fno-rtti -fno-exceptions -fno-threadsafe-statics -ffunction-sections -fdata-sections -fno-common -ffreestanding -fno-builtin -nostdlib --param max-inline-insns-single=500 -MMD -D__SKETCH_NAME__="""{build.project_name}"""
 compiler.ar.cmd=arm-none-eabi-ar
 compiler.ar.flags=rcs
 compiler.objcopy.cmd=arm-none-eabi-objcopy
