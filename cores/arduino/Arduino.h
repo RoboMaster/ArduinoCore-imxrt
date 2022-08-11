@@ -33,16 +33,15 @@
 // Misc Arduino core functions
 #include "Common.h"
 #include "WVariant.h"
-#include "wiring_analog.h"
 #include "pins_arduino.h"
 
 #ifdef __cplusplus
+#include "WInterrupts.h"
 #include "Client.h"
 #include "HardwareI2C.h"
 #include "HardwareSerial.h"
 #include "Uart.h"
-#include "USBCDC.h"
-#include "Interrupts.h"
+#include "USBSerial.h"
 #include "IPAddress.h"
 #include "Print.h"
 #include "Printable.h"
@@ -53,6 +52,7 @@
 #include "Udp.h"
 #include "USBAPI.h"
 #include "WCharacter.h"
+
 #endif
 
 #endif

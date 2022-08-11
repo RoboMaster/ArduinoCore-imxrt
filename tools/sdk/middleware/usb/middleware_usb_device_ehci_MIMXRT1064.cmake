@@ -2,13 +2,13 @@ include_guard()
 message("middleware_usb_device_ehci component is included.")
 
 target_sources(${MCUX_SDK_PROJECT_NAME} PRIVATE
-    ${CMAKE_CURRENT_LIST_DIR}/device/usb_device_ehci.c
+${CMAKE_CURRENT_LIST_DIR}/device/source/ehci/usb_device_ehci.c
 )
 
 
 target_include_directories(${MCUX_SDK_PROJECT_NAME} PRIVATE
-    ${CMAKE_CURRENT_LIST_DIR}/device
-    ${CMAKE_CURRENT_LIST_DIR}/include
+${CMAKE_CURRENT_LIST_DIR}/device/source/ehci
+${CMAKE_CURRENT_LIST_DIR}/include
 )
 
 

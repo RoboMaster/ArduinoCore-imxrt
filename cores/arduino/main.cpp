@@ -1,13 +1,38 @@
-#ifdef ARDUINO_MAIN
+/*
+ * Copyright (C) 2022 DJI.
+ *
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ *
+ * Change Logs:
+ * Date           Author       Notes
+ * 2022-09-27     robomaster   first version
+ */
 
 #include "Arduino.h"
-#include "virtual_com.h"
 
-// __attribute__((constructor))修饰，该函数在mian之前被调用
-__attribute__((constructor(101))) void premain()
+#include "FreeRTOS.h"
+#include "queue.h"
+#include "semphr.h"
+#include "task.h"
+#include "timers.h"
+
+#define ARDUINO_LOOP_TASK_PRIORITY (tskIDLE_PRIORITY + 1)
+
+#ifndef ARDUINO_LOOP_STACK_SIZE
+#ifndef CONFIG_ARDUINO_LOOP_STACK_SIZE
+#define ARDUINO_LOOP_STACK_SIZE 4 * 1024
+#else
+#define ARDUINO_LOOP_STACK_SIZE CONFIG_ARDUINO_LOOP_STACK_SIZE
+#endif
+#endif
+
+TaskHandle_t loopTaskHandle = NULL;
+
+bool loopTaskWDTEnabled;
+
+__attribute__((weak)) size_t getArduinoLoopTaskStackSize(void)
 {
-
-  init();
+    return ARDUINO_LOOP_STACK_SIZE;
 }
 
 void __attribute__((weak)) setup()
@@ -18,21 +43,23 @@ void __attribute__((weak)) loop()
 {
 }
 
-int __attribute__((weak)) main()
+void loopTask(void *pvParameters)
 {
-  // init();
+    setup();
 
-  setup();
-  for (;;)
-  {
-    // extern "C"
-    // {
-    //     extern void APPTask();
-    //     APPTask();
-    // }
-    APPTask();
-    loop();
-  }
+    for (;;)
+    {
+        loop();
+    }
 }
 
-#endif
+int __attribute__((weak)) main()
+{
+    init();
+
+    xTaskCreate(loopTask, "loopTask", getArduinoLoopTaskStackSize(), NULL, ARDUINO_LOOP_TASK_PRIORITY, &loopTaskHandle);
+
+    vTaskStartScheduler();
+
+    return 0;
+}

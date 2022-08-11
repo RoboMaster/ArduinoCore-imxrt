@@ -1,3 +1,15 @@
+#
+# Copyright (C) 2022 DJI.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+# Change Logs:
+# Date           Author       Notes
+# 2022-09-27     robomaster   first version
+#
+
+# =============================================================================
+
 # The MIT License (MIT)
 
 # Copyright (c) 2019 Seeed Technology Inc.
@@ -20,45 +32,57 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-menu.flash=Flash
-menu.speed=CPU Speed
-menu.debug=Debug
+menu.debug=Generate Debug Info
+menu.feature1=Connect RoboMaster EP
+menu.feature2=Connect AI Camera
+# menu.speedup=Fastest compilation speed
 
-# Robomaster Ai Hub
+# RM Expansion Module
 # ------------------------------
-rm_ai_hub.name=Robomaster Ai Hub
-rm_ai_hub.vid.0=0x2886
-rm_ai_hub.pid.0=0x002B
-rm_ai_hub.vid.1=0x2886
-rm_ai_hub.pid.1=0x802B
+RMEM_01.name=RM Expansion Module (RMEM01)
+RMEM_01.vid.0=0x2CA3U
+RMEM_01.pid.0=0x6001U
+RMEM_01.vid.1=0x2CA3U
+RMEM_01.pid.1=0x6001U
 
-rm_ai_hub.upload.tool=rmaut
-rm_ai_hub.upload.protocol=sam-ba
-rm_ai_hub.upload.maximum_size=8323072
-rm_ai_hub.upload.offset=0x10000
-rm_ai_hub.upload.use_1200bps_touch=false
-rm_ai_hub.upload.wait_for_upload_port=true
-rm_ai_hub.upload.native_usb=true
+RMEM_01.upload.tool=rmaut
+RMEM_01.upload.protocol=open-protocol
+RMEM_01.upload.maximum_size=3145728
+RMEM_01.upload.maximum_data_size=1048576
+RMEM_01.upload.offset=0x10000
+RMEM_01.upload.use_1200bps_touch=false
+RMEM_01.upload.wait_for_upload_port=true
+RMEM_01.upload.native_usb=true
 
-rm_ai_hub.build.mcu=cortex-m7
-rm_ai_hub.build.fpu=fpv5-d16
-rm_ai_hub.build.f_cpu=600000000L
-rm_ai_hub.build.usb_product="Ai Hub"
-rm_ai_hub.build.usb_manufacturer="Dji"
-#SEEED_ARCH_MIX RM_AI_HUB 这个换了没有印象
-rm_ai_hub.build.board=RM_AI_HUB 
-rm_ai_hub.build.processor=MIMXRT1064
-rm_ai_hub.build.core=arduino
-rm_ai_hub.build.extra_flags=-DCPU_MIMXRT1064DVL6A -DSEEED_ARCH_MIX -DXIP_EXTERNAL_FLASH=1 -DXIP_BOOT_HEADER_ENABLE=1 -DUSB_STACK_BM -DARDUINO_MAIN=1 -DSERIAL_PORT_TYPE_UART=1 -DSDK_DEBUGCONSOLE=1 -DMCUXPRESSO_SDK -DDEBUG -g
-rm_ai_hub.build.ldscript=MIMXRT1064xxxxx_flexspi_nor.ld
-# 决定了varitans文件夹的名称
-rm_ai_hub.build.variant=ai_hub 
+RMEM_01.build.mcu=cortex-m7
+RMEM_01.build.fpu=fpv5-d16
+RMEM_01.build.f_cpu=600000000L
+RMEM_01.build.usb_product="Ai Hub"
+RMEM_01.build.usb_manufacturer="Dji"
 
-rm_ai_hub.menu.debug.off=Off
-rm_ai_hub.menu.debug.on=On
-rm_ai_hub.menu.debug.on.build.flags.debug=-g
-rm_ai_hub.menu.speed.600= 600 MHz (standard)
-rm_ai_hub.menu.speed.600.build.f_cpu=600000000L
-rm_ai_hub.menu.flash.QSPI=QSPI (default)
-rm_ai_hub.menu.flash.QSPI.build.flags.flash=-DQSPI_FLASH
-rm_ai_hub.menu.flash.Hyper=Hyper
+RMEM_01.build.board=RMEM_01 
+RMEM_01.build.processor=MIMXRT1064
+RMEM_01.build.core=arduino
+RMEM_01.build.extra_flags=-DCPU_MIMXRT1064DVL6A -DCPU_MIMXRT1064DVL6A_cm7 -DXIP_EXTERNAL_FLASH=1 -DXIP_BOOT_HEADER_ENABLE=1 -DUSB_STACK_BM -DSERIAL_PORT_TYPE_UART=1 -DSDK_DEBUGCONSOLE=1 -DSDK_OS_FREE_RTOS -DMCUXPRESSO_SDK -DCR_INTEGER_PRINTF -DPRINTF_FLOAT_ENABLE=0 -D__USE_CMSIS -DDEBUG -DDEBUG_CONSOLE_TRANSFER_NON_BLOCKING -DSD_ENABLED -DDISABLE_WDOG -D__STARTUP_INITIALIZE_NONCACHEDATA -DI2C_RETRY_TIMES=10
+RMEM_01.build.ldscript=MIMXRT1064_Arduino.ld
+RMEM_01.build.variant=RMEM_01 
+
+RMEM_01.menu.debug.off=OFF
+RMEM_01.menu.debug.on=ON
+RMEM_01.menu.debug.off.build.flags.debug=-O0
+RMEM_01.menu.debug.on.build.flags.debug=-Og -g3
+
+RMEM_01.menu.feature1.off=OFF
+RMEM_01.menu.feature1.on=ON
+RMEM_01.menu.feature1.off.build.flags.feature1=
+RMEM_01.menu.feature1.on.build.flags.feature1=-DCONNECT_EP
+
+RMEM_01.menu.feature2.off=OFF
+RMEM_01.menu.feature2.on=ON
+RMEM_01.menu.feature2.off.build.flags.feature2=
+RMEM_01.menu.feature2.on.build.flags.feature2=-DCONNECT_AI_CAMERA
+
+# RMEM_01.menu.speedup.off=OFF
+# RMEM_01.menu.speedup.on=ON
+# RMEM_01.menu.speedup.off.build.flags.speedup=
+# RMEM_01.menu.speedup.on.build.flags.speedup="{runtime.platform.path}/tools/lib/{build.processor}/librm_func.a" "{runtime.platform.path}/tools/lib/{build.processor}/libarduinocore.a"

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2015, Freescale Semiconductor, Inc.
- * Copyright 2016-2020 NXP
+ * Copyright 2016-2019 NXP
  * All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
@@ -51,12 +51,6 @@ static const clock_ip_name_t s_pwmClocks[][FSL_FEATURE_PWM_SUBMODULE_COUNT] = PW
 static inline uint16_t PWM_GetComplementU16(uint16_t value)
 {
     return (~value + 1U);
-}
-
-static inline uint16_t dutyCycleToReloadValue(uint8_t dutyCyclePercent)
-{
-    /* Rounding calculations to improve the accuracy of reloadValue */
-    return ((65535U * dutyCyclePercent) + 50U) / 100U;
 }
 
 static uint32_t PWM_GetInstance(PWM_Type *base)
@@ -314,8 +308,7 @@ status_t PWM_SetupPwm(PWM_Type *base,
                     /* Indicates the center value */
                     base->SM[subModule].VAL0 = 0;
                     /* Indicates the end of the PWM period */
-                    /* The change during the end to start of the PWM period requires a count time */
-                    base->SM[subModule].VAL1 = modulo - 1U;
+                    base->SM[subModule].VAL1 = modulo;
                 }
 
                 /* Setup the PWM dutycycle */
@@ -339,8 +332,7 @@ status_t PWM_SetupPwm(PWM_Type *base,
                     /* Indicates the center value */
                     base->SM[subModule].VAL0 = (pulseCnt / 2U);
                     /* Indicates the end of the PWM period */
-                    /* The change during the end to start of the PWM period requires a count time */
-                    base->SM[subModule].VAL1 = pulseCnt - 1U;
+                    base->SM[subModule].VAL1 = pulseCnt;
                 }
 
                 /* Setup the PWM dutycycle */
@@ -365,8 +357,7 @@ status_t PWM_SetupPwm(PWM_Type *base,
                     /* Indicates the center value */
                     base->SM[subModule].VAL0 = 0;
                     /* Indicates the end of the PWM period */
-                    /* The change during the end to start of the PWM period requires a count time */
-                    base->SM[subModule].VAL1 = modulo - 1U;
+                    base->SM[subModule].VAL1 = modulo;
                 }
 
                 /* Setup the PWM dutycycle */
@@ -390,8 +381,7 @@ status_t PWM_SetupPwm(PWM_Type *base,
                     /* Indicates the center value */
                     base->SM[subModule].VAL0 = (pulseCnt / 2U);
                     /* Indicates the end of the PWM period */
-                    /* The change during the end to start of the PWM period requires a count time */
-                    base->SM[subModule].VAL1 = pulseCnt - 1U;
+                    base->SM[subModule].VAL1 = pulseCnt;
                 }
 
                 /* Setup the PWM dutycycle */
@@ -424,29 +414,6 @@ status_t PWM_SetupPwm(PWM_Type *base,
             polarityShift              = PWM_OCTRL_POLB_SHIFT;
             outputEnableShift          = PWM_OUTEN_PWMB_EN_SHIFT;
             base->SM[subModule].DTCNT1 = PWM_DTCNT1_DTCNT1(chnlParams->deadtimeValue);
-        }
-
-        /* Set PWM output fault status */
-        switch (chnlParams->pwmChannel)
-        {
-            case kPWM_PwmA:
-                base->SM[subModule].OCTRL &= ~((uint16_t)PWM_OCTRL_PWMAFS_MASK);
-                base->SM[subModule].OCTRL |= (((uint16_t)(chnlParams->faultState) << (uint16_t)PWM_OCTRL_PWMAFS_SHIFT) &
-                                              (uint16_t)PWM_OCTRL_PWMAFS_MASK);
-                break;
-            case kPWM_PwmB:
-                base->SM[subModule].OCTRL &= ~((uint16_t)PWM_OCTRL_PWMBFS_MASK);
-                base->SM[subModule].OCTRL |= (((uint16_t)(chnlParams->faultState) << (uint16_t)PWM_OCTRL_PWMBFS_SHIFT) &
-                                              (uint16_t)PWM_OCTRL_PWMBFS_MASK);
-                break;
-            case kPWM_PwmX:
-                base->SM[subModule].OCTRL &= ~((uint16_t)PWM_OCTRL_PWMXFS_MASK);
-                base->SM[subModule].OCTRL |= (((uint16_t)(chnlParams->faultState) << (uint16_t)PWM_OCTRL_PWMXFS_SHIFT) &
-                                              (uint16_t)PWM_OCTRL_PWMXFS_MASK);
-                break;
-            default:
-                assert(false);
-                break;
         }
 
         /* Setup signal active level */
@@ -491,40 +458,16 @@ void PWM_UpdatePwmDutycycle(PWM_Type *base,
 {
     assert(dutyCyclePercent <= 100U);
     assert((uint16_t)pwmSignal < 2U);
-    uint16_t reloadValue = dutyCycleToReloadValue(dutyCyclePercent);
-
-    PWM_UpdatePwmDutycycleHighAccuracy(base, subModule, pwmSignal, currPwmMode, reloadValue);
-}
-
-/*!
- * brief Updates the PWM signal's dutycycle with 16-bit accuracy.
- *
- * The function updates the PWM dutycyle to the new value that is passed in.
- * If the dead time insertion logic is enabled then the pulse period is reduced by the
- * dead time period specified by the user.
- *
- * param base              PWM peripheral base address
- * param subModule         PWM submodule to configure
- * param pwmSignal         Signal (PWM A or PWM B) to update
- * param currPwmMode       The current PWM mode set during PWM setup
- * param dutyCycle         New PWM pulse width, value should be between 0 to 65535
- *                          0=inactive signal(0% duty cycle)...
- *                          65535=active signal (100% duty cycle)
- */
-void PWM_UpdatePwmDutycycleHighAccuracy(
-    PWM_Type *base, pwm_submodule_t subModule, pwm_channels_t pwmSignal, pwm_mode_t currPwmMode, uint16_t dutyCycle)
-{
-    assert((uint16_t)pwmSignal < 2U);
     uint16_t pulseCnt = 0, pwmHighPulse = 0;
     uint16_t modulo = 0;
 
     switch (currPwmMode)
     {
         case kPWM_SignedCenterAligned:
-            modulo   = base->SM[subModule].VAL1 + 1U;
+            modulo   = base->SM[subModule].VAL1;
             pulseCnt = modulo * 2U;
             /* Calculate pulse width */
-            pwmHighPulse = (pulseCnt * dutyCycle) / 65535U;
+            pwmHighPulse = (pulseCnt * dutyCyclePercent) / 100U;
 
             /* Setup the PWM dutycycle */
             if (pwmSignal == kPWM_PwmA)
@@ -539,9 +482,9 @@ void PWM_UpdatePwmDutycycleHighAccuracy(
             }
             break;
         case kPWM_CenterAligned:
-            pulseCnt = base->SM[subModule].VAL1 + 1U;
+            pulseCnt = base->SM[subModule].VAL1;
             /* Calculate pulse width */
-            pwmHighPulse = (pulseCnt * dutyCycle) / 65535U;
+            pwmHighPulse = (pulseCnt * dutyCyclePercent) / 100U;
 
             /* Setup the PWM dutycycle */
             if (pwmSignal == kPWM_PwmA)
@@ -556,10 +499,10 @@ void PWM_UpdatePwmDutycycleHighAccuracy(
             }
             break;
         case kPWM_SignedEdgeAligned:
-            modulo   = base->SM[subModule].VAL1 + 1U;
+            modulo   = base->SM[subModule].VAL1;
             pulseCnt = modulo * 2U;
             /* Calculate pulse width */
-            pwmHighPulse = (pulseCnt * dutyCycle) / 65535U;
+            pwmHighPulse = (pulseCnt * dutyCyclePercent) / 100U;
 
             /* Setup the PWM dutycycle */
             if (pwmSignal == kPWM_PwmA)
@@ -574,9 +517,9 @@ void PWM_UpdatePwmDutycycleHighAccuracy(
             }
             break;
         case kPWM_EdgeAligned:
-            pulseCnt = base->SM[subModule].VAL1 + 1U;
+            pulseCnt = base->SM[subModule].VAL1;
             /* Calculate pulse width */
-            pwmHighPulse = (pulseCnt * dutyCycle) / 65535U;
+            pwmHighPulse = (pulseCnt * dutyCyclePercent) / 100U;
 
             /* Setup the PWM dutycycle */
             if (pwmSignal == kPWM_PwmA)
@@ -787,35 +730,6 @@ void PWM_SetupFaults(PWM_Type *base, pwm_fault_input_t faultNum, const pwm_fault
             break;
     }
     base->FSTS = reg;
-}
-
-/*!
- * brief  Fill in the PWM fault config struct with the default settings
- *
- * The default values are:
- * code
- *   config->faultClearingMode = kPWM_Automatic;
- *   config->faultLevel = false;
- *   config->enableCombinationalPath = true;
- *   config->recoverMode = kPWM_NoRecovery;
- * endcode
- * param config Pointer to user's PWM fault config structure.
- */
-void PWM_FaultDefaultConfig(pwm_fault_param_t *config)
-{
-    assert(config);
-
-    /* Initializes the configure structure to zero. */
-    (void)memset(config, 0, sizeof(*config));
-
-    /* PWM uses automatic fault clear mode */
-    config->faultClearingMode = kPWM_Automatic;
-    /* PWM fault level is set to logic 0 */
-    config->faultLevel = false;
-    /* Combinational Path from fault input is enabled */
-    config->enableCombinationalPath = true;
-    /* PWM output will stay inactive when recovering from a fault */
-    config->recoverMode = kPWM_NoRecovery;
 }
 
 /*!

@@ -2,6 +2,27 @@
 #include <stdint.h>
 
 #ifdef __cplusplus
+  #include <algorithm>
+  using std::min;
+  using std::max;
+#else // C
+  #include <stdlib.h>
+  #ifndef abs
+    #define abs(x) ((x)>0?(x):-(x))
+  #endif // abs
+
+  #ifndef min
+    #define min(a,b) ((a)<(b)?(a):(b))
+  #endif // min
+
+  #ifndef max
+    #define max(a,b) ((a)>(b)?(a):(b))
+  #endif // max
+
+#endif // __cplusplus
+
+
+#ifdef __cplusplus
 extern "C"{
 #endif
 
@@ -36,20 +57,6 @@ typedef enum {
 
 #define SERIAL      0x0
 #define DISPLAY     0x1
-
-#ifndef min
-#define min(a,b) \
-   ({ __typeof__ (a) _a = (a); \
-       __typeof__ (b) _b = (b); \
-     _a < _b ? _a : _b; })
-#endif
-
-#ifndef max
-#define max(a,b) \
-   ({ __typeof__ (a) _a = (a); \
-       __typeof__ (b) _b = (b); \
-     _a > _b ? _a : _b; })
-#endif
 
 #ifndef constrain
 #define constrain(amt,low,high) ((amt)<(low)?(low):((amt)>(high)?(high):(amt)))
@@ -102,10 +109,20 @@ typedef uint32_t pin_size_t;
 typedef uint8_t pin_size_t;
 #endif
 
+#define gpioTogglePin(pin)                                                            \
+  ({                                                                                  \
+    (digitalRead(pin) == HIGH) ? digitalWrite(pin, LOW) :  digitalWrite(pin, HIGH);   \
+  })
+
 void pinMode(pin_size_t pinNumber, PinMode pinMode);
 void digitalWrite(pin_size_t pinNumber, uint8_t status);
 PinStatus digitalRead(pin_size_t pinNumber);
 
+void analogReadResolution(int res);
+uint32_t analogRead(uint32_t ulPin);
+void analogWriteResolution(int res);
+void analogWrite(uint32_t ulPin, uint32_t ulValue);
+void analogOutputInit(void);
 
 unsigned long millis(void);
 unsigned long micros(void);
@@ -117,9 +134,9 @@ unsigned long pulseInLong(pin_size_t pin, uint8_t state, unsigned long timeout);
 void shiftOut(pin_size_t dataPin, pin_size_t clockPin, BitOrder bitOrder, uint8_t val);
 pin_size_t shiftIn(pin_size_t dataPin, pin_size_t clockPin, BitOrder bitOrder);
 
-void attachInterrupt(pin_size_t interruptNumber, voidFuncPtr callback, PinStatus mode);
-void attachInterruptParam(pin_size_t interruptNumber, voidFuncPtrParam callback, PinStatus mode, void* param);
-void detachInterrupt(pin_size_t interruptNumber);
+// void attachInterrupt(pin_size_t interruptNumber, voidFuncPtr callback, PinStatus mode);
+// void attachInterruptParam(pin_size_t interruptNumber, voidFuncPtrParam callback, PinStatus mode, void* param);
+// void detachInterrupt(pin_size_t interruptNumber);
 
 void setup(void);
 void loop(void);
@@ -127,6 +144,9 @@ void loop(void);
 #ifdef __cplusplus
 } // extern "C"
 #endif
+
+
+
 
 #ifdef __cplusplus
 

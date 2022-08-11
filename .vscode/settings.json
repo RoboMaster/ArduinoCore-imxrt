@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "*.ld": "linkerscript",
+        "fsl_os_abstraction.h": "c"
+    }
+}

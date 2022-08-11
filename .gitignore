@@ -1,3 +1,5 @@
-.vscode/
 build/
-examples/
+devel/
+dist/
+__pycache__/
+.vscode/

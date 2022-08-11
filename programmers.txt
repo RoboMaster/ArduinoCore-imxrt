@@ -1,3 +1,15 @@
+#
+# Copyright (C) 2022 DJI.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+# Change Logs:
+# Date           Author       Notes
+# 2022-09-27     robomaster   first version
+#
+
+# =============================================================================
+
 # The MIT License (MIT)
 
 # Copyright (c) 2019 Seeed Technology Inc.
@@ -20,11 +32,11 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-seeed_jlink.name=J-Link over OpenOCD
-seeed_jlink.communication=USB
-seeed_jlink.protocol=jlink
-seeed_jlink.program.protocol=jlink
-seeed_jlink.program.tool=openocd
-seeed_jlink.program.setup_command=interface jlink; transport select swd; reset_config none separate; set WORKAREASIZE 0;
+jlink.name=J-Link over OpenOCD
+jlink.communication=USB
+jlink.protocol=jlink
+jlink.program.protocol=jlink
+jlink.program.tool=openocd
+jlink.program.setup_command=interface jlink; transport select swd; reset_config none separate; set WORKAREASIZE 0;
 
 

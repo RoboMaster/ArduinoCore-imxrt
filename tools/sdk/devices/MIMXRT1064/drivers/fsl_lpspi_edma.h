@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2015, Freescale Semiconductor, Inc.
- * Copyright 2016-2022 NXP
+ * Copyright 2016-2020 NXP
  * All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
@@ -146,6 +146,9 @@ struct _lpspi_slave_edma_handle
     edma_handle_t *edmaTxDataToTxRegHandle; /*!<edma_handle_t handle point used for TxData to TxReg*/
 
     edma_tcd_t lpspiSoftwareTCD[2]; /*!<SoftwareTCD, internal used*/
+
+    __attribute__((aligned(sizeof(edma_tcd_t)))) edma_tcd_t rx_tcd_pool[10];
+    uint8_t rx_tcd_used;
 };
 
 /***********************************************************************************************************************
@@ -163,11 +166,11 @@ extern "C" {
  * This function initializes the LPSPI eDMA handle which can be used for other LPSPI transactional APIs.  Usually, for a
  * specified LPSPI instance, call this API once to get the initialized handle.
  *
- * Note that the LPSPI eDMA has a separated (Rx and Tx as two sources) or shared (Rx  and Tx are the same source) DMA
+ * Note that the LPSPI eDMA has a separated (Rx and Rx as two sources) or shared (Rx  and Tx are the same source) DMA
  * request source.
  * (1) For a separated DMA request source, enable and set the Rx DMAMUX source for edmaRxRegToRxDataHandle and
- * Tx DMAMUX source for edmaTxDataToTxRegHandle.
- * (2) For a shared DMA request source, enable and set the Rx/Tx DMAMUX source for edmaRxRegToRxDataHandle.
+ * Tx DMAMUX source for edmaIntermediaryToTxRegHandle.
+ * (2) For a shared DMA request source, enable and set the Rx/Rx DMAMUX source for edmaRxRegToRxDataHandle.
  *
  * @param base LPSPI peripheral base address.
  * @param handle LPSPI handle pointer to lpspi_master_edma_handle_t.

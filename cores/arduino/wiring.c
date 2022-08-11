@@ -1,7 +1,19 @@
+/*
+ * Copyright (C) 2022 DJI.
+ *
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ *
+ * Change Logs:
+ * Date           Author       Notes
+ * 2022-09-27     robomaster   first version
+ */
+
+//===================================================================
+
 /**
  * The MIT License (MIT)
  *
- * Author: Hongtai Liu (lht856@foxmail.com)
+ * Author: Hongtai Liu (lht856@fox.com)
  *
  * Copyright (C) 2019  Seeed Technology Co.,Ltd.
  *
@@ -25,160 +37,133 @@
  */
 
 #include "Arduino.h"
-#include "clock_config.h"
-#include "pin_mux.h"
-#include "virtual_com.h"
-
-#include "board.h"
 #include "fsl_adc.h"
-#include "fsl_xbara.h"
-#include "fsl_pwm.h"
+#include "user_main.h"
+#include "FreeRTOS.h"
+#include "task.h"
 
-/** Tick Counter united by ms */
-static volatile uint32_t _ulTickCount = 0;
-
-unsigned long millis(void)
+void adc_init()
 {
-  // todo: ensure no interrupts
-  return _ulTickCount;
-}
+    adc_config_t adcConfigStrcut;
 
-// Interrupt-compatible version of micros
-// Theory: repeatedly take readings of SysTick counter, millis counter and SysTick interrupt pending flag.
-// When it appears that millis counter and pending is stable and SysTick hasn't rolled over, use these
-// values to calculate micros. If there is a pending SysTick, add one to the millis counter in the calculation.
-unsigned long micros(void)
-{
-  uint32_t ticks, ticks2;
-  uint32_t pend, pend2;
-  uint32_t count, count2;
+    ADC_GetDefaultConfig(&adcConfigStrcut);
 
-  ticks2 = SysTick->VAL;
-  pend2 = !!(SCB->ICSR & SCB_ICSR_PENDSTSET_Msk);
-  count2 = _ulTickCount;
+    ADC_Init(ADC1, &adcConfigStrcut);
+    ADC_Init(ADC2, &adcConfigStrcut);
 
-  do
-  {
-    ticks = ticks2;
-    pend = pend2;
-    count = count2;
-    ticks2 = SysTick->VAL;
-    pend2 = !!(SCB->ICSR & SCB_ICSR_PENDSTSET_Msk);
-    count2 = _ulTickCount;
-  } while ((pend != pend2) || (count != count2) || (ticks < ticks2));
+#if !(defined(FSL_FEATURE_ADC_SUPPORT_HARDWARE_TRIGGER_REMOVE) && FSL_FEATURE_ADC_SUPPORT_HARDWARE_TRIGGER_REMOVE)
+    ADC_EnableHardwareTrigger(ADC1, false);
+    ADC_EnableHardwareTrigger(ADC2, false);
+#endif
 
-  return ((count + pend) * 1000) + (((SysTick->LOAD - ticks) * (1048576 / (SystemCoreClock / 1000000))) >> 20);
-  // this is an optimization to turn a runtime division into two compile-time divisions and
-  // a runtime multiplication and shift, saving a few cycles
-}
-
-void delay(unsigned long ms)
-{
-  if (ms == 0)
-  {
-    return;
-  }
-
-  uint32_t start = micros();
-
-  while (ms > 0)
-  {
-    yield();
-    while (ms > 0 && (micros() - start) >= 1000)
+    // waitting for ADC Auto Calibiration
+    while (!(kStatus_Success == ADC_DoAutoCalibration(ADC1)))
     {
-      ms--;
-      start += 1000;
     }
-  }
-}
-
-void delayMicroseconds(unsigned int us)
-{
-  if (us == 0)
-  {
-    return;
-  }
-
-  uint32_t start = micros();
-
-  while (us > 0)
-  {
-    yield();
-    while (us > 0 && (micros() - start) >= 1)
+    while (!(kStatus_Success == ADC_DoAutoCalibration(ADC2)))
     {
-      us--;
-      start += 1;
     }
-  }
-}
-
-/*
- * Seeeduion Arch Mix(NPX RT1052) initialization
- *
- * Good to know:
- *
- *
- *
- */
-
-void SysTick_Handler(void)
-{
-  _ulTickCount++;
 }
 
 void init(void)
 {
+    adc_init();
+    
+    vendor_start();
+}
 
-  /* Board pin init */
-  BOARD_ConfigMPU();
-  BOARD_InitBootPins();
-  BOARD_InitBootClocks();
-  /* Update the core clock */
-  SystemCoreClockUpdate();
+/*!
+ * @brief tick hook is executed every tick.
+ */
+void vApplicationTickHook(void)
+{
+    // BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+    static uint32_t ulCount = 0;
 
-  // BOARD_InitDebugConsole();
+    /* The RTOS tick hook function is enabled by setting configUSE_TICK_HOOK to
+    1 in FreeRTOSConfig.h.
 
-  // BOARD_BootClockRUN();
-  // /* Update the core clock */
-  // SystemCoreClockUpdate();
-
-  // /*allow io mux*/
-  // CLOCK_EnableClock(kCLOCK_Iomuxc);
-
-  /* Set systick reload value to generate 1ms interrupt */
-  if (SysTick_Config(SystemCoreClock / 1000U))
-  {
-    while (1)
+    "Give" the semaphore on every 500th tick interrupt. */
+    ulCount++;
+    if (ulCount >= 500UL)
     {
+        /* This function is called from an interrupt context (the RTOS tick
+        interrupt),    so only ISR safe API functions can be used (those that end
+        in "FromISR()".
+
+        xHigherPriorityTaskWoken was initialised to pdFALSE, and will be set to
+        pdTRUE by xSemaphoreGiveFromISR() if giving the semaphore unblocked a
+        task that has equal or higher priority than the interrupted task. */
+        // xSemaphoreGiveFromISR(xEventSemaphore, &xHigherPriorityTaskWoken);
+        ulCount = 0UL;
     }
-  }
 
-  //     // Initialize Analog Controller
-  //     adc_config_t adcConfigStrcut;
-  //      /*
-  //      *  config->enableAsynchronousClockOutput = true;
-  //      *  config->enableOverWrite =               false;
-  //      *  config->enableContinuousConversion =    false;
-  //      *  config->enableHighSpeed =               false;
-  //      *  config->enableLowPower =                false;
-  //      *  config->enableLongSample =              false;
-  //      *  config->referenceVoltageSource =        kADC_ReferenceVoltageSourceVref;
-  //      *  config->samplePeriodMode =              kADC_SamplePeriod2or12Clocks;
-  //      *  config->clockSource =                   kADC_ClockSourceAD;
-  //      *  config->clockDriver =                   kADC_ClockDriver1;
-  //      *  config->resolution =                    kADC_Resolution12Bit;
-  //      */
-  //     ADC_GetDefaultConfig(&adcConfigStrcut);
-  //     ADC_Init(ADC1, &adcConfigStrcut);
-  //     ADC_Init(ADC2, &adcConfigStrcut);
-  // #if !(defined(FSL_FEATURE_ADC_SUPPORT_HARDWARE_TRIGGER_REMOVE) && FSL_FEATURE_ADC_SUPPORT_HARDWARE_TRIGGER_REMOVE)
-  //     ADC_EnableHardwareTrigger(ADC1, false);
-  //     ADC_EnableHardwareTrigger(ADC2, false);
-  // #endif
+    /* If xHigherPriorityTaskWoken is pdTRUE then a context switch should
+    normally be performed before leaving the interrupt (because during the
+    execution of the interrupt a task of equal or higher priority than the
+    running task was unblocked).  The syntax required to context switch from
+    an interrupt is port dependent, so check the documentation of the port you
+    are using.
 
-  //     // waitting for ADC Auto Calibiration
-  //     while (!(kStatus_Success == ADC_DoAutoCalibration(ADC1))){}
-  //     while (!(kStatus_Success == ADC_DoAutoCalibration(ADC2))){}
+    In this case, the function is running in the context of the tick interrupt,
+    which will automatically check for the higher priority task to run anyway,
+    so no further action is required. */
+}
 
-  vcom_cdc_init();
+/*!
+ * @brief Malloc failed hook.
+ */
+void vApplicationMallocFailedHook(void)
+{
+    /* The malloc failed hook is enabled by setting
+    configUSE_MALLOC_FAILED_HOOK to 1 in FreeRTOSConfig.h.
+
+    Called if a call to pvPortMalloc() fails because there is insufficient
+    free memory available in the FreeRTOS heap.  pvPortMalloc() is called
+    internally by FreeRTOS API functions that create tasks, queues, software
+    timers, and semaphores.  The size of the FreeRTOS heap is set by the
+    configTOTAL_HEAP_SIZE configuration constant in FreeRTOSConfig.h. */
+    for (;;)
+        ;
+}
+
+/*!
+ * @brief Stack overflow hook.
+ */
+void vApplicationStackOverflowHook(TaskHandle_t xTask, char *pcTaskName)
+{
+    (void)pcTaskName;
+    (void)xTask;
+
+    /* Run time stack overflow checking is performed if
+    configconfigCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2.  This hook
+    function is called if a stack overflow is detected.  pxCurrentTCB can be
+    inspected in the debugger if the task name passed into this function is
+    corrupt. */
+    for (;;)
+        ;
+}
+
+/*!
+ * @brief Idle hook.
+ */
+void vApplicationIdleHook(void)
+{
+    volatile size_t xFreeStackSpace;
+
+    /* The idle task hook is enabled by setting configUSE_IDLE_HOOK to 1 in
+    FreeRTOSConfig.h.
+
+    This function is called on each cycle of the idle task.  In this case it
+    does nothing useful, other than report the amount of FreeRTOS heap that
+    remains unallocated. */
+    xFreeStackSpace = xPortGetFreeHeapSize();
+
+    if (xFreeStackSpace > 100)
+    {
+        /* By now, the kernel has allocated everything it is going to, so
+        if there is a lot of heap remaining unallocated then
+        the value of configTOTAL_HEAP_SIZE in FreeRTOSConfig.h can be
+        reduced accordingly. */
+    }
 }

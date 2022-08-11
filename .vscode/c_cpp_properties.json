@@ -1,0 +1,31 @@
+{
+    "configurations": [
+        {
+            "name": "Win32",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "${workspaceFolder}/tools/sdk/rtos/freertos/portable/GCC/ARM_CM4F",
+                "${workspaceFolder}/tools/sdk/devices/MIMXRT1064/**"
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE",
+                "SDK_DEBUGCONSOLE=1",
+                "XIP_EXTERNAL_FLASH=1",
+                "XIP_BOOT_HEADER_ENABLE=1",
+                "SERIAL_PORT_TYPE_UART=1",
+                "__USE_CMSIS",
+                "__MCUXPRESSO",
+                "MCUXPRESSO_SDK",
+                "ARDUINO",
+                "SDK_OS_FREE_RTOS"
+            ],
+            "compilerPath": "E://GNUTools//gcc-arm-none-eabi//bin//arm-none-eabi-gcc.exe",
+            "cStandard": "gnu99",
+            "cppStandard": "gnu++11",
+            "intelliSenseMode": "windows-gcc-arm"
+        }
+    ],
+    "version": 4
+}

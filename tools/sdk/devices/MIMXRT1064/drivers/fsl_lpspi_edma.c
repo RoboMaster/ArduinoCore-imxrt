@@ -647,7 +647,8 @@ void LPSPI_SlaveTransferCreateHandleEDMA(LPSPI_Type *base,
 {
     assert(handle != NULL);
     assert(edmaRxRegToRxDataHandle != NULL);
-    assert(edmaTxDataToTxRegHandle != NULL);
+    //TODO: 这里修改了官方驱动，SPI没有用到TX，不需要初始化对应的DMA.
+    //assert(edmaTxDataToTxRegHandle != NULL);
 
     /* Zero the handle. */
     (void)memset(handle, 0, sizeof(*handle));
@@ -839,10 +840,41 @@ status_t LPSPI_SlaveTransferEDMA(LPSPI_Type *base, lpspi_slave_edma_handle_t *ha
         /* Store the initially configured eDMA minor byte transfer count into the DSPI handle */
         handle->nbytes = (uint8_t)transferConfigRx.minorLoopBytes;
 
-        EDMA_SetTransferConfig(handle->edmaRxRegToRxDataHandle->base, handle->edmaRxRegToRxDataHandle->channel,
+        //TODO: 修改官方驱动使Slave传输支持大于0x7FFF个字节
+        if(transferConfigRx.majorLoopCounts <= 0x7FFF)
+        {
+            handle->rx_tcd_used = 0;
+            EDMA_SetTransferConfig(handle->edmaRxRegToRxDataHandle->base, handle->edmaRxRegToRxDataHandle->channel,
                                &transferConfigRx, NULL);
+
+        }
+        else
+        {
+            uint32_t remain_cnt = transferConfigRx.majorLoopCounts;
+            int i = 0;
+            /* 超过需要分为多个tcd传输 */
+            while(i < 9 && remain_cnt > 0x7FFF)
+            {
+                transferConfigRx.majorLoopCounts = 0x7FFF;
+                remain_cnt -= 0x7FFF;
+                EDMA_TcdReset(&(handle->rx_tcd_pool)[i]);
+                EDMA_TcdSetTransferConfig(&(handle->rx_tcd_pool)[i], &transferConfigRx, &(handle->rx_tcd_pool)[i + 1]);
+                handle->rx_tcd_pool[i].CSR |= DMA_CSR_INTMAJOR_MASK;
+                transferConfigRx.destAddr += transferConfigRx.majorLoopCounts;
+                i++;
+            }
+            transferConfigRx.majorLoopCounts = remain_cnt & 0x7FFF;
+            EDMA_TcdReset(&(handle->rx_tcd_pool)[i]);
+            EDMA_TcdSetTransferConfig(&(handle->rx_tcd_pool)[i], &transferConfigRx, NULL);
+            handle->rx_tcd_pool[i].CSR |= DMA_CSR_INTMAJOR_MASK;
+            EDMA_ResetChannel(handle->edmaRxRegToRxDataHandle->base, handle->edmaRxRegToRxDataHandle->channel);
+            EDMA_InstallTCD(handle->edmaRxRegToRxDataHandle->base, handle->edmaRxRegToRxDataHandle->channel, &(handle->rx_tcd_pool)[0U]);
+            EDMA_InstallTCDMemory(handle->edmaRxRegToRxDataHandle, (edma_tcd_t *)&(handle->rx_tcd_pool)[0U], i + 1);
+            handle->rx_tcd_used = i;
+        }
+
         EDMA_EnableChannelInterrupts(handle->edmaRxRegToRxDataHandle->base, handle->edmaRxRegToRxDataHandle->channel,
-                                     (uint32_t)kEDMA_MajorInterruptEnable);
+                                                (uint32_t)kEDMA_MajorInterruptEnable);
         EDMA_StartTransfer(handle->edmaRxRegToRxDataHandle);
     }
 
@@ -964,6 +996,12 @@ static void EDMA_LpspiSlaveCallback(edma_handle_t *edmaHandle,
     lpspi_slave_edma_private_handle_t *lpspiEdmaPrivateHandle;
 
     lpspiEdmaPrivateHandle = (lpspi_slave_edma_private_handle_t *)g_lpspiEdmaPrivateHandle;
+
+    if(lpspiEdmaPrivateHandle->handle->rx_tcd_used != 0)
+    {
+        lpspiEdmaPrivateHandle->handle->rx_tcd_used--;
+        return;
+    }
 
     size_t rxRemainingByteCount = lpspiEdmaPrivateHandle->handle->rxRemainingByteCount;
     uint8_t bytesLastRead       = lpspiEdmaPrivateHandle->handle->bytesLastRead;

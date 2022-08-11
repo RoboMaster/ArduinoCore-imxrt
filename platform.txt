@@ -1,4 +1,15 @@
-    
+#
+# Copyright (C) 2022 DJI.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+# Change Logs:
+# Date           Author       Notes
+# 2022-09-27     robomaster   first version
+#
+
+# =============================================================================
+
 # The MIT License (MIT)
 
 # Copyright (c) 2019 Seeed Technology Inc.
@@ -17,68 +28,58 @@
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 # AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OT vgbHERWISE, ARISING FROM,
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
 
-# Seeed IMXRT Core and platform
-# For more info:
-# https://github.com/arduino/Arduino/wiki/Arduino-IDE-1.5-3rd-party-Hardware-specification
-# https://github.com/arduino/Arduino/wiki/Arduino-IDE-1.6.x-package_index.json-format-specification
+name=RoboMaster Education Series Boards
+version=1.0.0
 
-
-# -I 表示 include    
-
-
-
-# name=Seeed i.MX RT (NXP 32-bits ARM Cortex-M7) Boards
-# version=1.2.1
-
-name=RM AI HUB i.MX RT (NXP 32-bits ARM Cortex-M7) Boards
-version=0.0.1
-
-
-# compiler include path
-#----------------------
-compiler.sdk.path={runtime.platform.path}/tools/sdk/devices/{build.processor}
+# ---------------------------------------------------------------
+#                   Part One Macros
+# ---------------------------------------------------------------
+# ### cores folder
 compiler.cores.path={runtime.platform.path}/cores/arduino
-compiler.cores.deprecated.path={runtime.platform.path}/cores/arduino/deprecated/
-compiler.cores.deprecated-avr-comp.path={runtime.platform.path}/cores/arduino/deprecated-avr-comp/
+compiler.cores.include=-I{compiler.cores.path} -I{compiler.cores.path}/imxrt
+# ### sdk folder
+compiler.sdk.path={runtime.platform.path}/tools/sdk
+compiler.sdk.CMSIS.include=-I{compiler.sdk.path}/CMSIS/Include
+compiler.sdk.components.include=-I{compiler.sdk.path}/components/lists -I{compiler.sdk.path}/components/osa -I{compiler.sdk.path}/components/serial_manager -I{compiler.sdk.path}/components/silicon_id -I{compiler.sdk.path}/components/uart
+compiler.sdk.devices.include=-I{compiler.sdk.path}/devices/MIMXRT1064 -I{compiler.sdk.path}/devices/MIMXRT1064/drivers -I{compiler.sdk.path}/devices/MIMXRT1064/xip -I{compiler.sdk.path}/devices/MIMXRT1064/utilities -I{compiler.sdk.path}/devices/MIMXRT1064/utilities/debug_console -I{compiler.sdk.path}/devices/MIMXRT1064/str
+compiler.sdk.middleware.include=-I{compiler.sdk.path}/middleware/usb/device/class -I{compiler.sdk.path}/middleware/usb/device/class/cdc -I{compiler.sdk.path}/middleware/usb/device/class/video -I{compiler.sdk.path}/middleware/usb/device/include -I{compiler.sdk.path}/middleware/usb/device/source -I{compiler.sdk.path}/middleware/usb/device/source/ehci -I{compiler.sdk.path}/middleware/usb/include -I{compiler.sdk.path}/middleware/usb/phy
+compiler.sdk.rtos.include=-I{compiler.sdk.path}/rtos/freertos/include -I{compiler.sdk.path}/rtos/freertos/portable/GCC/ARM_CM4F
+compiler.sdk.include={compiler.sdk.CMSIS.include} {compiler.sdk.components.include} {compiler.sdk.devices.include} {compiler.sdk.middleware.include} {compiler.sdk.rtos.include}
+# ### variants folder
+compiler.variant.include=-I{build.variant.path} -I{build.variant.path}/board
+# ### 
+compiler.user.include=-I{build.variant.path}/drivers -I{build.variant.path}/source -I{build.variant.path}/source/user_app -I{build.variant.path}/source/user_driver -I{build.variant.path}/source/user_libs -I{build.variant.path}/source/user_libs/crc -I{build.variant.path}/source/user_libs/ext_protocol -I{build.variant.path}/source/user_libs/log -I{build.variant.path}/source/user_libs/open_protocol -I{build.variant.path}/source/user_libs/open_protocol/crc -I{build.variant.path}/source/user_middleware/cmsis_os -I{build.variant.path}/source/user_usb 
+# ################## all
+compiler.preproc.include={compiler.cores.include} {compiler.sdk.include} {compiler.variant.include} {compiler.user.include} 
 
-
-# /tools/sdk/middleware/usb/dcd
-# /tools/sdk/middleware/usb/device
-# /tools/sdk/middleware/usb/include
-# /tools/sdk/middleware/usb/output/source/device
-# /tools/sdk/middleware/usb/output/source/device/class
-# /tools/sdk/middleware/usb/output/npw/device_config/ehci
-# /tools/sdk/middleware/usb/phy
-
-# /usb/osa 没有找到
-compiler.cores.usb.include=-I{runtime.platform.path}/cores/arduino/USB -I{runtime.platform.path}/tools/sdk/middleware/usb/dcd -I{runtime.platform.path}/tools/sdk/middleware/usb/device -I{runtime.platform.path}/tools/sdk/middleware/usb/include -I{runtime.platform.path}/tools/sdk/middleware/usb/output/source/device -I{runtime.platform.path}/tools/sdk/middleware/usb/output/source/device/class -I{runtime.platform.path}/tools/sdk/middleware/usb/output/npw/device_config/ehci -I{runtime.platform.path}/tools/sdk/middleware/usb/phy
-compiler.sdk.include=-I{compiler.sdk.path} -I{compiler.sdk.path}/drivers -I{compiler.sdk.path}/utilities/debug_console -I{runtime.platform.path}/tools/sdk/components/serial_manager -I{runtime.platform.path}/tools/sdk/components/uart -I{runtime.platform.path}/tools/sdk/components/osa -I{runtime.platform.path}/tools/sdk/components/lists
-
-# -
-compiler.preproc.include={compiler.cores.usb.include} {compiler.sdk.include} -I{compiler.cores.path} -I{compiler.cores.deprecated.path} -I{compiler.cores.deprecated-avr-comp.path} -I{build.variant.path}/board -I{build.variant.path}/xip -I{build.variant.path}/drivers
-
+# ---------------------------------------------------------------
+#                   Part Two Compiler
+# ---------------------------------------------------------------
 # Compile variables
 # -----------------
-compiler.warning_flags=-w
+# -w no warning
+# -Wall All Warning
+# -Wextra extra warning
+compiler.warning_flags=-Wno-unused-function
+compiler.warning_flags.more=
 compiler.warning_flags.none=-w
 compiler.warning_flags.default=
-compiler.warning_flags.more=-Wall
 compiler.warning_flags.all=-Wall -Wextra
 
-compiler.path={runtime.tools.arm-none-eabi-gcc.path}/bin/
+compiler.path={runtime.tools.xpack-arm-none-eabi-gcc.path}/bin/
 compiler.c.cmd=arm-none-eabi-gcc
-compiler.c.flags=-mcpu={build.mcu} -mfpu={build.fpu} -c -Os {compiler.warning_flags} {compiler.warning_flags.more} -mthumb -mapcs -mfloat-abi=hard -std=gnu99 -ffunction-sections -fdata-sections -fno-common -ffreestanding -fno-builtin -nostdlib --param max-inline-insns-single=500 -MMD -D__SKETCH_NAME__="""{build.project_name}"""
+compiler.c.flags=-mcpu={build.mcu} -mfpu={build.fpu} -c {compiler.warning_flags} {compiler.warning_flags.more} -mthumb -mapcs -mfloat-abi=hard -std=gnu99 -ffunction-sections -fdata-sections -fno-common -ffreestanding -fno-builtin -nostdlib --param max-inline-insns-single=500 -MMD -D__SKETCH_NAME__="""{build.project_name}"""
 compiler.c.elf.cmd=arm-none-eabi-gcc
-compiler.c.elf.flags= -mcpu={build.mcu} -mfpu={build.fpu} -mfloat-abi=hard -Os -Wall -fno-common -ffunction-sections -fdata-sections -ffreestanding -fno-builtin -mthumb -mapcs -std=gnu99 -MMD -MP --specs=nano.specs --specs=nosys.specs -Xlinker --gc-sections  -static -z muldefs  
+compiler.c.elf.flags=-mcpu={build.mcu} -mfpu={build.fpu} -mfloat-abi=hard -Wall -fno-common -ffunction-sections -fdata-sections -ffreestanding -fno-builtin -mthumb -mapcs -std=gnu99 -MMD -MP --specs=nano.specs --specs=nosys.specs -Xlinker --gc-sections -Xlinker -static -Xlinker -z -Xlinker muldefs  
 compiler.S.cmd=arm-none-eabi-gcc
 compiler.S.flags=-c -g -x assembler-with-cpp -MMD
 compiler.cpp.cmd=arm-none-eabi-g++
-compiler.cpp.flags=-mcpu={build.mcu} -mfpu={build.fpu} -c -Os {compiler.warning_flags} {compiler.warning_flags.more} -mthumb -mapcs  -mfloat-abi=hard -std=gnu++11 -fno-rtti -fno-exceptions -fno-threadsafe-statics -ffunction-sections -fdata-sections -fno-common -ffreestanding -fno-builtin -nostdlib --param max-inline-insns-single=500 -MMD -D__SKETCH_NAME__="""{build.project_name}"""
+compiler.cpp.flags=-mcpu={build.mcu} -mfpu={build.fpu} -c {compiler.warning_flags} {compiler.warning_flags.more} -mthumb -mapcs  -mfloat-abi=hard -std=gnu++11 -fno-rtti -fno-exceptions -fno-threadsafe-statics -ffunction-sections -fdata-sections -fno-common -ffreestanding -fno-builtin -nostdlib --param max-inline-insns-single=500 -MMD -D__SKETCH_NAME__="""{build.project_name}"""
 compiler.ar.cmd=arm-none-eabi-ar
 compiler.ar.flags=rcs
 compiler.objcopy.cmd=arm-none-eabi-objcopy
@@ -86,7 +87,7 @@ compiler.objcopy.eep.flags=-O ihex -j .eeprom --set-section-flags=.eeprom=alloc,
 compiler.elf2hex.flags=-O binary
 compiler.elf2hex.cmd=arm-none-eabi-objcopy
 
-# compiler.ldflags=-static 取消-static 让其从现编译的文件中链接
+# compiler.ldflags=-static
 compiler.ldflags=
 
 compiler.size.cmd=arm-none-eabi-size
@@ -99,8 +100,13 @@ build.flags.optimize=
 build.flags.maxspi=
 build.flags.maxqspi=
 build.flags.usbstack=
+
 build.flags.debug=
-build.flags.flash=
+build.flags.features=
+build.flags.module=
+build.flags.feature1=
+build.flags.feature2=
+build.flags.speedup=
 
 # These can be overridden in platform.local.txt
 compiler.c.extra_flags=
@@ -111,26 +117,21 @@ compiler.S.extra_flags=
 compiler.ar.extra_flags=
 compiler.elf2hex.extra_flags=
 
-#compiler.arm.cmsis.c.flags="-I{runtime.platform.path}/tools/sdk/CMSIS/Include/" 
-compiler.arm.cmsis.c.flags="-I{runtime.platform.path}/tools/sdk/CMSIS/Core/Include/" 
+compiler.arm.cmsis.c.flags=
+compiler.libraries.ldflags=
 
-#CMSIS/DSP/Lib/ARM/arm_cortexM7lfdp_math.lib
-# compiler.arm.cmsis.ldflags="-L{runtime.platform.path}/tools/sdk/CMSIS/Lib/GCC/"  -larm_cortexM7lfdp_math -larm_cortexM7lfsp_math
-compiler.arm.cmsis.ldflags="-L{runtime.platform.path}/tools/sdk/CMSIS/DSP/Lib/GCC/"  -larm_cortexM7lfdp_math -larm_cortexM7lfsp_math
+compiler.arm.cmsis.ldflags="-L{compiler.sdk.path}/CMSIS/Lib/GCC/" -larm_cortexM7lfdp_math -larm_cortexM7lfsp_math
 
-# compiler.sdk.ldflags=-Wl,--whole-archive  "{runtime.platform.path}/tools/lib/{build.processor}/libfsl_usb_drivers.a"  "{runtime.platform.path}/tools/lib/{build.processor}/libfsl_bsp.a" -Wl,--no-whole-archive
-# 先取消使用库，看看缺少什么东西，先使用编译来做
-compiler.sdk.ldflags=
-
+compiler.sdk.ldflags= {compiler.libraries.ldflags} {build.flags.speedup} "{runtime.platform.path}/tools/lib/{build.processor}/libsdk_components.a"  "{runtime.platform.path}/tools/lib/{build.processor}/libsdk_devices.a" "{runtime.platform.path}/tools/lib/{build.processor}/libsdk_middleware.a" "{runtime.platform.path}/tools/lib/{build.processor}/libsdk_rtos.a"
 
 # Compile patterns
 # ----------------
 
 ## Compile c files
-recipe.c.o.pattern="{compiler.path}{compiler.c.cmd}" {compiler.c.flags} -DF_CPU={build.f_cpu} -DARDUINO={runtime.ide.version} -DARDUINO_{build.board} -DARDUINO_ARCH_{build.arch} {compiler.c.extra_flags} {build.extra_flags} {build.flags.debug} {build.flags.flash} {compiler.arm.cmsis.c.flags} {compiler.preproc.include} {includes} "{source_file}" -o "{object_file}"
+recipe.c.o.pattern="{compiler.path}{compiler.c.cmd}" {compiler.c.flags} -DF_CPU={build.f_cpu} -DARDUINO={runtime.ide.version} -DARDUINO_{build.board} -DARDUINO_ARCH_{build.arch} {compiler.c.extra_flags} {build.extra_flags} {build.flags.debug} {build.flags.features} {build.flags.feature1} {build.flags.feature2} {build.flags.module} {compiler.arm.cmsis.c.flags} {compiler.preproc.include} {includes} "{source_file}" -o "{object_file}"
 
 ## Compile c++ files
-recipe.cpp.o.pattern="{compiler.path}{compiler.cpp.cmd}" {compiler.cpp.flags} -DF_CPU={build.f_cpu} -DARDUINO={runtime.ide.version} -DARDUINO_{build.board} -DARDUINO_ARCH_{build.arch} {compiler.cpp.extra_flags} {build.extra_flags} {build.flags.debug} {build.flags.flash} {compiler.arm.cmsis.c.flags} {compiler.preproc.include} {includes} "{source_file}" -o "{object_file}"
+recipe.cpp.o.pattern="{compiler.path}{compiler.cpp.cmd}" {compiler.cpp.flags} -DF_CPU={build.f_cpu} -DARDUINO={runtime.ide.version} -DARDUINO_{build.board} -DARDUINO_ARCH_{build.arch} {compiler.cpp.extra_flags} {build.extra_flags} {build.flags.debug} {build.flags.features} {build.flags.feature1} {build.flags.feature2} {build.flags.module} {compiler.arm.cmsis.c.flags} {compiler.preproc.include} {includes} "{source_file}" -o "{object_file}"
 
 ## Compile S files
 recipe.S.o.pattern="{compiler.path}{compiler.S.cmd}" {compiler.S.flags} -DF_CPU={build.f_cpu} -DARDUINO={runtime.ide.version} -DARDUINO_{build.board} -DARDUINO_ARCH_{build.arch} {compiler.S.extra_flags}  {build.extra_flags} {build.cache_flags} {compiler.arm.cmsis.c.flags} {includes} "{source_file}" -o "{object_file}"
@@ -139,7 +140,7 @@ recipe.S.o.pattern="{compiler.path}{compiler.S.cmd}" {compiler.S.flags} -DF_CPU=
 recipe.ar.pattern="{compiler.path}{compiler.ar.cmd}" {compiler.ar.flags} {compiler.ar.extra_flags} "{archive_file_path}" "{object_file}"
 
 ## Combine gc-sections, archives, and objects
-recipe.c.combine.pattern="{compiler.path}{compiler.c.elf.cmd}"  "-L{build.path}" {compiler.c.elf.flags} {compiler.c.elf.extra_flags} "-T{build.variant.path}/{build.ldscript}" "-Wl,-Map,{build.path}/{build.project_name}.map" {compiler.ldflags} -o "{build.path}/{build.project_name}.elf" {object_files} -Wl,--start-group {compiler.arm.cmsis.ldflags} "-L{build.variant.path}" -lm "{build.path}/{archive_file}" {compiler.sdk.ldflags} -Wl,--end-group
+recipe.c.combine.pattern="{compiler.path}{compiler.c.elf.cmd}"  "-L{build.path}" {compiler.c.elf.flags} {compiler.c.elf.extra_flags} "-T{build.variant.path}/starup/{build.ldscript}" {compiler.ldflags} "-Wl,-Map,{build.path}/{build.project_name}.map" -o "{build.path}/{build.project_name}.elf" {object_files} -Wl,--start-group {compiler.arm.cmsis.ldflags} "-L{build.variant.path}" -Wl,--whole-archive -lm "{build.path}/{archive_file}" {compiler.sdk.ldflags} -Wl,--no-whole-archive -Wl,--end-group
 
 ## Create output (bin file)
 recipe.objcopy.bin.pattern="{compiler.path}{compiler.elf2hex.cmd}" {compiler.elf2hex.flags} {compiler.elf2hex.extra_flags} "{build.path}/{build.project_name}.elf" "{build.path}/{build.project_name}.bin"
@@ -150,42 +151,21 @@ recipe.output.save_file={build.project_name}.{build.variant}.bin
 
 ## Compute size
 recipe.size.pattern="{compiler.path}{compiler.size.cmd}" -A "{build.path}/{build.project_name}.elf"
-recipe.size.regex=\.text\s+([0-9]+).*
+#Calc Flash
+recipe.size.regex=^(?:\.flash_config|\.ivt|\.interrupts|\.text|\.ARM|\.data)\s+([0-9]+).*
+#Calc RAM
+recipe.size.regex.data=^(?:\.data|\.bss|\.ncache.init|\.ncache|\.heap|\.stack|\.m_data3)\s+([0-9]+).*
 
 # Uploader tools
 # --------------
 
 #
-# BOSSA
-#
-
-# tools.bossac.path={runtime.tools.bossac.path}
-# tools.bossac.cmd=bossac
-# tools.bossac.cmd.windows=bossac.exe
-
-# tools.bossac.upload.params.verbose=-i -d
-# tools.bossac.upload.params.quiet=
-# tools.bossac.upload.pattern="{path}/{cmd}" --port={serial.port.file} -i -w -v "{build.path}/{build.project_name}.bin" -R
-
-# tools.bossac_remote.upload.pattern=/usr/bin/run-bossac  --port=ttyATH0 -w -v /tmp/sketch.bin -R
-# tools.bossac.network_cmd={runtime.tools.arduinoOTA.path}/bin/arduinoOTA
-# tools.bossac.upload.network_pattern="{network_cmd}" -address {serial.port} -port 65280 -username arduino -password "{network.password}" -sketch "{build.path}/{build.project_name}.bin" -upload /sketch -b
-
-#
 # RM AIHUB_UPGRADE_TOOL -> rmaut
 #
-
 tools.rmaut.path={runtime.tools.rmaut.path}
 tools.rmaut.cmd=rmaut
 tools.rmaut.cmd.windows=rmaut.exe
 
 tools.rmaut.upload.params.verbose=-i -d
 tools.rmaut.upload.params.quiet=
-# tools.rmaut.upload.pattern="{path}/{cmd}" -d -p {serial.port.file} -f "{build.path}/{build.project_name}.bin"
-#仅做测试，用固定路径 需要将rmaut工具放在 D盘根目录下面
-tools.rmaut.upload.pattern="D:\rmaut.exe" -d -p {serial.port.file} -f "{build.path}/{build.project_name}.bin"
-
-
-# tools.rmaut_remote.upload.pattern=/usr/bin/run-bossac  --port=ttyATH0 -w -v /tmp/sketch.bin -R
-# tools.rmaut.network_cmd={runtime.tools.arduinoOTA.path}/bin/arduinoOTA
-# tools.rmaut.upload.network_pattern="{network_cmd}" -address {serial.port} -port 65280 -username arduino -password "{network.password}" -sketch "{build.path}/{build.project_name}.bin" -upload /sketch -b
+tools.rmaut.upload.pattern="{path}/{cmd}" -d -p {serial.port.file} -f "{build.path}/{build.project_name}.bin"
