@@ -45,14 +45,14 @@ rm_ai_hub.build.fpu=fpv5-d16
 rm_ai_hub.build.f_cpu=600000000L
 rm_ai_hub.build.usb_product="Ai Hub"
 rm_ai_hub.build.usb_manufacturer="Dji"
-#SEEED_ARCH_MIX RM_AI_HUB 这个换了没有印象
+
 rm_ai_hub.build.board=RM_AI_HUB 
 rm_ai_hub.build.processor=MIMXRT1064
 rm_ai_hub.build.core=arduino
-rm_ai_hub.build.extra_flags=-DCPU_MIMXRT1064DVL6A -DSEEED_ARCH_MIX -DXIP_EXTERNAL_FLASH=1 -DXIP_BOOT_HEADER_ENABLE=1 -DUSB_STACK_BM -DARDUINO_MAIN=1 -DSERIAL_PORT_TYPE_UART=1 -DSDK_DEBUGCONSOLE=1 -DSDK_OS_FREE_RTOS -DMCUXPRESSO_SDK -DDEBUG -DDISABLE_WDOG -g
+rm_ai_hub.build.extra_flags=-DCPU_MIMXRT1064DVL6A -DSEEED_ARCH_MIX -DXIP_EXTERNAL_FLASH=1 -DXIP_BOOT_HEADER_ENABLE=1 -DUSB_STACK_BM -DARDUINO_MAIN=1 -DSERIAL_PORT_TYPE_UART=1 -DSDK_DEBUGCONSOLE=1 -DSDK_OS_FREE_RTOS -DMCUXPRESSO_SDK -DDEBUG -DDISABLE_WDOG -g -O0
 rm_ai_hub.build.ldscript=MIMXRT1064xxxxx_flexspi_nor.ld
-# 决定了varitans文件夹的名称
-rm_ai_hub.build.variant=ai_hub 
+# varitans文件夹的相对路径
+rm_ai_hub.build.variant=MIMXRT1064/ai_hub 
 
 rm_ai_hub.menu.debug.off=Off
 rm_ai_hub.menu.debug.on=On

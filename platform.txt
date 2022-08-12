@@ -1,39 +1,8 @@
-    
-# The MIT License (MIT)
 
-# Copyright (c) 2019 Seeed Technology Inc.
-
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-
-# The above copyright notice and this permission notice shall be included in
-# all copies or substantial portions of the Software.
-
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OT vgbHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-# THE SOFTWARE.
-
-
-# Seeed IMXRT Core and platform
 # For more info:
 # https://github.com/arduino/Arduino/wiki/Arduino-IDE-1.5-3rd-party-Hardware-specification
 # https://github.com/arduino/Arduino/wiki/Arduino-IDE-1.6.x-package_index.json-format-specification
 
-
-# -I 表示 include    
-
-
-
-# name=Seeed i.MX RT (NXP 32-bits ARM Cortex-M7) Boards
-# version=1.2.1
 
 name=RM AI HUB i.MX RT (NXP 32-bits ARM Cortex-M7) Boards
 version=0.0.1
@@ -46,25 +15,35 @@ compiler.cores.path={runtime.platform.path}/cores/arduino
 compiler.cores.deprecated.path={runtime.platform.path}/cores/arduino/deprecated/
 compiler.cores.deprecated-avr-comp.path={runtime.platform.path}/cores/arduino/deprecated-avr-comp/
 
+# ---------------------------------------------------------------
+#                   第一部分 参数宏定义
+# ---------------------------------------------------------------
+# ### cores 文件夹
+compiler.cores.CMSIS.include=-I{compiler.cores.path}/imxrt/CMSIS
+compiler.cores.freertos.include=-I{compiler.cores.path}/imxrt/freertos_kernel/include -I{compiler.cores.path}/imxrt/freertos_kernel/portable/GCC/ARM_CM4F
+compiler.cores.usb.include=-I{compiler.cores.path}/imxrt/usb 
+# 综合本部分
+compiler.cores.include= {compiler.cores.usb.include} {compiler.cores.freertos.include} {compiler.cores.CMSIS.include}
+# ### variants 文件夹
+compiler.variant.component.include=-I{build.variant.path}/component/lists -I{build.variant.path}/component/osa -I{build.variant.path}/component/serial_manager -I{build.variant.path}/component/silicon_id -I{build.variant.path}/component/uart
+# -I{build.variant.path}/middleware/usb/device/class
+# -I{build.variant.path}/middleware/usb/device/class/cdc
+# -I{build.variant.path}/middleware/usb/device/include
+# -I{build.variant.path}/middleware/usb/device/source
+# -I{build.variant.path}/middleware/usb/device/source/ehci
+# -I{build.variant.path}/middleware/usb/include
+# -I{build.variant.path}/middleware/usb/phy
+compiler.variant.middleware.include=-I{build.variant.path}/middleware/usb/device/class -I{build.variant.path}/middleware/usb/device/class/cdc -I{build.variant.path}/middleware/usb/device/include -I{build.variant.path}/middleware/usb/device/source -I{build.variant.path}/middleware/usb/device/source/ehci -I{build.variant.path}/middleware/usb/include -I{build.variant.path}/middleware/usb/phy
+compiler.variant.other.include=-I{build.variant.path}/board -I{build.variant.path}/device -I{build.variant.path}/drivers -I{build.variant.path}/starup -I{build.variant.path}/xip
+##综合本部分
+compiler.variant.include=-I{build.variant.path} {compiler.variant.component.include} {compiler.variant.middleware.include} {compiler.variant.other.include}
+# ################## 综合以上所有
+compiler.preproc.include={compiler.cores.include} {compiler.variant.include} -I{compiler.cores.path} -I{compiler.cores.deprecated.path} -I{compiler.cores.deprecated-avr-comp.path}
 
-# /tools/sdk/middleware/usb/dcd
-# /tools/sdk/middleware/usb/device
-# /tools/sdk/middleware/usb/include
-# /tools/sdk/middleware/usb/output/source/device
-# /tools/sdk/middleware/usb/output/source/device/class
-# /tools/sdk/middleware/usb/output/npw/device_config/ehci
-# /tools/sdk/middleware/usb/phy
 
-# /usb/osa 没有找到
-
-compiler.cores.usb.include=-I{runtime.platform.path}/cores/arduino/USB -I{runtime.platform.path}/tools/sdk/middleware/usb/dcd -I{runtime.platform.path}/tools/sdk/middleware/usb/device -I{runtime.platform.path}/tools/sdk/middleware/usb/include -I{runtime.platform.path}/tools/sdk/middleware/usb/output/source/device -I{runtime.platform.path}/tools/sdk/middleware/usb/output/source/device/class -I{runtime.platform.path}/tools/sdk/middleware/usb/output/npw/device_config/ehci -I{runtime.platform.path}/tools/sdk/middleware/usb/phy
-
-compiler.cores.freertos.include=-I{runtime.platform.path}/cores/arduino/freertos_kernel -I{runtime.platform.path}/cores/arduino/freertos_kernel/include -I{runtime.platform.path}/cores/arduino/freertos_kernel/portable/GCC/ARM_CM4F
-
-compiler.sdk.include=-I{compiler.sdk.path} -I{compiler.sdk.path}/drivers -I{compiler.sdk.path}/utilities/debug_console -I{runtime.platform.path}/tools/sdk/components/serial_manager -I{runtime.platform.path}/tools/sdk/components/uart -I{runtime.platform.path}/tools/sdk/components/osa -I{runtime.platform.path}/tools/sdk/components/lists
-
-compiler.preproc.include={compiler.cores.usb.include} {compiler.cores.freertos.include} {compiler.sdk.include} -I{compiler.cores.path} -I{compiler.cores.deprecated.path} -I{compiler.cores.deprecated-avr-comp.path} -I{build.variant.path}/board -I{build.variant.path}/xip -I{build.variant.path}/drivers
-
+# ---------------------------------------------------------------
+#                   第二部分 编译参数汇总
+# ---------------------------------------------------------------
 # Compile variables
 # -----------------
 compiler.warning_flags=-w
@@ -75,13 +54,13 @@ compiler.warning_flags.all=-Wall -Wextra
 
 compiler.path={runtime.tools.arm-none-eabi-gcc.path}/bin/
 compiler.c.cmd=arm-none-eabi-gcc
-compiler.c.flags=-mcpu={build.mcu} -mfpu={build.fpu} -c -O0 {compiler.warning_flags} {compiler.warning_flags.more} -mthumb -mapcs -mfloat-abi=hard -std=gnu99 -ffunction-sections -fdata-sections -fno-common -ffreestanding -fno-builtin -nostdlib --param max-inline-insns-single=500 -MMD -D__SKETCH_NAME__="""{build.project_name}"""
+compiler.c.flags=-mcpu={build.mcu} -mfpu={build.fpu} -c {compiler.warning_flags} {compiler.warning_flags.more} -mthumb -mapcs -mfloat-abi=hard -std=gnu99 -ffunction-sections -fdata-sections -fno-common -ffreestanding -fno-builtin -nostdlib --param max-inline-insns-single=500 -MMD -D__SKETCH_NAME__="""{build.project_name}"""
 compiler.c.elf.cmd=arm-none-eabi-gcc
-compiler.c.elf.flags= -mcpu={build.mcu} -mfpu={build.fpu} -mfloat-abi=hard -O0 -Wall -fno-common -ffunction-sections -fdata-sections -ffreestanding -fno-builtin -mthumb -mapcs -std=gnu99 -MMD -MP --specs=nano.specs --specs=nosys.specs -Xlinker --gc-sections  -static -z muldefs  
+compiler.c.elf.flags= -mcpu={build.mcu} -mfpu={build.fpu} -mfloat-abi=hard -Wall -fno-common -ffunction-sections -fdata-sections -ffreestanding -fno-builtin -mthumb -mapcs -std=gnu99 -MMD -MP --specs=nano.specs --specs=nosys.specs -Xlinker --gc-sections  -static -z muldefs  
 compiler.S.cmd=arm-none-eabi-gcc
 compiler.S.flags=-c -g -x assembler-with-cpp -MMD
 compiler.cpp.cmd=arm-none-eabi-g++
-compiler.cpp.flags=-mcpu={build.mcu} -mfpu={build.fpu} -c -O0 {compiler.warning_flags} {compiler.warning_flags.more} -mthumb -mapcs  -mfloat-abi=hard -std=gnu++11 -fno-rtti -fno-exceptions -fno-threadsafe-statics -ffunction-sections -fdata-sections -fno-common -ffreestanding -fno-builtin -nostdlib --param max-inline-insns-single=500 -MMD -D__SKETCH_NAME__="""{build.project_name}"""
+compiler.cpp.flags=-mcpu={build.mcu} -mfpu={build.fpu} -c {compiler.warning_flags} {compiler.warning_flags.more} -mthumb -mapcs  -mfloat-abi=hard -std=gnu++11 -fno-rtti -fno-exceptions -fno-threadsafe-statics -ffunction-sections -fdata-sections -fno-common -ffreestanding -fno-builtin -nostdlib --param max-inline-insns-single=500 -MMD -D__SKETCH_NAME__="""{build.project_name}"""
 compiler.ar.cmd=arm-none-eabi-ar
 compiler.ar.flags=rcs
 compiler.objcopy.cmd=arm-none-eabi-objcopy
@@ -115,16 +94,17 @@ compiler.ar.extra_flags=
 compiler.elf2hex.extra_flags=
 
 #compiler.arm.cmsis.c.flags="-I{runtime.platform.path}/tools/sdk/CMSIS/Include/" 
+# compiler.arm.cmsis.c.flags="-I{runtime.platform.path}/tools/sdk/CMSIS/Core/Include/" 
 compiler.arm.cmsis.c.flags="-I{runtime.platform.path}/tools/sdk/CMSIS/Core/Include/" 
 
 #CMSIS/DSP/Lib/ARM/arm_cortexM7lfdp_math.lib
 # compiler.arm.cmsis.ldflags="-L{runtime.platform.path}/tools/sdk/CMSIS/Lib/GCC/"  -larm_cortexM7lfdp_math -larm_cortexM7lfsp_math
-compiler.arm.cmsis.ldflags="-L{runtime.platform.path}/tools/sdk/CMSIS/DSP/Lib/GCC/"  -larm_cortexM7lfdp_math -larm_cortexM7lfsp_math
+# compiler.arm.cmsis.ldflags="-L{runtime.platform.path}/tools/sdk/CMSIS/DSP/Lib/GCC/"  -larm_cortexM7lfdp_math -larm_cortexM7lfsp_math
+compiler.arm.cmsis.ldflags="-L{compiler.cores.path}/imxrt/CMSIS/Lib/GCC/"  -larm_cortexM7lfdp_math -larm_cortexM7lfsp_math
 
 # compiler.sdk.ldflags=-Wl,--whole-archive  "{runtime.platform.path}/tools/lib/{build.processor}/libfsl_usb_drivers.a"  "{runtime.platform.path}/tools/lib/{build.processor}/libfsl_bsp.a" -Wl,--no-whole-archive
 # 先取消使用库，看看缺少什么东西，先使用编译来做
 compiler.sdk.ldflags=
-
 
 # Compile patterns
 # ----------------
@@ -142,7 +122,7 @@ recipe.S.o.pattern="{compiler.path}{compiler.S.cmd}" {compiler.S.flags} -DF_CPU=
 recipe.ar.pattern="{compiler.path}{compiler.ar.cmd}" {compiler.ar.flags} {compiler.ar.extra_flags} "{archive_file_path}" "{object_file}"
 
 ## Combine gc-sections, archives, and objects
-recipe.c.combine.pattern="{compiler.path}{compiler.c.elf.cmd}"  "-L{build.path}" {compiler.c.elf.flags} {compiler.c.elf.extra_flags} "-T{build.variant.path}/{build.ldscript}" "-Wl,-Map,{build.path}/{build.project_name}.map" {compiler.ldflags} -o "{build.path}/{build.project_name}.elf" {object_files} -Wl,--start-group {compiler.arm.cmsis.ldflags} "-L{build.variant.path}" -lm "{build.path}/{archive_file}" {compiler.sdk.ldflags} -Wl,--end-group
+recipe.c.combine.pattern="{compiler.path}{compiler.c.elf.cmd}"  "-L{build.path}" {compiler.c.elf.flags} {compiler.c.elf.extra_flags} "-T{build.variant.path}/starup/{build.ldscript}" "-Wl,-Map,{build.path}/{build.project_name}.map" {compiler.ldflags} -o "{build.path}/{build.project_name}.elf" {object_files} -Wl,--start-group {compiler.arm.cmsis.ldflags} "-L{build.variant.path}" -lm "{build.path}/{archive_file}" {compiler.sdk.ldflags} -Wl,--end-group
 
 ## Create output (bin file)
 recipe.objcopy.bin.pattern="{compiler.path}{compiler.elf2hex.cmd}" {compiler.elf2hex.flags} {compiler.elf2hex.extra_flags} "{build.path}/{build.project_name}.elf" "{build.path}/{build.project_name}.bin"
