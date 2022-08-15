@@ -26,7 +26,7 @@ menu.debug=Debug
 
 # Robomaster Ai Hub
 # ------------------------------
-rm_ai_hub.name=Robomaster AiHub Module
+rm_ai_hub.name=RM Expansion Module (RMEM01)
 rm_ai_hub.vid.0=0x2886
 rm_ai_hub.pid.0=0x002B
 rm_ai_hub.vid.1=0x2886
