@@ -37,8 +37,7 @@
 #ifdef __cplusplus
 extern "C"
 {
-#endif // __cplusplu
-
+#endif
 
 #define J3_4    0U
 #define J3_5    1U
@@ -72,12 +71,12 @@ extern "C"
 #define J4_16    28U
 #define J4_17    29U
 
+#define USER_LED_1 30U
+#define USER_LED_2 31U
+#define USER_LED_3 32U
+#define USER_LED_4 33U
 
-#define USER_LED_R 30U
-#define USER_LED_G 31U
-#define USER_LED_B 32U
-
-#define LED_BUILTIN USER_LED_R
+#define LED_BUILTIN USER_LED_1
 
 #define UART_INTERFACES_COUNT 3
 

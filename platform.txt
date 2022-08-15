@@ -4,7 +4,7 @@
 # https://github.com/arduino/Arduino/wiki/Arduino-IDE-1.6.x-package_index.json-format-specification
 
 
-name=RM AI HUB i.MX RT (NXP 32-bits ARM Cortex-M7) Boards
+name=Robomaster i.MX RT (NXP 32-bits ARM Cortex-M7) Boards
 version=0.0.1
 
 
@@ -164,9 +164,9 @@ tools.rmaut.cmd.windows=rmaut.exe
 
 tools.rmaut.upload.params.verbose=-i -d
 tools.rmaut.upload.params.quiet=
-# tools.rmaut.upload.pattern="{path}/{cmd}" -d -p {serial.port.file} -f "{build.path}/{build.project_name}.bin"
+tools.rmaut.upload.pattern="{path}/{cmd}" -d -p {serial.port.file} -f "{build.path}/{build.project_name}.bin"
 #仅做测试，用固定路径 需要将rmaut工具放在 D盘根目录下面
-tools.rmaut.upload.pattern="D:\rmaut.exe" -d -p {serial.port.file} -f "{build.path}/{build.project_name}.bin"
+# tools.rmaut.upload.pattern="D:\rmaut.exe" -d -p {serial.port.file} -f "{build.path}/{build.project_name}.bin"
 
 
 # tools.rmaut_remote.upload.pattern=/usr/bin/run-bossac  --port=ttyATH0 -w -v /tmp/sketch.bin -R

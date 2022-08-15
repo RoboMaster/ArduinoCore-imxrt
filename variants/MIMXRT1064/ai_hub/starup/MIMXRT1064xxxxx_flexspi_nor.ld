@@ -33,12 +33,23 @@ STACK_SIZE = DEFINED(__stack_size__) ? __stack_size__ : 0x2000;
 VECTOR_RAM_SIZE = DEFINED(__ram_vector_table__) ? 0x00000400 : 0;
 
 /* Specify the memory areas */
-MEMORY
+/* MEMORY
 {
   m_flash_config        (RX)  : ORIGIN = 0x70000000, LENGTH = 0x00001000
   m_ivt                 (RX)  : ORIGIN = 0x70001000, LENGTH = 0x00001000
   m_interrupts          (RX)  : ORIGIN = 0x70002000, LENGTH = 0x00000400
   m_text                (RX)  : ORIGIN = 0x70002400, LENGTH = 0x003FDC00
+  m_qacode              (RX)  : ORIGIN = 0x00000000, LENGTH = 0x00020000
+  m_data                (RW)  : ORIGIN = 0x20000000, LENGTH = 0x00020000
+  m_data2               (RW)  : ORIGIN = 0x20200000, LENGTH = 0x000C0000
+} */
+
+MEMORY
+{
+  m_flash_config        (RX)  : ORIGIN = 0x70100000, LENGTH = 0x00001000
+  m_ivt                 (RX)  : ORIGIN = 0x70101000, LENGTH = 0x00001000
+  m_interrupts          (RX)  : ORIGIN = 0x70102000, LENGTH = 0x00000400
+  m_text                (RX)  : ORIGIN = 0x70102400, LENGTH = 0x003FDC00
   m_qacode              (RX)  : ORIGIN = 0x00000000, LENGTH = 0x00020000
   m_data                (RW)  : ORIGIN = 0x20000000, LENGTH = 0x00020000
   m_data2               (RW)  : ORIGIN = 0x20200000, LENGTH = 0x000C0000

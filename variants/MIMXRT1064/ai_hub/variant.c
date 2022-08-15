@@ -373,25 +373,32 @@ const PinDescription g_APinDescription[]=
           IOMUXC_GPIO_AD_B1_03_LPUART2_RX
       }
   },
-   {   //USER_LED_R GPIO_AD_B0_08 #30
-      .GROUP = GPIO1,
-      .PIN = 9,
+   {   //USER_LED_1     GPIO_AD_B0_09     #30
+      .GROUP = GPIO6,
+      .PIN = 9U,
       .FUN_GPIO = {
           IOMUXC_GPIO_AD_B0_09_GPIO1_IO09
       }
   },
-   {   //USER_LED_G GPIO_AD_B0_09  #31
-      .GROUP = GPIO1,
-      .PIN = 10,
+   {   //USER_LED_2     GPIO_AD_B0_10     #31
+      .GROUP = GPIO6,
+      .PIN = 10U,
       .FUN_GPIO = {
           IOMUXC_GPIO_AD_B0_10_GPIO1_IO10
       }
   },
-   {   //USER_LED_B GPIO_AD_B0_10  #32
-      .GROUP = GPIO1,
-      .PIN = 11,
+   {   //USER_LED_3     GPIO_AD_B0_11     #32
+      .GROUP = GPIO6,
+      .PIN = 11U,
       .FUN_GPIO = {
           IOMUXC_GPIO_AD_B0_11_GPIO1_IO11
+      }
+  },
+    {   //USER_LED_4     GPIO_AD_B0_02     #33
+      .GROUP = GPIO6,
+      .PIN = 2U,
+      .FUN_GPIO = {
+          IOMUXC_GPIO_AD_B0_02_GPIO1_IO02
       }
   }
 };
