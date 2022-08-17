@@ -17,7 +17,6 @@
 
 unsigned long millis(void)
 {
-  // 注意：不能在中断中调用
   return xTaskGetTickCount();
 }
 
@@ -27,12 +26,12 @@ unsigned long micros(void)
 
 void delay(uint32_t ms)
 {
+  // 注意：不能在中断中调用
   vTaskDelay(ms / portTICK_PERIOD_MS);
 }
 
 void delayMicroseconds(unsigned int us)
 {
-
 }
 
 void init(void)
@@ -43,7 +42,7 @@ void init(void)
   BOARD_InitBootClocks();
 
   /* Init usb cdc. */
-  vcom_cdc_init();
+  // vcom_cdc_init();
 }
 
 /*!
@@ -259,4 +258,3 @@ void vApplicationIdleHook(void)
 //     }
 //   }
 // }
-
