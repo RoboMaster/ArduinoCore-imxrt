@@ -19,14 +19,14 @@ const PinDescription g_APinDescription[]=
   ///            LED config
   //////////////////////////////////////////////////////////////
    {   //                               #1
-      .GROUP = GPIO6,
+      .GROUP = GPIO1,
       .PIN = 9U,
       .FUN_GPIO = {
           IOMUXC_GPIO_AD_B0_09_GPIO1_IO09
       }
   },
    {   //                               #2
-      .GROUP = GPIO6,
+      .GROUP = GPIO1,
       .PIN = 10U,
       .FUN_GPIO = {
           IOMUXC_GPIO_AD_B0_10_GPIO1_IO10
