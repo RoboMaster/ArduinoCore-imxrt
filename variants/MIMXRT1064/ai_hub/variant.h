@@ -1,28 +1,3 @@
-/*
- * The MIT License (MIT)
- * 
- * Author: Hongtai Liu (lht856@foxmail.com)
- * 
- * Copyright (C) 2019  Seeed Technology Co.,Ltd. 
- * 
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- * 
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- */
 #ifndef PINS_ARDUINO_ARCH_MIX
 #define PINS_ARDUINO_ARCH_MIX
 
@@ -45,7 +20,7 @@ extern "C"
 #define JP_0   7U           // UART3_TX
 #define JP_1   8U           // UART3_RX
 #define JP_2   9U           // SPI3_MISO
-#define JP_3   15U          // EXT_INT1
+#define JP_3   15U          // EXT_INT1 !!!!Deprecated
 #define JP_4   11U          // SPI3_CLK
 
 #define JP_5   13U          // I2C1_SCL
@@ -122,13 +97,15 @@ extern "C"
 /////////////////////////////////////////////////////
 ///                 OTHER
 /////////////////////////////////////////////////////
-// #define AD2_9  J3_9
-// #define AD2_10  J3_8
-// #define AD1_3  J3_14
-// #define AD1_4  J3_15
 
-// #define PWM4_0  J4_8
-// #define PWM4_1  J4_9
+#define A0  JP_0
+#define A1  JP_1
+#define A2  JP_2
+#define A3  JP_4
+#define A4  JP_7
+#define A5  JP_9
+
+#define PWM0 JP_8
 
 #ifdef __cplusplus
 }
