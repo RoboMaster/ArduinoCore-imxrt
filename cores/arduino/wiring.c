@@ -20,8 +20,10 @@ unsigned long millis(void)
     return xTaskGetTickCount();
 }
 
+// reserved
 unsigned long micros(void)
 {
+    return 0;
 }
 
 void delay(uint32_t ms)
@@ -30,6 +32,7 @@ void delay(uint32_t ms)
     vTaskDelay(ms / portTICK_PERIOD_MS);
 }
 
+// reserved
 void delayMicroseconds(unsigned int us)
 {
 }
@@ -92,7 +95,7 @@ void init(void)
  */
 void vApplicationTickHook(void)
 {
-    BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+    // BaseType_t xHigherPriorityTaskWoken = pdFALSE;
     static uint32_t ulCount = 0;
 
     /* The RTOS tick hook function is enabled by setting configUSE_TICK_HOOK to

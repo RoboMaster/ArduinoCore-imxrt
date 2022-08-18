@@ -34,11 +34,6 @@
 extern "C" {
 #endif
 
-#define MAX_PWM_RESOLUTION 16
-
-static int _writeResolution = 8;
-static int _internalWriteResolution = MAX_PWM_RESOLUTION;
-
 void analogReadResolution(int res)
 {
     // Initialize Analog Controller
@@ -125,22 +120,6 @@ uint32_t analogRead(uint32_t pin)
 
 void analogWriteResolution(int res)
 {
-    if ((res > 0) && (res <= 32))
-    {
-        _writeResolution = res;
-        if (_writeResolution > MAX_PWM_RESOLUTION)
-        {
-            _internalWriteResolution = MAX_PWM_RESOLUTION;
-        }
-        else
-        {
-            _internalWriteResolution = _writeResolution;
-        }
-    }
-    else
-    {
-        Error_Handler();
-    }
 }
 
 void analogWrite(uint32_t pin, uint32_t value)
