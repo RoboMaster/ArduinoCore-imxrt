@@ -7,38 +7,36 @@
 name=RoboMaster Education Series Boards
 version=0.0.1
 
-
+# {build.system.path}
 # compiler include path
 #----------------------
-compiler.sdk.path={runtime.platform.path}/tools/sdk/devices/{build.processor}
-compiler.cores.path={runtime.platform.path}/cores/arduino
-compiler.cores.deprecated.path={runtime.platform.path}/cores/arduino/deprecated/
-compiler.cores.deprecated-avr-comp.path={runtime.platform.path}/cores/arduino/deprecated-avr-comp/
+# compiler.sdk.path={runtime.platform.path}/tools/sdk/devices/{build.processor}
+
+# compiler.cores.deprecated.path={runtime.platform.path}/cores/arduino/deprecated/
+# compiler.cores.deprecated-avr-comp.path={runtime.platform.path}/cores/arduino/deprecated-avr-comp/
 
 # ---------------------------------------------------------------
 #                   第一部分 参数宏定义
 # ---------------------------------------------------------------
 # ### cores 文件夹
-compiler.cores.CMSIS.include=-I{compiler.cores.path}/imxrt/CMSIS
-compiler.cores.freertos.include=-I{compiler.cores.path}/imxrt/freertos_kernel/include -I{compiler.cores.path}/imxrt/freertos_kernel/portable/GCC/ARM_CM4F
-compiler.cores.usb.include=-I{compiler.cores.path}/imxrt/usb 
+compiler.cores.path={runtime.platform.path}/cores/arduino
 # 综合本部分
-compiler.cores.include= {compiler.cores.usb.include} {compiler.cores.freertos.include} {compiler.cores.CMSIS.include}
+compiler.cores.include=-I{compiler.cores.path} -I{compiler.cores.path}/imxrt/usb 
+
+# ### system 文件夹
+compiler.system.CMSIS.include=-I{build.system.path}/CMSIS
+compiler.system.component.include=-I{build.system.path}/component/lists -I{build.system.path}/component/osa -I{build.system.path}/component/serial_manager -I{build.system.path}/component/uart
+compiler.system.devices.include=-I{build.system.path}/devices/MIMXRT1064 -I{build.system.path}/devices/MIMXRT1064/drivers -I{build.system.path}/devices/MIMXRT1064/xip
+compiler.system.middleware.include=-I{build.system.path}/middleware/usb/device/class -I{build.system.path}/middleware/usb/device/class/cdc -I{build.system.path}/middleware/usb/device/include -I{build.system.path}/middleware/usb/device/source -I{build.system.path}/middleware/usb/device/source/ehci -I{build.system.path}/middleware/usb/include -I{build.system.path}/middleware/usb/phy
+compiler.system.rtos.include=-I{build.system.path}/rtos/freertos/include -I{build.system.path}/rtos/freertos/portable/GCC/ARM_CM4F
+# 综合本部分
+compiler.system.include={compiler.system.CMSIS.include} {compiler.system.component.include} {compiler.system.devices.include} {compiler.system.middleware.include} {compiler.system.rtos.include}
+
 # ### variants 文件夹
-compiler.variant.component.include=-I{build.variant.path}/component/lists -I{build.variant.path}/component/osa -I{build.variant.path}/component/serial_manager -I{build.variant.path}/component/silicon_id -I{build.variant.path}/component/uart
-# -I{build.variant.path}/middleware/usb/device/class
-# -I{build.variant.path}/middleware/usb/device/class/cdc
-# -I{build.variant.path}/middleware/usb/device/include
-# -I{build.variant.path}/middleware/usb/device/source
-# -I{build.variant.path}/middleware/usb/device/source/ehci
-# -I{build.variant.path}/middleware/usb/include
-# -I{build.variant.path}/middleware/usb/phy
-compiler.variant.middleware.include=-I{build.variant.path}/middleware/usb/device/class -I{build.variant.path}/middleware/usb/device/class/cdc -I{build.variant.path}/middleware/usb/device/include -I{build.variant.path}/middleware/usb/device/source -I{build.variant.path}/middleware/usb/device/source/ehci -I{build.variant.path}/middleware/usb/include -I{build.variant.path}/middleware/usb/phy
-compiler.variant.other.include=-I{build.variant.path}/board -I{build.variant.path}/device -I{build.variant.path}/drivers -I{build.variant.path}/starup -I{build.variant.path}/xip
-##综合本部分
-compiler.variant.include=-I{build.variant.path} {compiler.variant.component.include} {compiler.variant.middleware.include} {compiler.variant.other.include}
+compiler.variant.include=-I{build.variant.path} -I{build.variant.path}/board
+
 # ################## 综合以上所有
-compiler.preproc.include={compiler.cores.include} {compiler.variant.include} -I{compiler.cores.path} -I{compiler.cores.deprecated.path} -I{compiler.cores.deprecated-avr-comp.path}
+compiler.preproc.include={compiler.cores.include} {compiler.system.include} {compiler.variant.include}
 
 
 # ---------------------------------------------------------------
@@ -95,16 +93,17 @@ compiler.elf2hex.extra_flags=
 
 #compiler.arm.cmsis.c.flags="-I{runtime.platform.path}/tools/sdk/CMSIS/Include/" 
 # compiler.arm.cmsis.c.flags="-I{runtime.platform.path}/tools/sdk/CMSIS/Core/Include/" 
-compiler.arm.cmsis.c.flags="-I{runtime.platform.path}/tools/sdk/CMSIS/Core/Include/" 
+# compiler.arm.cmsis.c.flags="-I{runtime.platform.path}/tools/sdk/CMSIS/Core/Include/" 
+compiler.arm.cmsis.c.flags=
 
 #CMSIS/DSP/Lib/ARM/arm_cortexM7lfdp_math.lib
 # compiler.arm.cmsis.ldflags="-L{runtime.platform.path}/tools/sdk/CMSIS/Lib/GCC/"  -larm_cortexM7lfdp_math -larm_cortexM7lfsp_math
 # compiler.arm.cmsis.ldflags="-L{runtime.platform.path}/tools/sdk/CMSIS/DSP/Lib/GCC/"  -larm_cortexM7lfdp_math -larm_cortexM7lfsp_math
-compiler.arm.cmsis.ldflags="-L{compiler.cores.path}/imxrt/CMSIS/Lib/GCC/"  -larm_cortexM7lfdp_math -larm_cortexM7lfsp_math
+compiler.arm.cmsis.ldflags="-L{build.system.path}/CMSIS/Lib/GCC/" -larm_cortexM7lfdp_math -larm_cortexM7lfsp_math
 
 # compiler.sdk.ldflags=-Wl,--whole-archive  "{runtime.platform.path}/tools/lib/{build.processor}/libfsl_usb_drivers.a"  "{runtime.platform.path}/tools/lib/{build.processor}/libfsl_bsp.a" -Wl,--no-whole-archive
 # 先取消使用库，看看缺少什么东西，先使用编译来做
-compiler.sdk.ldflags=
+compiler.sdk.ldflags=-Wl,--whole-archive  "{runtime.platform.path}/tools/lib/{build.processor}/libdriver_fsl.a"  "{runtime.platform.path}/tools/lib/{build.processor}/libdriver_usb.a" "{runtime.platform.path}/tools/lib/{build.processor}/libdriver_component.a" "{runtime.platform.path}/tools/lib/{build.processor}/libdriver_freertos.a" "{runtime.platform.path}/tools/lib/{build.processor}/libdriver_sys.a" -Wl,--no-whole-archive
 
 # Compile patterns
 # ----------------
@@ -122,7 +121,7 @@ recipe.S.o.pattern="{compiler.path}{compiler.S.cmd}" {compiler.S.flags} -DF_CPU=
 recipe.ar.pattern="{compiler.path}{compiler.ar.cmd}" {compiler.ar.flags} {compiler.ar.extra_flags} "{archive_file_path}" "{object_file}"
 
 ## Combine gc-sections, archives, and objects
-recipe.c.combine.pattern="{compiler.path}{compiler.c.elf.cmd}"  "-L{build.path}" {compiler.c.elf.flags} {compiler.c.elf.extra_flags} "-T{build.variant.path}/starup/{build.ldscript}" "-Wl,-Map,{build.path}/{build.project_name}.map" {compiler.ldflags} -o "{build.path}/{build.project_name}.elf" {object_files} -Wl,--start-group {compiler.arm.cmsis.ldflags} "-L{build.variant.path}" -lm "{build.path}/{archive_file}" {compiler.sdk.ldflags} -Wl,--end-group
+recipe.c.combine.pattern="{compiler.path}{compiler.c.elf.cmd}"  "-L{build.path}" {compiler.c.elf.flags} {compiler.c.elf.extra_flags} "-T{build.variant.path}/ld/{build.ldscript}" "-Wl,-Map,{build.path}/{build.project_name}.map" {compiler.ldflags} -o "{build.path}/{build.project_name}.elf" {object_files} -Wl,--start-group {compiler.arm.cmsis.ldflags} "-L{build.variant.path}" -lm "{build.path}/{archive_file}" {compiler.sdk.ldflags} -Wl,--end-group
 
 ## Create output (bin file)
 recipe.objcopy.bin.pattern="{compiler.path}{compiler.elf2hex.cmd}" {compiler.elf2hex.flags} {compiler.elf2hex.extra_flags} "{build.path}/{build.project_name}.elf" "{build.path}/{build.project_name}.bin"
