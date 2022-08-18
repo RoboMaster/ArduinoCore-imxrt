@@ -15,15 +15,38 @@
 #include "fsl_pwm.h"
 #include "fsl_xbara.h"
 
+static volatile uint32_t _ulTickCount = 0;
+
 unsigned long millis(void)
 {
     return xTaskGetTickCount();
 }
 
-// reserved
 unsigned long micros(void)
 {
-    return 0;
+    uint32_t ticks, ticks2;
+    uint32_t pend, pend2;
+    uint32_t count, count2;
+
+    _ulTickCount = millis();
+
+    ticks2 = SysTick->VAL;
+    pend2 = !!(SCB->ICSR & SCB_ICSR_PENDSTSET_Msk);
+    count2 = _ulTickCount;
+
+    do
+    {
+        ticks = ticks2;
+        pend = pend2;
+        count = count2;
+        ticks2 = SysTick->VAL;
+        pend2 = !!(SCB->ICSR & SCB_ICSR_PENDSTSET_Msk);
+        count2 = _ulTickCount;
+    } while ((pend != pend2) || (count != count2) || (ticks < ticks2));
+
+    return ((count + pend) * 1000) + (((SysTick->LOAD - ticks) * (1048576 / (SystemCoreClock / 1000000))) >> 20);
+    // this is an optimization to turn a runtime division into two compile-time divisions and
+    // a runtime multiplication and shift, saving a few cycles
 }
 
 void delay(uint32_t ms)
@@ -32,9 +55,23 @@ void delay(uint32_t ms)
     vTaskDelay(ms / portTICK_PERIOD_MS);
 }
 
-// reserved
+// 微妙级延时 阻塞线程 理论上其取值不能高于一个osTick
 void delayMicroseconds(unsigned int us)
 {
+    if (us == 0)
+        return;
+
+    uint32_t start = micros();
+
+    while (us > 0)
+    {
+        yield();
+        while (us > 0 && (micros() - start) >= 1)
+        {
+            us--;
+            start += 1;
+        }
+    }
 }
 
 void adc_init()
@@ -84,6 +121,7 @@ void init(void)
 
     PRINTF("DebugConsole Start !!!!\n");
 
+    /* ADC first init */
     adc_init();
 
     /* Init usb cdc. */
