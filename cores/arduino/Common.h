@@ -106,6 +106,11 @@ void pinMode(pin_size_t pinNumber, PinMode pinMode);
 void digitalWrite(pin_size_t pinNumber, uint8_t status);
 PinStatus digitalRead(pin_size_t pinNumber);
 
+void analogReadResolution(int res);
+uint32_t analogRead(uint32_t ulPin);
+void analogWriteResolution(int res);
+void analogWrite(uint32_t ulPin, uint32_t ulValue);
+void analogOutputInit(void);
 
 unsigned long millis(void);
 unsigned long micros(void);

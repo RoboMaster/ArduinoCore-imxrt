@@ -24,7 +24,6 @@
  * THE SOFTWARE.
  */
 
-#include "wiring_analog.h"
 #include "Arduino.h"
 #include "fsl_adc.h"
 #include "fsl_pwm.h"

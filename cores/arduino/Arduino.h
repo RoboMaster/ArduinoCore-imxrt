@@ -33,7 +33,6 @@
 // Misc Arduino core functions
 #include "Common.h"
 #include "WVariant.h"
-#include "wiring_analog.h"
 #include "pins_arduino.h"
 
 #ifdef __cplusplus
