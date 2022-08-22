@@ -27,7 +27,7 @@ compiler.cores.include=-I{compiler.cores.path} -I{compiler.cores.path}/imxrt/usb
 compiler.system.CMSIS.include=-I{build.system.path}/CMSIS
 compiler.system.component.include=-I{build.system.path}/component/lists -I{build.system.path}/component/osa -I{build.system.path}/component/serial_manager -I{build.system.path}/component/uart
 compiler.system.devices.include=-I{build.system.path}/devices/MIMXRT1064 -I{build.system.path}/devices/MIMXRT1064/drivers -I{build.system.path}/devices/MIMXRT1064/xip
-compiler.system.middleware.include=-I{build.system.path}/middleware/usb/device/class -I{build.system.path}/middleware/usb/device/class/cdc -I{build.system.path}/middleware/usb/device/include -I{build.system.path}/middleware/usb/device/source -I{build.system.path}/middleware/usb/device/source/ehci -I{build.system.path}/middleware/usb/include -I{build.system.path}/middleware/usb/phy
+compiler.system.middleware.include=-I{build.system.path}/middleware/usb/device/class -I{build.system.path}/middleware/usb/device/class/cdc -I{build.system.path}/middleware/usb/device/class/video -I{build.system.path}/middleware/usb/device/include -I{build.system.path}/middleware/usb/device/source -I{build.system.path}/middleware/usb/device/source/ehci -I{build.system.path}/middleware/usb/include -I{build.system.path}/middleware/usb/phy
 compiler.system.rtos.include=-I{build.system.path}/rtos/freertos/include -I{build.system.path}/rtos/freertos/portable/GCC/ARM_CM4F
 # 综合本部分
 compiler.system.include={compiler.system.CMSIS.include} {compiler.system.component.include} {compiler.system.devices.include} {compiler.system.middleware.include} {compiler.system.rtos.include}
@@ -35,8 +35,11 @@ compiler.system.include={compiler.system.CMSIS.include} {compiler.system.compone
 # ### variants 文件夹
 compiler.variant.include=-I{build.variant.path} -I{build.variant.path}/board
 
+# ### 新增的用户文件
+compiler.user.include=-I{build.variant.path}/drivers -I{build.variant.path}/source -I{build.variant.path}/source/user_app -I{build.variant.path}/source/user_driver -I{build.variant.path}/source/user_libs -I{build.variant.path}/source/user_libs/crc -I{build.variant.path}/source/user_libs/ext_protocol -I{build.variant.path}/source/user_libs/log -I{build.variant.path}/source/user_libs/open_protocol -I{build.variant.path}/source/user_libs/open_protocol/crc -I{build.variant.path}/source/user_middleware/cmsis_os -I{build.variant.path}/source/user_usb 
+
 # ################## 综合以上所有
-compiler.preproc.include={compiler.cores.include} {compiler.system.include} {compiler.variant.include}
+compiler.preproc.include={compiler.cores.include} {compiler.system.include} {compiler.variant.include} {compiler.user.include} 
 
 
 # ---------------------------------------------------------------

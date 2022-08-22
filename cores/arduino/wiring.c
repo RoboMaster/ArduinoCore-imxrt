@@ -2,10 +2,15 @@
 
 #include "clock_config.h"
 #include "pin_mux.h"
-#include "virtual_com.h"
+// #include "virtual_com.h"
 
 #include "board.h"
 #include "fsl_adc.h"
+
+#include "user_main.h"
+
+#include "FreeRTOS.h"
+#include "task.h"
 
 void adc_init()
 {
@@ -45,20 +50,22 @@ void adc_init()
 void init(void)
 {
     /* Init board hardware. */
-    BOARD_ConfigMPU();
-    BOARD_InitBootPins();
-    BOARD_InitBootClocks();
+    // BOARD_ConfigMPU();
+    // BOARD_InitBootPins();
+    // BOARD_InitBootClocks();
 
     /* Debug Uart1 */
-    BOARD_InitDebugConsole();
+    // BOARD_InitDebugConsole();
 
-    PRINTF("DebugConsole Start !!!!\n");
+    // PRINTF("DebugConsole Start !!!!\n");
 
     /* ADC first init */
-    adc_init();
+    // adc_init();
 
     /* Init usb cdc. */
     // vcom_cdc_init();
+
+    internal_fun_start();
 }
 
 /*!

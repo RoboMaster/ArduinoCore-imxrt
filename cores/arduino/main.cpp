@@ -3,10 +3,10 @@
 #include "Arduino.h"
 
 #include "FreeRTOS.h"
-#include "task.h"
 #include "queue.h"
-#include "timers.h"
 #include "semphr.h"
+#include "task.h"
+#include "timers.h"
 
 #define ARDUINO_LOOP_TASK_PRIORITY (tskIDLE_PRIORITY + 1)
 
@@ -24,7 +24,7 @@ bool loopTaskWDTEnabled;
 
 __attribute__((weak)) size_t getArduinoLoopTaskStackSize(void)
 {
-  return ARDUINO_LOOP_STACK_SIZE;
+    return ARDUINO_LOOP_STACK_SIZE;
 }
 
 void __attribute__((weak)) setup()
@@ -37,37 +37,37 @@ void __attribute__((weak)) loop()
 
 void loopTask(void *pvParameters)
 {
-  setup();
+    setup();
 
-  for (;;)
-  {
-    // #if CONFIG_FREERTOS_UNICORE
-    //     yieldIfNecessary();
-    // #endif
-    //     if (loopTaskWDTEnabled)
-    //     {
-    //       esp_task_wdt_reset();
-    //     }
+    for (;;)
+    {
+        // #if CONFIG_FREERTOS_UNICORE
+        //     yieldIfNecessary();
+        // #endif
+        //     if (loopTaskWDTEnabled)
+        //     {
+        //       esp_task_wdt_reset();
+        //     }
 
-    loop();
+        loop();
 
-    //   if (serialEventRun)
-    //     serialEventRun();
-    // }
-  }
+        //   if (serialEventRun)
+        //     serialEventRun();
+        // }
+    }
 }
 
 int __attribute__((weak)) main()
 {
-  // 执行板子初始化动作
-  init();
+    // 执行板子初始化动作
+    init();
 
-  xTaskCreate(loopTask, "loopTask", getArduinoLoopTaskStackSize(), NULL, ARDUINO_LOOP_TASK_PRIORITY, &loopTaskHandle);
+    xTaskCreate(loopTask, "loopTask", getArduinoLoopTaskStackSize(), NULL, ARDUINO_LOOP_TASK_PRIORITY, &loopTaskHandle);
 
-  vTaskStartScheduler();
+    vTaskStartScheduler();
 
-  for (;;)
-    ;
+    // for (;;)
+        // ;
 }
 
 // #endif

@@ -22,27 +22,17 @@
  * @{
  */
 
-/* @TEST_ANCHOR */
-
 /*! @brief KHCI instance count */
-#ifndef USB_DEVICE_CONFIG_KHCI
 #define USB_DEVICE_CONFIG_KHCI (0U)
-#endif
 
 /*! @brief EHCI instance count */
-#ifndef USB_DEVICE_CONFIG_EHCI
 #define USB_DEVICE_CONFIG_EHCI (1U)
-#endif
 
 /*! @brief LPC USB IP3511 FS instance count */
-#ifndef USB_DEVICE_CONFIG_LPCIP3511FS
 #define USB_DEVICE_CONFIG_LPCIP3511FS (0U)
-#endif
 
 /*! @brief LPC USB IP3511 HS instance count */
-#ifndef USB_DEVICE_CONFIG_LPCIP3511HS
 #define USB_DEVICE_CONFIG_LPCIP3511HS (0U)
-#endif
 
 /*! @brief Device instance count, the sum of KHCI and EHCI instance counts*/
 #define USB_DEVICE_CONFIG_NUM \
@@ -71,7 +61,7 @@
 #define USB_DEVICE_CONFIG_PHDC (0U)
 
 /*! @brief Video instance count */
-#define USB_DEVICE_CONFIG_VIDEO (0U)
+#define USB_DEVICE_CONFIG_VIDEO (1U)
 
 /*! @brief CCID instance count */
 #define USB_DEVICE_CONFIG_CCID (0U)
@@ -83,16 +73,12 @@
 #define USB_DEVICE_CONFIG_DFU (0U)
 
 /* @} */
-/*! @brief Whether disable the endpoint of communitcation interface class. 1U disable, 0U not disable.
-    Note that this feature only can work on windows 10 currently.
-*/
-#define USB_DEVICE_CONFIG_CDC_CIC_EP_DISABLE (0U)
 
 /*! @brief Whether device is self power. 1U supported, 0U not supported */
 #define USB_DEVICE_CONFIG_SELF_POWER (1U)
 
 /*! @brief How many endpoints are supported in the stack. */
-#define USB_DEVICE_CONFIG_ENDPOINTS (4U)
+#define USB_DEVICE_CONFIG_ENDPOINTS (5U)
 
 /*! @brief Whether the device task is enabled. */
 #define USB_DEVICE_CONFIG_USE_TASK (0U)
@@ -108,9 +94,7 @@
 
 /*! @brief Whether device compliance test is enabled. If the macro is enabled,
     the test mode and CV test macroes will be set.*/
-#ifndef USB_DEVICE_CONFIG_COMPLIANCE_TEST
 #define USB_DEVICE_CONFIG_COMPLIANCE_TEST (0U)
-#endif
 
 #if ((defined(USB_DEVICE_CONFIG_COMPLIANCE_TEST)) && (USB_DEVICE_CONFIG_COMPLIANCE_TEST > 0U))
 
@@ -167,9 +151,6 @@
 
 /*! @brief Whether handle the USB bus error. */
 #define USB_DEVICE_CONFIG_ERROR_HANDLING (0U)
-
-/*! @brief Whether checking return value is enabled. */
-#define USB_DEVICE_CONFIG_RETURN_VALUE_CHECK (0U)
 
 /* @} */
 
