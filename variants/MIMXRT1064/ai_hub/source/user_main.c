@@ -101,14 +101,15 @@ static void task_start(void const *argument)
     uart_init(LPUART3, 1500000, 512, 512);
     uart_init(LPUART1, 921600, 512, 512);
 
-    // /* 初始化Log模块 */
-    // log_init(osKernelSysTick);
-    // g_log_sys = log_module_add("sys");
-    // log_output_object_add("USART0", debug_uart_output);
-    // log_set_output_pri(LOG_INFO);
+    /* 初始化Log模块 */
+    log_init(osKernelSysTick);
+    g_log_sys = log_module_add("sys");
+    log_output_object_add("USART0", debug_uart_output);
+    log_set_output_pri(LOG_INFO);
 
-    // start_print();
-    // log_printf(g_log_sys, 0, LOG_INFO, "Logger initial complete.");
+    start_print();
+    log_printf(g_log_sys, 0, LOG_INFO, "Logger initial complete.");
+    
     // if(board_wdog_is_timeout_reset())
     // {
     //     log_printf(g_log_sys, 0, LOG_INFO, "Last system Reset by WDOG timeout.");
@@ -130,9 +131,9 @@ static void task_start(void const *argument)
 
     g_sn_crc16 = board_sn_crc16();
 
-    // /* 初始化LedKeyTask*/
-    // osThreadDef(KeyTask, task_key, osPriorityNormal, 0, TASK_LED_STACK_SIZE);
-    // task_key_handle = osThreadCreate(osThread(KeyTask), NULL);
+    /* 初始化LedKeyTask*/
+    osThreadDef(KeyTask, task_key, osPriorityNormal, 0, TASK_LED_STACK_SIZE);
+    task_key_handle = osThreadCreate(osThread(KeyTask), NULL);
 
     /* 初始化UsbVcpTask*/
     osThreadDef(UsbVcpTask, task_cdc_uvc, osPriorityNormal, 0, TASK_USB_VCP_STACK_SIZE);
@@ -197,8 +198,7 @@ static void task_key(void const *argument)
             if (board_key_read())
             {
                 osDelay(50);
-                while (board_key_read())
-                    ;
+                while (board_key_read());
                 osDelay(50);
 
                 // //发送开启关闭视频流指令

@@ -311,9 +311,6 @@ edma_handle_t LPUART1_TX_Handle;
 lpuart_edma_handle_t LPUART1_LPUART_eDMA_Handle;
 
 static void LPUART1_init(void) {
-
-  // LPUART_Init(LPUART1_PERIPHERAL, &LPUART1_config, BOARD_DebugConsoleSrcFreq());
-
   LPUART_Init(LPUART1_PERIPHERAL, &LPUART1_config, LPUART1_CLOCK_SOURCE);
   /* Set the source kDmaRequestMuxLPUART1Rx request in the DMAMUX */
   DMAMUX_SetSource(LPUART1_RX_DMAMUX_BASEADDR, LPUART1_RX_DMA_CHANNEL, LPUART1_RX_DMA_REQUEST);

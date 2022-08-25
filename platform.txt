@@ -25,7 +25,7 @@ compiler.cores.include=-I{compiler.cores.path} -I{compiler.cores.path}/imxrt/usb
 
 # ### system 文件夹
 compiler.system.CMSIS.include=-I{build.system.path}/CMSIS
-compiler.system.component.include=-I{build.system.path}/component/lists -I{build.system.path}/component/osa -I{build.system.path}/component/serial_manager -I{build.system.path}/component/uart
+compiler.system.component.include=-I{build.system.path}/component/lists -I{build.system.path}/component/osa -I{build.system.path}/component/serial_manager -I{build.system.path}/component/silicon_id -I{build.system.path}/component/uart
 compiler.system.devices.include=-I{build.system.path}/devices/MIMXRT1064 -I{build.system.path}/devices/MIMXRT1064/drivers -I{build.system.path}/devices/MIMXRT1064/xip
 compiler.system.middleware.include=-I{build.system.path}/middleware/usb/device/class -I{build.system.path}/middleware/usb/device/class/cdc -I{build.system.path}/middleware/usb/device/class/video -I{build.system.path}/middleware/usb/device/include -I{build.system.path}/middleware/usb/device/source -I{build.system.path}/middleware/usb/device/source/ehci -I{build.system.path}/middleware/usb/include -I{build.system.path}/middleware/usb/phy
 compiler.system.rtos.include=-I{build.system.path}/rtos/freertos/include -I{build.system.path}/rtos/freertos/portable/GCC/ARM_CM4F
@@ -106,7 +106,9 @@ compiler.arm.cmsis.ldflags="-L{build.system.path}/CMSIS/Lib/GCC/" -larm_cortexM7
 
 # compiler.sdk.ldflags=-Wl,--whole-archive  "{runtime.platform.path}/tools/lib/{build.processor}/libfsl_usb_drivers.a"  "{runtime.platform.path}/tools/lib/{build.processor}/libfsl_bsp.a" -Wl,--no-whole-archive
 # 先取消使用库，看看缺少什么东西，先使用编译来做
-compiler.sdk.ldflags=-Wl,--whole-archive  "{runtime.platform.path}/tools/lib/{build.processor}/libdriver_fsl.a"  "{runtime.platform.path}/tools/lib/{build.processor}/libdriver_usb.a" "{runtime.platform.path}/tools/lib/{build.processor}/libdriver_component.a" "{runtime.platform.path}/tools/lib/{build.processor}/libdriver_freertos.a" "{runtime.platform.path}/tools/lib/{build.processor}/libdriver_sys.a" -Wl,--no-whole-archive
+# compiler.sdk.ldflags=-Wl,--whole-archive  "{runtime.platform.path}/tools/lib/{build.processor}/libdriver_fsl.a"  "{runtime.platform.path}/tools/lib/{build.processor}/libdriver_usb.a" "{runtime.platform.path}/tools/lib/{build.processor}/libdriver_component.a" "{runtime.platform.path}/tools/lib/{build.processor}/libdriver_freertos.a" "{runtime.platform.path}/tools/lib/{build.processor}/libdriver_sys.a" -Wl,--no-whole-archive
+# compiler.sdk.ldflags=-Wl,--whole-archive  "{runtime.platform.path}/tools/lib/{build.processor}/libdriver_fsl.a"  "{runtime.platform.path}/tools/lib/{build.processor}/libdriver_usb.a" "{runtime.platform.path}/tools/lib/{build.processor}/libdriver_component.a" -Wl,--no-whole-archive
+compiler.sdk.ldflags=
 
 # Compile patterns
 # ----------------

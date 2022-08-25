@@ -42,7 +42,6 @@ static gpio_int_f gpio_spi3_cs0_int;
  */
 int user_board_int(void)
 {
-
     BOARD_ConfigMPU();
     BOARD_InitBootPins();
     BOARD_InitBootClocks();

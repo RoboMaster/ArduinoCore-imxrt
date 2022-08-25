@@ -1197,12 +1197,12 @@ void LPUART1_RX_IRQHandler(void)
     SDK_ISR_EXIT_BARRIER;
 }
 #else  /* FSL_FEATURE_LPUART_HAS_SEPARATE_RX_TX_IRQ */
-void LPUART1_IRQHandler(void);
-void LPUART1_IRQHandler(void)
-{
-    HAL_UartInterruptHandle(1);
-    SDK_ISR_EXIT_BARRIER;
-}
+// void LPUART1_IRQHandler(void);
+// void LPUART1_IRQHandler(void)
+// {
+//     HAL_UartInterruptHandle(1);
+//     SDK_ISR_EXIT_BARRIER;
+// }
 #endif /* FSL_FEATURE_LPUART_HAS_SEPARATE_RX_TX_IRQ */
 #endif /* FSL_FEATURE_LPUART_HAS_SHARED_IRQ0_IRQ1 */
 #endif /* LPUART1 */
@@ -1242,12 +1242,12 @@ void LPUART3_RX_IRQHandler(void)
     SDK_ISR_EXIT_BARRIER;
 }
 #else
-void LPUART3_IRQHandler(void);
-void LPUART3_IRQHandler(void)
-{
-    HAL_UartInterruptHandle(3);
-    SDK_ISR_EXIT_BARRIER;
-}
+// void LPUART3_IRQHandler(void);
+// void LPUART3_IRQHandler(void)
+// {
+//     HAL_UartInterruptHandle(3);
+//     SDK_ISR_EXIT_BARRIER;
+// }
 #endif
 #endif /* LPUART3 */
 

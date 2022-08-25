@@ -52,7 +52,10 @@ MEMORY
   m_text                (RX)  : ORIGIN = 0x70102400, LENGTH = 0x003FDC00
   m_qacode              (RX)  : ORIGIN = 0x00000000, LENGTH = 0x00020000
   m_data                (RW)  : ORIGIN = 0x20000000, LENGTH = 0x00020000
-  m_data2               (RW)  : ORIGIN = 0x20200000, LENGTH = 0x000C0000
+  /* OCRAM Not Vary Fast */
+  /* 0x20200080 - 0x20200080 reserved for bootloader and app comm*/
+  m_data2               (RW)  : ORIGIN = 0x20200080, LENGTH = (0x00010000 - 0x80) /* noCacheable */
+  m_data3               (RW)  : ORIGIN = 0x20210000, LENGTH = 0x000B0000          /* large var use */
 }
 
 /* Define output sections */
@@ -252,7 +255,7 @@ SECTIONS
     . = ALIGN(4);
     __bss_end__ = .;
     __END_BSS = .;
-  } > m_data2
+  } > m_data
 
   .heap :
   {
@@ -270,6 +273,17 @@ SECTIONS
     . = ALIGN(8);
     . += STACK_SIZE;
   } > m_data
+
+  .m_data3 (NOLOAD) :
+  {
+    . = ALIGN(4);
+    __START_M_DATA3 = .;
+    *(.m_data3)
+    *(.m_data3.*)
+    . = ALIGN(4);
+    . = ALIGN (. != 0 ? 4 : 1) ; /* avoid empty segment */
+    __END_M_DATA3 = .;
+  } > m_data3
 
   /* Initializes stack on the end of block */
   __StackTop   = ORIGIN(m_data) + LENGTH(m_data);

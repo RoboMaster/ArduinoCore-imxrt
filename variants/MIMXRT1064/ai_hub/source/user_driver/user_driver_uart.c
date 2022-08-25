@@ -64,8 +64,8 @@ static void uart1_init(uint32_t baudrate)
                          sizeof(uint8_t), usart1_dma_rx_buff, sizeof(uint8_t), sizeof(uint8_t), USART1_DMA_RX_BUFFER_SIZE / 2,
                          kEDMA_PeripheralToMemory);
     EDMA_PrepareTransfer(&xferConfig_1, (void *)(uint32_t *)LPUART_GetDataRegisterAddress(LPUART1),
-                             sizeof(uint8_t), usart1_dma_rx_buff + USART1_DMA_RX_BUFFER_SIZE / 2, sizeof(uint8_t), sizeof(uint8_t), USART1_DMA_RX_BUFFER_SIZE / 2,
-                             kEDMA_PeripheralToMemory);
+                         sizeof(uint8_t), usart1_dma_rx_buff + USART1_DMA_RX_BUFFER_SIZE / 2, sizeof(uint8_t), sizeof(uint8_t), USART1_DMA_RX_BUFFER_SIZE / 2,
+                         kEDMA_PeripheralToMemory);
 
     /* Submit transfer. */
     LPUART1_RX_Handle.tcdUsed = 2U;
@@ -90,13 +90,11 @@ static void uart1_init(uint32_t baudrate)
     /* Start EDMA transfer. */
     EDMA_StartTransfer(&LPUART1_RX_Handle);
 
-
     /* Enable LPUART RX EDMA. */
     LPUART_EnableRxDMA(LPUART1, true);
 
     LPUART_EnableInterrupts(LPUART1, kLPUART_IdleLineInterruptEnable);
     EnableIRQ(LPUART1_IRQn);
-
 }
 
 /**

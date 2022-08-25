@@ -30,7 +30,6 @@
 #include "log.h"
 
 #include "string.h"
-//#include "log.h"
 
 /* Private typedef -----------------------------------------------------------*/
 typedef struct
@@ -110,8 +109,8 @@ static void set_ai_core_uart_speed(uint32_t uart_speed);
  */
 void task_protocol(void const * argument)
 {
-    // g_log_proto = log_module_add("proto");
-    // log_printf(g_log_proto, 0, LOG_INFO, "Start task: protocol.");
+    g_log_proto = log_module_add("proto");
+    log_printf(g_log_proto, 0, LOG_INFO, "Start task: protocol.");
 
     uint8_t last_usb_attach_status = 0;
     open_proto_init(g_sys_param.id | 0x0200);
