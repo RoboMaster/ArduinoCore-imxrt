@@ -26,7 +26,7 @@ static void spi3_rx_dma_finish_irq(LPSPI_Type *base, lpspi_slave_edma_handle_t *
 /* Exported functions --------------------------------------------------------*/
 
 /**
- * @brief SPI从机接受初始化
+ * @brief SPI 从机接受初始化
  *
  */
 void spi3_slave_init(void)
@@ -36,7 +36,7 @@ void spi3_slave_init(void)
 }
 
 /**
- * @brief SPI2从机开始接受
+ * @brief SPI 从机开始接受
  *
  * @param buff
  * @param size
@@ -61,7 +61,7 @@ int spi3_slave_start_receive(void* buff, uint32_t size)
 
 
 /**
- * @brief SPI2从机取消接收
+ * @brief SPI 从机取消接收
  *
  * @param buff
  * @param size
@@ -79,7 +79,7 @@ int spi3_slave_cancel_receive(void)
 }
 
 /**
- * @brief SPI3是否处于接收中
+ * @brief SPI 是否处于接收中
  *
  * @return int
  */
@@ -100,7 +100,7 @@ void spi3_slave_receive_finish_handle_reg(spi_rx_handler_t handle)
 
 
 /**
- * @brief SPI2 DMA接受完成中断
+ * @brief SPI DMA接受完成中断
  *
  */
 static void spi3_rx_dma_finish_irq(LPSPI_Type *base, lpspi_slave_edma_handle_t *handle, status_t status, void *userData)

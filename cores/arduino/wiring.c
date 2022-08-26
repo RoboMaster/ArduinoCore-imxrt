@@ -1,14 +1,9 @@
 #include "Arduino.h"
-
-#include "clock_config.h"
-#include "pin_mux.h"
-// #include "virtual_com.h"
-
-#include "board.h"
+// #include "clock_config.h"
+// #include "pin_mux.h"
+// #include "board.h"
 #include "fsl_adc.h"
-
 #include "user_main.h"
-
 #include "FreeRTOS.h"
 #include "task.h"
 
@@ -65,7 +60,7 @@ void init(void)
     /* Init usb cdc. */
     // vcom_cdc_init();
 
-    internal_fun_start();
+    vendor_start();
 }
 
 /*!

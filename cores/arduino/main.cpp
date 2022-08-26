@@ -1,5 +1,3 @@
-// #ifdef ARDUINO_MAIN
-
 #include "Arduino.h"
 
 #include "FreeRTOS.h"
@@ -59,15 +57,9 @@ void loopTask(void *pvParameters)
 
 int __attribute__((weak)) main()
 {
-    // 执行板子初始化动作
     init();
 
     xTaskCreate(loopTask, "loopTask", getArduinoLoopTaskStackSize(), NULL, ARDUINO_LOOP_TASK_PRIORITY, &loopTaskHandle);
 
     vTaskStartScheduler();
-
-    // for (;;)
-        // ;
 }
-
-// #endif

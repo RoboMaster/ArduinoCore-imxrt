@@ -62,30 +62,17 @@ static void start_print(void);
 
 /* Exported functions --------------------------------------------------------*/
 
-// int main(void)
-// {
-//     user_board_int();
-//     board_wdog_init(2000);
-
-//     /* 初始化StartTask */
-//     osThreadDef(TaskStart, task_start, osPriorityNormal, 0, TASK_START_STACK_SIZE);
-//     task_start_handle = osThreadCreate(osThread(TaskStart), NULL);
-
-//     /* 启动RTOS内核 */
-//     osKernelStart();
-// }
-
-int internal_fun_start(void)
+int vendor_start(void)
 {
     user_board_int();
+    
     // board_wdog_init(2000);
 
     /* 初始化StartTask */
     osThreadDef(TaskStart, task_start, osPriorityNormal, 0, TASK_START_STACK_SIZE);
     task_start_handle = osThreadCreate(osThread(TaskStart), NULL);
 
-    // /* 启动RTOS内核 */
-    // osKernelStart();
+    /* 启动RTOS内核 在main.cpp中 */
 }
 
 /**

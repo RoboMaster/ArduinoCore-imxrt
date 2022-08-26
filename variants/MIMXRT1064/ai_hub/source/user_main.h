@@ -18,6 +18,6 @@
 
 #define UNUSED(X) (void)X
 
-int internal_fun_start(void);
+int vendor_start(void);
 
 #endif
