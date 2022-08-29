@@ -1,10 +1,11 @@
 cmake_minimum_required(VERSION 3.0)
+
 include(${CMAKE_CURRENT_LIST_DIR}/macros.cmake)
 
 global_set(CMAKE_C_COMPILER_WORKS 1)
 global_set(CMAKE_CXX_COMPILER_WORKS 1)
-
 global_set(CMAKE_SYSTEM_NAME "Generic")
+
 if (NOT CMAKE_BUILD_TYPE)
     global_set(CMAKE_BUILD_TYPE Debug)
 else ()
@@ -18,13 +19,13 @@ IF (CMAKE_BUILD_TYPE STREQUAL Debug)
     add_definitions(-DDEBUG=1)
 ENDIF ()
 
-
 if (NOT SDK_ROOT)
     get_filename_component(_SDK_ROOT ${CMAKE_CURRENT_LIST_DIR} DIRECTORY)
     global_set(SDK_ROOT ${_SDK_ROOT})
 endif ()
 
 include(${CMAKE_CURRENT_LIST_DIR}/arm-none-toolchain.cmake)
+
 include(${CMAKE_CURRENT_LIST_DIR}/compile-flags.cmake)
 
 include(${CMAKE_CURRENT_LIST_DIR}/fix-9985.cmake)
