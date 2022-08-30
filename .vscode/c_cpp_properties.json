@@ -1,0 +1,30 @@
+{
+    "configurations": [
+        {
+            "name": "Win32",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "${workspaceFolder}/0.0.1\\**"
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE",
+                "SDK_DEBUGCONSOLE=1",
+                "XIP_EXTERNAL_FLASH=1",
+                "XIP_BOOT_HEADER_ENABLE=1",
+                "SERIAL_PORT_TYPE_UART=1",
+                "__USE_CMSIS",
+                "__MCUXPRESSO",
+                "MCUXPRESSO_SDK",
+                "SDK_OS_FREE_RTOS"
+            ],
+            "compilerPath": "",
+            "cStandard": "gnu11",
+            "cppStandard": "gnu++11",
+            "intelliSenseMode": "windows-gcc-x86"
+        }
+    ],
+    "version": 4
+}
+

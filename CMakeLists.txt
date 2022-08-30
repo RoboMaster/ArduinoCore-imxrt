@@ -62,7 +62,7 @@ SET_PROPERTY(SOURCE ${ASSEMBLY_FILES} PROPERTY LANGUAGE C)
 SET_SOURCE_FILES_PROPERTIES(${ASSEMBLY_FILES} PROPERTIES COMPILE_FLAGS "-x assembler-with-cpp")
 
 # 编译SDK生成静态链接库
-include(${CMAKE_CURRENT_SOURCE_DIR}/sdk.cmake)
+include(${CMAKE_CURRENT_SOURCE_DIR}/tools/cmake/sdk.cmake)
 
 # 编译文件
 include(${CMAKE_CURRENT_SOURCE_DIR}/tools/cmake/executable.cmake)

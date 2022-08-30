@@ -1,0 +1,54 @@
+# 语言: None, Cpp, Java, JavaScript, ObjC, Proto, TableGen, TextProto
+Language: Cpp 
+
+# LLVM A style complying with the LLVM coding standards
+# Google A style complying with Google’s C++ style guide
+# Chromium A style complying with Chromium’s style guide
+# Mozilla A style complying with Mozilla’s style guide
+# WebKit A style complying with WebKit’s style guide
+# Microsoft A style complying with Microsoft’s style guide
+# GNU A style complying with the GNU coding standards
+BasedOnStyle: Microsoft
+
+# 连续声明时，对齐所有的 宏定义
+AlignConsecutiveMacros: true
+
+# 短的循环保持在同一行
+AllowShortLoopsOnASingleLine: true
+
+# 每行字符的限制，0表示没有限制
+# ColumnLimit: 132
+ColumnLimit: 162
+
+# 大括号换行设置，BreakBeforeBraces设置为Custom时有效
+BraceWrapping:
+  # class定义后面
+  AfterClass: true                      
+  # 控制语句后面
+  AfterControlStatement: true        
+  # enum定义后面
+  AfterEnum: true        
+  # 函数定义后面
+  AfterFunction: true       
+  # 命名空间定义后面
+  AfterNamespace: true        
+  # struct定义后面
+  AfterStruct: true       
+  # union定义后面
+  AfterUnion: true       
+  # extern之后
+  AfterExternBlock: false
+  # catch之前
+  BeforeCatch: true       
+  # else之前
+  BeforeElse: true        
+  # 缩进大括号
+  IndentBraces: false        
+  # 分离空函数
+  SplitEmptyFunction: true
+  # 分离空语句
+  SplitEmptyRecord: false
+  # 分离空命名空间
+  SplitEmptyNamespace: false
+
+BreakBeforeBraces: Custom

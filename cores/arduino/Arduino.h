@@ -40,7 +40,7 @@
 #include "HardwareI2C.h"
 #include "HardwareSerial.h"
 #include "Uart.h"
-#include "USBCDC.h"
+// #include "USBSerial.h"
 #include "Interrupts.h"
 #include "IPAddress.h"
 #include "Print.h"
