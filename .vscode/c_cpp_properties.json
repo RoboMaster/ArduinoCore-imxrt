@@ -4,7 +4,8 @@
             "name": "Win32",
             "includePath": [
                 "${workspaceFolder}/**",
-                "${workspaceFolder}/0.0.1\\**"
+                "${workspaceFolder}/tools/sdk/rtos/freertos/portable/GCC/ARM_CM4F",
+                "${workspaceFolder}/tools/sdk/devices/MIMXRT1064/**"
             ],
             "defines": [
                 "_DEBUG",
@@ -19,12 +20,11 @@
                 "MCUXPRESSO_SDK",
                 "SDK_OS_FREE_RTOS"
             ],
-            "compilerPath": "",
-            "cStandard": "gnu11",
+            "compilerPath": "E://GNUTools//gcc-arm-none-eabi//bin//arm-none-eabi-gcc.exe",
+            "cStandard": "gnu99",
             "cppStandard": "gnu++11",
-            "intelliSenseMode": "windows-gcc-x86"
+            "intelliSenseMode": "windows-gcc-arm"
         }
     ],
     "version": 4
 }
-

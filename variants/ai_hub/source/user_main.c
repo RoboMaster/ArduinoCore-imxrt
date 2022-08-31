@@ -72,7 +72,7 @@ int vendor_start(void)
     osThreadDef(TaskStart, task_start, osPriorityNormal, 0, TASK_START_STACK_SIZE);
     task_start_handle = osThreadCreate(osThread(TaskStart), NULL);
 
-    /* 启动RTOS内核 在main.cpp中 */
+    /* 在main.cpp中启动RTOS内核  */
 }
 
 /**

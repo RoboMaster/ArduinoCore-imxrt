@@ -1,3 +1,4 @@
+# https://clang.llvm.org/docs/ClangFormatStyleOptions.html
 # 语言: None, Cpp, Java, JavaScript, ObjC, Proto, TableGen, TextProto
 Language: Cpp 
 
@@ -13,8 +14,13 @@ BasedOnStyle: Microsoft
 # 连续声明时，对齐所有的 宏定义
 AlignConsecutiveMacros: true
 
+# 结构数组初始化时对其方式 Left Right None
+AlignArrayOfStructures: Left
+
 # 短的循环保持在同一行
 AllowShortLoopsOnASingleLine: true
+# 允许短的if语句保持在同一行 AllIfsAndElse WithoutElse
+AllowShortIfStatementsOnASingleLine: AllIfsAndElse
 
 # 每行字符的限制，0表示没有限制
 # ColumnLimit: 132

@@ -55,7 +55,7 @@ void pinMode(pin_size_t pinNumber, uint8_t pinMode)
     case INPUT:
         gpio_config.direction = kGPIO_DigitalInput;
         gpio_config.outputLogic = 0U;
-        _pinConfig = 0x90B0U;   // default pullup
+        _pinConfig = 0x90B0U; 
         break;
     case INPUT_PULLUP:
         gpio_config.direction = kGPIO_DigitalInput;

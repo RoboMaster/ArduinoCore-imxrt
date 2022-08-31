@@ -5,6 +5,7 @@
 #include "fsl_lpuart.h"
 #include "fsl_common.h"
 #include "fsl_gpio.h"
+#include "MIMXRT1064.h"
 
 #define USB_VID 0x2CA3U
 #define USB_PID 0x6001U

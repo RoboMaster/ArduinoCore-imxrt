@@ -36,12 +36,13 @@
 #include "pins_arduino.h"
 
 #ifdef __cplusplus
+#include "WInterrupts.h"
 #include "Client.h"
 #include "HardwareI2C.h"
 #include "HardwareSerial.h"
 #include "Uart.h"
 // #include "USBSerial.h"
-#include "Interrupts.h"
+// #include "Interrupts.h"
 #include "IPAddress.h"
 #include "Print.h"
 #include "Printable.h"
@@ -52,6 +53,7 @@
 #include "Udp.h"
 #include "USBAPI.h"
 #include "WCharacter.h"
+
 #endif
 
 #endif
