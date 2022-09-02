@@ -81,4 +81,15 @@ add_custom_command(
     COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/libsdk_devices.a ${CMAKE_CURRENT_SOURCE_DIR}/tools/lib/${SDK}/
     COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/libsdk_middleware.a ${CMAKE_CURRENT_SOURCE_DIR}/tools/lib/${SDK}/
     COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/libsdk_rtos.a ${CMAKE_CURRENT_SOURCE_DIR}/tools/lib/${SDK}/
+
+    COMMENT "Upload COM Port: ${COM}..."
+    COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tools/uploader/rmaut.exe -d -p "COM10" -f ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.bin
 )
+
+if (COM)
+add_custom_command(
+    TARGET ${PROJECT_NAME} POST_BUILD
+    COMMENT "Upload COM Port: ${COM}..."
+    COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tools/uploader/rmaut.exe -d -p "COM10" -f ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.bin
+)
+endif ()
