@@ -30,13 +30,13 @@ const PinDescription g_APinDescription[] = {
     },
     {
         //                               #3
-        .GROUP = GPIO6,
+        .GROUP = GPIO1,
         .PIN = 11U,
         .FUN_GPIO = {IOMUXC_GPIO_AD_B0_11_GPIO1_IO11},
     },
     {
         //                               #4
-        .GROUP = GPIO6,
+        .GROUP = GPIO1,
         .PIN = 2U,
         .FUN_GPIO = {IOMUXC_GPIO_AD_B0_02_GPIO1_IO02},
     },
@@ -63,7 +63,7 @@ const PinDescription g_APinDescription[] = {
     ///-------------------- UART3 --------------------
     {
         // UART3_TX                              #7
-        .GROUP = GPIO6,
+        .GROUP = GPIO1,
         .PIN = 22U,
         .ADC = ADC1,
         .adcChannel = 11,
@@ -72,7 +72,7 @@ const PinDescription g_APinDescription[] = {
     },
     {
         // UART3_RX                              #8
-        .GROUP = GPIO6,
+        .GROUP = GPIO1,
         .PIN = 23U,
         .ADC = ADC2,
         .adcChannel = 12,

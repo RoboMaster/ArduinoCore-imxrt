@@ -58,8 +58,8 @@ void TwoWire::begin(void)
     LPI2C_MasterInit(lpi2c, &lpi2c_config, i2cclk);
 
     // IO MUX
-    pinPeripheral(_uc_pinSDA, 1U, FUN_I2C, 0xF8B0U); // 启用内部上拉 0xF8B0U
-    pinPeripheral(_uc_pinSCL, 1U, FUN_I2C, 0xF8B0U);
+    pinPeripheral(_uc_pinSDA, 1U, FUN_I2C, 0xB8B0U); // 启用内部上拉 0xF8B0U 0xB8B0U
+    pinPeripheral(_uc_pinSCL, 1U, FUN_I2C, 0xB8B0U);
 }
 
 void TwoWire::begin(uint8_t address, bool enableGeneralCall)

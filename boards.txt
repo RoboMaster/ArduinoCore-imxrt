@@ -1,6 +1,7 @@
 # menu.flash=Flash
 menu.speed=CPU Speed
 menu.debug=Debug
+menu.module=Use AI Camera
 
 # RM Expansion Module
 # ------------------------------
@@ -37,6 +38,12 @@ rm_ai_hub.menu.debug.on=On
 rm_ai_hub.menu.debug.on.build.flags.debug=-g
 rm_ai_hub.menu.speed.600= 600 MHz (standard)
 rm_ai_hub.menu.speed.600.build.f_cpu=600000000L
+
+rm_ai_hub.menu.module.off=Off
+rm_ai_hub.menu.module.on=On
+rm_ai_hub.menu.module.on.build.flags.module=-DUSE_AICAMERA
+rm_ai_hub.menu.module.off.build.flags.module=
+
 # rm_ai_hub.menu.flash.QSPI=QSPI (default)
 # rm_ai_hub.menu.flash.QSPI.build.flags.flash=-DQSPI_FLASH
 # rm_ai_hub.menu.flash.Hyper=Hyper

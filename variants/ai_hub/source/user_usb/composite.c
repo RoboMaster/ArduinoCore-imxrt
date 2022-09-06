@@ -352,12 +352,12 @@ void USB_DeviceApplicationInit(void)
     if (kStatus_USB_Success !=
         USB_DeviceClassInit(CONTROLLER_ID, &g_UsbDeviceCompositeConfigList, &g_composite.deviceHandle))
     {
-        usb_echo("USB device composite demo init failed\r\n");
+        // usb_echo("USB device composite demo init failed\r\n");
         return;
     }
     else
     {
-        usb_echo("USB device composite demo\r\n");
+        // usb_echo("USB device composite demo\r\n");
         g_composite.cdcVcom.cdcAcmHandle = g_UsbDeviceCompositeConfigList.config[0].classHandle;
         g_composite.video.videoHandle    = g_UsbDeviceCompositeConfigList.config[1].classHandle;
 

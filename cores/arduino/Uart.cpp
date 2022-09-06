@@ -160,7 +160,7 @@ size_t UART::write(uint8_t c) { LPUART_WriteBlocking(_lpuart_num, &c, 1); return
 #if UART_INTERFACES_COUNT > 0
 UART Serial(UART1_NUM, UART1_IRQn, PIN_UART1_RX, PIN_UART1_TX);
 extern "C"{  // IRQHandler must be compiled in C
-void UART1_HANDLER(void)
+__attribute__((weak)) void UART1_HANDLER(void)
 {
     Serial.LPUART_IRQHandel();
 }

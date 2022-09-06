@@ -45,7 +45,7 @@ int user_board_int(void)
     BOARD_ConfigMPU();
     BOARD_InitBootPins();
     BOARD_InitBootClocks();
-    // BOARD_InitDebugConsole();
+
     BOARD_InitPeripherals();
 
     OCOTP_Init(OCOTP, CLOCK_GetFreq(kCLOCK_IpgClk));
@@ -382,10 +382,26 @@ void board_gpio_spi3_cs0_int_enable(uint8_t enable)
     }
 }
 
+#ifdef USE_AICAMERA
 /**
  * @brief GPIO1 16~31中断入口
  *
  */
+// 放在Winterrupt中，统一接口
+void Compatible_GPIO1_Combined_16_31_IRQHandler(void)
+{
+    if( GPIO_PortGetInterruptFlags(BOARD_INITPINS_SPI3_CS0_GPIO) & BOARD_INITPINS_SPI3_CS0_GPIO_PIN_MASK)
+    {
+        GPIO_PortClearInterruptFlags(BOARD_INITPINS_SPI3_CS0_GPIO, BOARD_INITPINS_SPI3_CS0_GPIO_PIN_MASK);
+        if(gpio_spi3_cs0_int)
+        {
+            gpio_spi3_cs0_int();
+        }
+    }
+}
+#endif
+
+/*
 void GPIO1_Combined_16_31_IRQHandler(void)
 {
     if( GPIO_PortGetInterruptFlags(BOARD_INITPINS_SPI3_CS0_GPIO) & BOARD_INITPINS_SPI3_CS0_GPIO_PIN_MASK)
@@ -397,3 +413,4 @@ void GPIO1_Combined_16_31_IRQHandler(void)
         }
     }
 }
+*/

@@ -239,6 +239,7 @@ static void uart3_tx_edma_callback(LPUART_Type *base, lpuart_edma_handle_t *hand
 
 extern void LPUART3_DriverIRQHandler(void);
 
+#ifdef USE_AICAMERA
 /**
  * @brief LPUART3中断处理函数
  *
@@ -256,7 +257,7 @@ void LPUART3_IRQHandler(void)
         LPUART3_DriverIRQHandler();
     }
 }
-
+#endif
 
 /**
  * @brief 获取UART设备结构体

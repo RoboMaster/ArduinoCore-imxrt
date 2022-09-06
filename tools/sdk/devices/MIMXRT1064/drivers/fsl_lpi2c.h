@@ -27,6 +27,7 @@
 #define FSL_LPI2C_DRIVER_VERSION (MAKE_VERSION(2, 3, 1))
 /*@}*/
 
+#define I2C_RETRY_TIMES 3U
 /*! @brief Retry times for waiting flag. */
 #ifndef I2C_RETRY_TIMES
 #define I2C_RETRY_TIMES 0U /* Define to zero means keep waiting until the flag is assert/deassert. */

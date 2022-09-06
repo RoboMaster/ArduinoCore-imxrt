@@ -79,16 +79,19 @@ void task_cdc_uvc(void *argument)
     fifo_init(&usb_vcp_tx_fifo, usb_vcp_tx_fifo_buff, USB_VCP_TX_FIFO_SIZE);
     fifo_init(&usb_vcp_rx_fifo, usb_vcp_rx_fifo_buff, USB_VCP_RX_FIFO_SIZE);
 
+#ifdef USE_AICAMERA
     spi3_slave_init();
     spi3_slave_receive_finish_handle_reg(spi_rx_complete);
     board_gpio_spi3_cs0_int_reg(spi_cs_falling);
     board_gpio_spi3_cs0_int_enable(1);
+#endif
     usb_video_data_req_handle_reg(usb_video_req_data);
     usb_video_set_source(UVC_SOURCE_INPUT);
 
     char sn[16];
     board_sn_read((uint8_t *)(sn));
     usb_set_serial_num(sn);
+
     USB_DeviceApplicationInit();
 
     uint8_t need_send = 0;
@@ -188,6 +191,7 @@ void task_cdc_uvc(void *argument)
         {
             usb_video_set_source(UVC_SOURCE_INPUT);
         }
+
         osDelay(2);
     }
 }
@@ -363,9 +367,6 @@ static void yuyv2nv12(uint8_t *buff)
     const int w = 320;
     const int h = 240;
 
-    // static uint8_t temp_buff[320 * 240 * 3 / 2];
-    // static uint8_t temp_buff[320 * 240 * 3 / 2] __attribute__ ((section(".m_user_bss"))) ;
-    // static uint8_t temp_buff[320 * 240 * 3 / 2] __attribute__ ((at(0x20280000))) ;
     __attribute__((section(".m_data3"))) static uint8_t temp_buff[320 * 240 * 3 / 2];
 
     uint8_t *yuyv_ptr = buff;

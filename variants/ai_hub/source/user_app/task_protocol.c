@@ -117,11 +117,15 @@ void task_protocol(void const * argument)
 
     usb_cdc_port_idx = open_proto_port_add("USB_CDC", cdc_vcp_send, cdc_vcp_recv);
     can_port_idx = open_proto_port_add("CAN", can_send, can_receive);
+#ifdef USE_AICAMERA
     uart3_port_idx = open_proto_port_add("UART3", uart3_send, uart3_receive);
+#endif
     open_proto_port_enable(usb_cdc_port_idx, 0);
     open_proto_static_route_add(0x0, 0x0, usb_cdc_port_idx, 252);
     open_proto_static_route_add(0x0, 0x0, can_port_idx, 253);
+#ifdef USE_AICAMERA
     open_proto_static_route_add(0x03FF, 0xFF00, uart3_port_idx, 2);
+#endif
 
     for (int i = 0; i < sizeof(open_protocol_fun_req) / sizeof(open_handler_keypair_t); i++)
     {

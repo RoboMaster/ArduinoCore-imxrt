@@ -628,11 +628,16 @@ void BOARD_InitPeripherals(void)
   EDMA_Init(DMA0_DMA_BASEADDR, &DMA0_config);
 
   /* Initialize components */
-  LPUART3_init();
+
   LPUART1_init();
   CAN3_init();
+
+#ifdef USE_AICAMERA
+  LPUART3_init();
   LPSPI3_init();
   GPIO1_init();
+#endif
+
 }
 
 /***********************************************************************************************************************

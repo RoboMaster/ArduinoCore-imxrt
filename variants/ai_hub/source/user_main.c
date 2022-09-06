@@ -15,21 +15,21 @@
 #include "can.h"
 #include "cmsis_os.h"
 #include "log.h"
-#include "user_main.h"
 #include "open_protocol.h"
 #include "open_protocol_cmd.h"
+#include "user_main.h"
 // #include "sd_file.h"
 #include "sys_param.h"
 #include "task_cdc_uvc.h"
 #include "task_protocol.h"
-#include "user_driver_uart.h"
 #include "user_board.h"
+#include "user_driver_uart.h"
 
 /* Private define ------------------------------------------------------------*/
-#define TASK_START_STACK_SIZE (256)   //初始化任务堆栈使用空间
-#define TASK_LED_STACK_SIZE (256)     //初始化任务堆栈使用空间
-#define TASK_USB_VCP_STACK_SIZE (512) // USB_VCP任务堆栈使用空间
-#define TASK_PROTOCOL_ACK_SIZE (1024) //协议任务堆栈使用空间
+#define TASK_START_STACK_SIZE   (256)  //初始化任务堆栈使用空间
+#define TASK_LED_STACK_SIZE     (256)  //初始化任务堆栈使用空间
+#define TASK_USB_VCP_STACK_SIZE (512)  // USB_VCP任务堆栈使用空间
+#define TASK_PROTOCOL_ACK_SIZE  (1024) //协议任务堆栈使用空间
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
@@ -65,7 +65,7 @@ static void start_print(void);
 int vendor_start(void)
 {
     user_board_int();
-    
+
     // board_wdog_init(2000);
 
     /* 初始化StartTask */
@@ -84,8 +84,12 @@ static void task_start(void const *argument)
 {
     flash_init();
     // sd_file_init();
-    can3_init();
+
+#ifdef USE_AICAMERA
     uart_init(LPUART3, 1500000, 512, 512);
+#endif
+
+    can3_init();
     uart_init(LPUART1, 921600, 512, 512);
 
     /* 初始化Log模块 */
@@ -96,7 +100,11 @@ static void task_start(void const *argument)
 
     start_print();
     log_printf(g_log_sys, 0, LOG_INFO, "Logger initial complete.");
-    
+
+#ifdef USE_AICAMERA
+    log_printf(g_log_sys, 0, LOG_INFO, "USE_AICAMERA.");
+#endif
+
     // if(board_wdog_is_timeout_reset())
     // {
     //     log_printf(g_log_sys, 0, LOG_INFO, "Last system Reset by WDOG timeout.");
@@ -119,8 +127,8 @@ static void task_start(void const *argument)
     g_sn_crc16 = board_sn_crc16();
 
     /* 初始化LedKeyTask*/
-    osThreadDef(KeyTask, task_key, osPriorityNormal, 0, TASK_LED_STACK_SIZE);
-    task_key_handle = osThreadCreate(osThread(KeyTask), NULL);
+    // osThreadDef(KeyTask, task_key, osPriorityNormal, 0, TASK_LED_STACK_SIZE);
+    // task_key_handle = osThreadCreate(osThread(KeyTask), NULL);
 
     /* 初始化UsbVcpTask*/
     osThreadDef(UsbVcpTask, task_cdc_uvc, osPriorityNormal, 0, TASK_USB_VCP_STACK_SIZE);
@@ -130,42 +138,43 @@ static void task_start(void const *argument)
     osThreadDef(ProtocolTask, task_protocol, osPriorityNormal, 0, TASK_PROTOCOL_ACK_SIZE);
     task_cdc_uvc_handle = osThreadCreate(osThread(ProtocolTask), NULL);
 
-    uint8_t led_mask = 0;
+    // uint8_t led_mask = 0;
 
-    switch(g_sys_param.id)
-    {
-        case 4: led_mask |= 0x8;
-        case 3: led_mask |= 0x4;
-        case 2: led_mask |= 0x2;
-        case 1: led_mask |= 0x1;
-    }
+    // switch(g_sys_param.id)
+    // {
+    //     case 4: led_mask |= 0x8;
+    //     case 3: led_mask |= 0x4;
+    //     case 2: led_mask |= 0x2;
+    //     case 1: led_mask |= 0x1;
+    // }
 
     for (;;)
     {
+        osDelay(500);
         // board_wdog_refresh();
 
-        if(g_factory_led_test_flag)
-        {
-            /* 工厂LED测试模式 */
-            if(board_key_read())
-            {
-                board_led_set(0x0F, 1);
-                osDelay(250);
-            }
-            else
-            {
-                board_led_set(0x0F, 0);
-                osDelay(250);
-                board_led_set(0x0F, 1);
-                osDelay(250);
-            }
-        }
-        else
-        {
-            /* 正常模式 */
-            board_led_togle(led_mask);
-            osDelay(500);
-        }
+        //     if(g_factory_led_test_flag)
+        //     {
+        //         /* 工厂LED测试模式 */
+        //         if(board_key_read())
+        //         {
+        //             board_led_set(0x0F, 1);
+        //             osDelay(250);
+        //         }
+        //         else
+        //         {
+        //             board_led_set(0x0F, 0);
+        //             osDelay(250);
+        //             board_led_set(0x0F, 1);
+        //             osDelay(250);
+        //         }
+        //     }
+        //     else
+        //     {
+        //         /* 正常模式 */
+        //         board_led_togle(led_mask);
+        //         osDelay(500);
+        //     }
     }
 }
 
@@ -185,7 +194,8 @@ static void task_key(void const *argument)
             if (board_key_read())
             {
                 osDelay(50);
-                while (board_key_read());
+                while (board_key_read())
+                    ;
                 osDelay(50);
 
                 // //发送开启关闭视频流指令
@@ -204,8 +214,7 @@ static void task_key(void const *argument)
  * @param ppxIdleTaskStackBuffer
  * @param pulIdleTaskStackSize
  */
-void vApplicationGetIdleTaskMemory(StaticTask_t **ppxIdleTaskTCBBuffer, StackType_t **ppxIdleTaskStackBuffer,
-                                   uint32_t *pulIdleTaskStackSize)
+void vApplicationGetIdleTaskMemory(StaticTask_t **ppxIdleTaskTCBBuffer, StackType_t **ppxIdleTaskStackBuffer, uint32_t *pulIdleTaskStackSize)
 {
     *ppxIdleTaskTCBBuffer = &xIdleTaskTCBBuffer;
     *ppxIdleTaskStackBuffer = &xIdleStack[0];
@@ -219,8 +228,7 @@ void vApplicationGetIdleTaskMemory(StaticTask_t **ppxIdleTaskTCBBuffer, StackTyp
  * @param ppxTimerTaskStackBuffer
  * @param pulTimerTaskStackSize
  */
-void vApplicationGetTimerTaskMemory(StaticTask_t **ppxTimerTaskTCBBuffer, StackType_t **ppxTimerTaskStackBuffer,
-                                    uint32_t *pulTimerTaskStackSize)
+void vApplicationGetTimerTaskMemory(StaticTask_t **ppxTimerTaskTCBBuffer, StackType_t **ppxTimerTaskStackBuffer, uint32_t *pulTimerTaskStackSize)
 {
     *ppxTimerTaskTCBBuffer = &xTimerTaskTCBBuffer;
     *ppxTimerTaskStackBuffer = &xTimerStack[0];
@@ -261,9 +269,8 @@ static void start_print(void)
     log_printf_noprefix(g_log_sys, 0, LOG_INFO, "    / _, _/ /_/ / /_/ / /_/ / /  / / /_/ (__  ) /_/  __/ /\r\n");
     log_printf_noprefix(g_log_sys, 0, LOG_INFO, "   /_/ |_|\\____/_.___/\\____/_/  /_/\\__,_/____/\\__/\\___/_/\r\n\r\n");
 
-    log_printf_noprefix(g_log_sys, 0, LOG_INFO, " Robomaster AI Module Comm Board   v%d.%d.%d.%d-%s\r\n",
-                        (APP_VERSION >> 24 & 0xFF), (APP_VERSION >> 16 & 0xFF), (APP_VERSION >> 8 & 0xFF), APP_VERSION & 0xFF,
-                        ver_str);
+    log_printf_noprefix(g_log_sys, 0, LOG_INFO, " Robomaster AI Module Comm Board   v%d.%d.%d.%d-%s\r\n", (APP_VERSION >> 24 & 0xFF), (APP_VERSION >> 16 & 0xFF),
+                        (APP_VERSION >> 8 & 0xFF), APP_VERSION & 0xFF, ver_str);
     log_printf_noprefix(g_log_sys, 0, LOG_INFO, " Build Time:%s %s\r\n", __DATE__, __TIME__);
     log_printf_noprefix(g_log_sys, 0, LOG_INFO, "==================================================================\r\n");
 }

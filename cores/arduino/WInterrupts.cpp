@@ -193,8 +193,14 @@ void GPIO1_Combined_0_15_IRQHandler(void)
     for (uint32_t pin = 0; pin <= 15; pin++) gpio_irq_handler(GPIO1, pin);
 }
 
+
 void GPIO1_Combined_16_31_IRQHandler(void)
 {
+#ifdef USE_AICAMERA    
+    extern void Compatible_GPIO1_Combined_16_31_IRQHandler(void);
+    Compatible_GPIO1_Combined_16_31_IRQHandler();
+#endif
+
     for (uint32_t pin = 16; pin <= 31; pin++) gpio_irq_handler(GPIO1, pin);
 }
 
@@ -241,6 +247,7 @@ void GPIO5_Combined_16_31_IRQHandler(void)
 {
     for (uint32_t pin = 16; pin <= 31; pin++) gpio_irq_handler(GPIO5, pin);
 }
+
 
 // void GPIO3_Combined_0_15_IRQHandler(void)
 // {

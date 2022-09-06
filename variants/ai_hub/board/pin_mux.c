@@ -97,6 +97,7 @@ BOARD_InitPins:
 void BOARD_InitPins(void) {
   CLOCK_EnableClock(kCLOCK_Iomuxc);
 
+#ifdef USE_AICAMERA
   /* GPIO configuration of SPI3_CS0 on GPIO_AD_B1_12 (pin H12) */
   gpio_pin_config_t SPI3_CS0_config = {
       .direction = kGPIO_DigitalInput,
@@ -106,25 +107,89 @@ void BOARD_InitPins(void) {
   /* Initialize GPIO functionality on GPIO_AD_B1_12 (pin H12) */
   GPIO_PinInit(GPIO1, 28U, &SPI3_CS0_config);
   /* Enable GPIO pin interrupt on GPIO_AD_B1_12 (pin H12) */
-  //GPIO_PortEnableInterrupts(GPIO1, 1U << 28U);
+  GPIO_PortEnableInterrupts(GPIO1, 1U << 28U);
+#endif
 
-  /* GPIO configuration of SD_CD_SW on GPIO_B1_14 (pin C14) */
-  gpio_pin_config_t SD_CD_SW_config = {
-      .direction = kGPIO_DigitalInput,
-      .outputLogic = 0U,
-      .interruptMode = kGPIO_NoIntmode
-  };
-  /* Initialize GPIO functionality on GPIO_B1_14 (pin C14) */
-  GPIO_PinInit(GPIO2, 30U, &SD_CD_SW_config);
+#ifdef USE_AICAMERA
+  IOMUXC_SetPinMux(IOMUXC_GPIO_AD_B1_06_LPUART3_TX, 0U);
+  IOMUXC_SetPinMux(IOMUXC_GPIO_AD_B1_07_LPUART3_RX, 0U);
+  IOMUXC_SetPinMux(IOMUXC_GPIO_AD_B1_12_GPIO1_IO28, 0U); // SPI3_CS0
+  IOMUXC_SetPinMux(IOMUXC_GPIO_AD_B1_13_LPSPI3_SDI, 0U);
+  IOMUXC_SetPinMux(IOMUXC_GPIO_AD_B1_14_LPSPI3_SDO, 0U);
+  IOMUXC_SetPinMux(IOMUXC_GPIO_AD_B1_15_LPSPI3_SCK, 0U);
+  IOMUXC_SetPinMux(IOMUXC_GPIO_B1_14_GPIO2_IO30, 0U); // 不知作用
+  IOMUXC_SetPinMux(IOMUXC_GPIO_B1_15_GPIO2_IO31, 0U); // 不知作用
+  IOMUXC_SetPinMux(IOMUXC_GPIO_SD_B0_00_USDHC1_CMD, 0U);
+  IOMUXC_SetPinMux(IOMUXC_GPIO_SD_B0_01_USDHC1_CLK, 0U);
+  IOMUXC_SetPinMux(IOMUXC_GPIO_SD_B0_02_USDHC1_DATA0, 0U);
+  IOMUXC_SetPinMux(IOMUXC_GPIO_SD_B0_03_USDHC1_DATA1, 0U);
+  IOMUXC_SetPinMux(IOMUXC_GPIO_SD_B0_04_USDHC1_DATA2, 0U);
+  IOMUXC_SetPinMux(IOMUXC_GPIO_SD_B0_05_USDHC1_DATA3, 0U);
+#endif
+  IOMUXC_SetPinMux(IOMUXC_GPIO_EMC_36_FLEXCAN3_TX, 0U);
+  IOMUXC_SetPinMux(IOMUXC_GPIO_EMC_37_FLEXCAN3_RX, 0U);
+  IOMUXC_SetPinMux(IOMUXC_GPIO_AD_B0_12_LPUART1_TX, 0U);
+  IOMUXC_SetPinMux(IOMUXC_GPIO_AD_B0_13_LPUART1_RX, 0U);
 
-  /* GPIO configuration of USER_KEY on GPIO_B1_15 (pin B14) */
-  gpio_pin_config_t USER_KEY_config = {
-      .direction = kGPIO_DigitalInput,
-      .outputLogic = 0U,
-      .interruptMode = kGPIO_NoIntmode
-  };
-  /* Initialize GPIO functionality on GPIO_B1_15 (pin B14) */
-  GPIO_PinInit(GPIO2, 31U, &USER_KEY_config);
+  // IOMUXC_SetPinMux(IOMUXC_GPIO_SD_B1_02_GPIO3_IO02, 0U);
+  
+  // IOMUXC_GPR->GPR26 = ((IOMUXC_GPR->GPR26 &
+  //   (~(BOARD_INITPINS_IOMUXC_GPR_GPR26_GPIO_MUX1_GPIO_SEL_MASK)))
+  //     | IOMUXC_GPR_GPR26_GPIO_MUX1_GPIO_SEL(0x00U)
+  //   );
+  // IOMUXC_GPR->GPR27 = ((IOMUXC_GPR->GPR27 &
+  //   (~(BOARD_INITPINS_IOMUXC_GPR_GPR27_GPIO_MUX2_GPIO_SEL_MASK)))
+  //     | IOMUXC_GPR_GPR27_GPIO_MUX2_GPIO_SEL(0x00U)
+  //   );
+
+  // IOMUXC_GPR->GPR28 = ((IOMUXC_GPR->GPR28 &
+  //   (~(BOARD_INITPINS_IOMUXC_GPR_GPR28_GPIO_MUX3_GPIO_SEL_MASK)))
+  //     | IOMUXC_GPR_GPR28_GPIO_MUX3_GPIO_SEL(0x00U)
+  //   );
+
+#ifdef USE_AICAMERA
+  IOMUXC_SetPinConfig(IOMUXC_GPIO_AD_B1_06_LPUART3_TX, 0x10F1U);
+  IOMUXC_SetPinConfig(IOMUXC_GPIO_AD_B1_07_LPUART3_RX, 0x10F1U);
+  IOMUXC_SetPinConfig(IOMUXC_GPIO_AD_B1_12_GPIO1_IO28, 0x90B1U);// SPI3_CS0
+  IOMUXC_SetPinConfig(IOMUXC_GPIO_AD_B1_13_LPSPI3_SDI, 0x1089U);
+  IOMUXC_SetPinConfig(IOMUXC_GPIO_AD_B1_14_LPSPI3_SDO, 0x1089U);
+  IOMUXC_SetPinConfig(IOMUXC_GPIO_AD_B1_15_LPSPI3_SCK, 0x1089U);
+  IOMUXC_SetPinConfig(IOMUXC_GPIO_B1_14_GPIO2_IO30, 0x90B1U); // 不知作用
+  IOMUXC_SetPinConfig(IOMUXC_GPIO_B1_15_GPIO2_IO31, 0x90B1U); // 不知作用
+  IOMUXC_SetPinConfig(IOMUXC_GPIO_SD_B0_00_USDHC1_CMD, 0x7089U);
+  IOMUXC_SetPinConfig(IOMUXC_GPIO_SD_B0_01_USDHC1_CLK, 0x7089U);
+  IOMUXC_SetPinConfig(IOMUXC_GPIO_SD_B0_02_USDHC1_DATA0, 0x7089U);
+  IOMUXC_SetPinConfig(IOMUXC_GPIO_SD_B0_03_USDHC1_DATA1, 0x7089U);
+  IOMUXC_SetPinConfig(IOMUXC_GPIO_SD_B0_04_USDHC1_DATA2, 0x7089U);
+  IOMUXC_SetPinConfig(IOMUXC_GPIO_SD_B0_05_USDHC1_DATA3, 0x7089U);
+#endif
+  IOMUXC_SetPinConfig(IOMUXC_GPIO_EMC_36_FLEXCAN3_TX, 0x1089U);
+  IOMUXC_SetPinConfig(IOMUXC_GPIO_EMC_37_FLEXCAN3_RX, 0x1089U);
+  IOMUXC_SetPinConfig(IOMUXC_GPIO_AD_B0_12_LPUART1_TX, 0x10B0U);
+  IOMUXC_SetPinConfig(IOMUXC_GPIO_AD_B0_13_LPUART1_RX, 0x10B0U);
+}
+
+/***********************************************************************************************************************
+ * EOF
+ **********************************************************************************************************************/
+
+  // /* GPIO configuration of SD_CD_SW on GPIO_B1_14 (pin C14) */
+  // gpio_pin_config_t SD_CD_SW_config = {
+  //     .direction = kGPIO_DigitalInput,
+  //     .outputLogic = 0U,
+  //     .interruptMode = kGPIO_NoIntmode
+  // };
+  // /* Initialize GPIO functionality on GPIO_B1_14 (pin C14) */
+  // GPIO_PinInit(GPIO2, 30U, &SD_CD_SW_config);
+
+  // /* GPIO configuration of USER_KEY on GPIO_B1_15 (pin B14) */
+  // gpio_pin_config_t USER_KEY_config = {
+  //     .direction = kGPIO_DigitalInput,
+  //     .outputLogic = 0U,
+  //     .interruptMode = kGPIO_NoIntmode
+  // };
+  // /* Initialize GPIO functionality on GPIO_B1_15 (pin B14) */
+  // GPIO_PinInit(GPIO2, 31U, &USER_KEY_config);
 
   // /* GPIO configuration of EXT_INT0 on GPIO_SD_B1_02 (pin M3) */
   // gpio_pin_config_t EXT_INT0_config = {
@@ -135,97 +200,43 @@ void BOARD_InitPins(void) {
   // /* Initialize GPIO functionality on GPIO_SD_B1_02 (pin M3) */
   // GPIO_PinInit(GPIO3, 2U, &EXT_INT0_config);
 
-  /* GPIO configuration of LED4 on GPIO_AD_B0_02 (pin M11) */
-  gpio_pin_config_t LED4_config = {
-      .direction = kGPIO_DigitalOutput,
-      .outputLogic = 0U,
-      .interruptMode = kGPIO_NoIntmode
-  };
-  /* Initialize GPIO functionality on GPIO_AD_B0_02 (pin M11) */
-  GPIO_PinInit(GPIO6, 2U, &LED4_config);
+  // /* GPIO configuration of LED4 on GPIO_AD_B0_02 (pin M11) */
+  // gpio_pin_config_t LED4_config = {
+  //     .direction = kGPIO_DigitalOutput,
+  //     .outputLogic = 0U,
+  //     .interruptMode = kGPIO_NoIntmode
+  // };
+  // /* Initialize GPIO functionality on GPIO_AD_B0_02 (pin M11) */
+  // GPIO_PinInit(GPIO6, 2U, &LED4_config);
 
-  /* GPIO configuration of LED1 on GPIO_AD_B0_09 (pin F14) */
-  gpio_pin_config_t LED1_config = {
-      .direction = kGPIO_DigitalOutput,
-      .outputLogic = 0U,
-      .interruptMode = kGPIO_NoIntmode
-  };
-  /* Initialize GPIO functionality on GPIO_AD_B0_09 (pin F14) */
-  GPIO_PinInit(GPIO6, 9U, &LED1_config);
+  // /* GPIO configuration of LED1 on GPIO_AD_B0_09 (pin F14) */
+  // gpio_pin_config_t LED1_config = {
+  //     .direction = kGPIO_DigitalOutput,
+  //     .outputLogic = 0U,
+  //     .interruptMode = kGPIO_NoIntmode
+  // };
+  // /* Initialize GPIO functionality on GPIO_AD_B0_09 (pin F14) */
+  // GPIO_PinInit(GPIO6, 9U, &LED1_config);
 
-  /* GPIO configuration of LED2 on GPIO_AD_B0_10 (pin G13) */
-  gpio_pin_config_t LED2_config = {
-      .direction = kGPIO_DigitalOutput,
-      .outputLogic = 0U,
-      .interruptMode = kGPIO_NoIntmode
-  };
-  /* Initialize GPIO functionality on GPIO_AD_B0_10 (pin G13) */
-  GPIO_PinInit(GPIO6, 10U, &LED2_config);
+  // /* GPIO configuration of LED2 on GPIO_AD_B0_10 (pin G13) */
+  // gpio_pin_config_t LED2_config = {
+  //     .direction = kGPIO_DigitalOutput,
+  //     .outputLogic = 0U,
+  //     .interruptMode = kGPIO_NoIntmode
+  // };
+  // /* Initialize GPIO functionality on GPIO_AD_B0_10 (pin G13) */
+  // GPIO_PinInit(GPIO6, 10U, &LED2_config);
 
-  /* GPIO configuration of LED3 on GPIO_AD_B0_11 (pin G10) */
-  gpio_pin_config_t LED3_config = {
-      .direction = kGPIO_DigitalOutput,
-      .outputLogic = 0U,
-      .interruptMode = kGPIO_NoIntmode
-  };
-  /* Initialize GPIO functionality on GPIO_AD_B0_11 (pin G10) */
-  GPIO_PinInit(GPIO6, 11U, &LED3_config);
+  // /* GPIO configuration of LED3 on GPIO_AD_B0_11 (pin G10) */
+  // gpio_pin_config_t LED3_config = {
+  //     .direction = kGPIO_DigitalOutput,
+  //     .outputLogic = 0U,
+  //     .interruptMode = kGPIO_NoIntmode
+  // };
+  // /* Initialize GPIO functionality on GPIO_AD_B0_11 (pin G10) */
+  // GPIO_PinInit(GPIO6, 11U, &LED3_config);
 
-  IOMUXC_SetPinMux(IOMUXC_GPIO_AD_B0_02_GPIO1_IO02, 0U);
-  IOMUXC_SetPinMux(IOMUXC_GPIO_AD_B0_09_GPIO1_IO09, 0U);
-  IOMUXC_SetPinMux(IOMUXC_GPIO_AD_B0_10_GPIO1_IO10, 0U);
-  IOMUXC_SetPinMux(IOMUXC_GPIO_AD_B0_11_GPIO1_IO11, 0U);
-  IOMUXC_SetPinMux(IOMUXC_GPIO_AD_B0_12_LPUART1_TX, 0U);
-  IOMUXC_SetPinMux(IOMUXC_GPIO_AD_B0_13_LPUART1_RX, 0U);
-  IOMUXC_SetPinMux(IOMUXC_GPIO_AD_B1_06_LPUART3_TX, 0U);
-  IOMUXC_SetPinMux(IOMUXC_GPIO_AD_B1_07_LPUART3_RX, 0U);
-  IOMUXC_SetPinMux(IOMUXC_GPIO_AD_B1_12_GPIO1_IO28, 0U);
-  IOMUXC_SetPinMux(IOMUXC_GPIO_AD_B1_13_LPSPI3_SDI, 0U);
-  IOMUXC_SetPinMux(IOMUXC_GPIO_AD_B1_14_LPSPI3_SDO, 0U);
-  IOMUXC_SetPinMux(IOMUXC_GPIO_AD_B1_15_LPSPI3_SCK, 0U);
-  IOMUXC_SetPinMux(IOMUXC_GPIO_B1_14_GPIO2_IO30, 0U);
-  IOMUXC_SetPinMux(IOMUXC_GPIO_B1_15_GPIO2_IO31, 0U);
-  IOMUXC_SetPinMux(IOMUXC_GPIO_EMC_36_FLEXCAN3_TX, 0U);
-  IOMUXC_SetPinMux(IOMUXC_GPIO_EMC_37_FLEXCAN3_RX, 0U);
-  IOMUXC_SetPinMux(IOMUXC_GPIO_SD_B0_00_USDHC1_CMD, 0U);
-  IOMUXC_SetPinMux(IOMUXC_GPIO_SD_B0_01_USDHC1_CLK, 0U);
-  IOMUXC_SetPinMux(IOMUXC_GPIO_SD_B0_02_USDHC1_DATA0, 0U);
-  IOMUXC_SetPinMux(IOMUXC_GPIO_SD_B0_03_USDHC1_DATA1, 0U);
-  IOMUXC_SetPinMux(IOMUXC_GPIO_SD_B0_04_USDHC1_DATA2, 0U);
-  IOMUXC_SetPinMux(IOMUXC_GPIO_SD_B0_05_USDHC1_DATA3, 0U);
-  // IOMUXC_SetPinMux(IOMUXC_GPIO_SD_B1_02_GPIO3_IO02, 0U);
-  IOMUXC_GPR->GPR26 = ((IOMUXC_GPR->GPR26 &
-    (~(BOARD_INITPINS_IOMUXC_GPR_GPR26_GPIO_MUX1_GPIO_SEL_MASK)))
-      | IOMUXC_GPR_GPR26_GPIO_MUX1_GPIO_SEL(0x0E04U)
-    );
-  IOMUXC_GPR->GPR27 = ((IOMUXC_GPR->GPR27 &
-    (~(BOARD_INITPINS_IOMUXC_GPR_GPR27_GPIO_MUX2_GPIO_SEL_MASK)))
-      | IOMUXC_GPR_GPR27_GPIO_MUX2_GPIO_SEL(0x00U)
-    );
-  IOMUXC_GPR->GPR28 = ((IOMUXC_GPR->GPR28 &
-    (~(BOARD_INITPINS_IOMUXC_GPR_GPR28_GPIO_MUX3_GPIO_SEL_MASK)))
-      | IOMUXC_GPR_GPR28_GPIO_MUX3_GPIO_SEL(0x00U)
-    );
-  IOMUXC_SetPinConfig(IOMUXC_GPIO_AD_B0_12_LPUART1_TX, 0x10B0U);
-  IOMUXC_SetPinConfig(IOMUXC_GPIO_AD_B0_13_LPUART1_RX, 0x10B0U);
-  IOMUXC_SetPinConfig(IOMUXC_GPIO_AD_B1_06_LPUART3_TX, 0x10F1U);
-  IOMUXC_SetPinConfig(IOMUXC_GPIO_AD_B1_07_LPUART3_RX, 0x10F1U);
-  IOMUXC_SetPinConfig(IOMUXC_GPIO_AD_B1_12_GPIO1_IO28, 0x90B1U);
-  IOMUXC_SetPinConfig(IOMUXC_GPIO_AD_B1_13_LPSPI3_SDI, 0x1089U);
-  IOMUXC_SetPinConfig(IOMUXC_GPIO_AD_B1_14_LPSPI3_SDO, 0x1089U);
-  IOMUXC_SetPinConfig(IOMUXC_GPIO_AD_B1_15_LPSPI3_SCK, 0x1089U);
-  IOMUXC_SetPinConfig(IOMUXC_GPIO_B1_14_GPIO2_IO30, 0x90B1U);
-  IOMUXC_SetPinConfig(IOMUXC_GPIO_B1_15_GPIO2_IO31, 0x90B1U);
-  IOMUXC_SetPinConfig(IOMUXC_GPIO_EMC_36_FLEXCAN3_TX, 0x1089U);
-  IOMUXC_SetPinConfig(IOMUXC_GPIO_EMC_37_FLEXCAN3_RX, 0x1089U);
-  IOMUXC_SetPinConfig(IOMUXC_GPIO_SD_B0_00_USDHC1_CMD, 0x7089U);
-  IOMUXC_SetPinConfig(IOMUXC_GPIO_SD_B0_01_USDHC1_CLK, 0x7089U);
-  IOMUXC_SetPinConfig(IOMUXC_GPIO_SD_B0_02_USDHC1_DATA0, 0x7089U);
-  IOMUXC_SetPinConfig(IOMUXC_GPIO_SD_B0_03_USDHC1_DATA1, 0x7089U);
-  IOMUXC_SetPinConfig(IOMUXC_GPIO_SD_B0_04_USDHC1_DATA2, 0x7089U);
-  IOMUXC_SetPinConfig(IOMUXC_GPIO_SD_B0_05_USDHC1_DATA3, 0x7089U);
-}
-
-/***********************************************************************************************************************
- * EOF
- **********************************************************************************************************************/
+  // IOMUXC_SetPinMux(IOMUXC_GPIO_AD_B0_02_GPIO1_IO02, 0U);
+  // IOMUXC_SetPinMux(IOMUXC_GPIO_AD_B0_09_GPIO1_IO09, 0U);
+  // IOMUXC_SetPinMux(IOMUXC_GPIO_AD_B0_10_GPIO1_IO10, 0U);
+  // IOMUXC_SetPinMux(IOMUXC_GPIO_AD_B0_11_GPIO1_IO11, 0U);
