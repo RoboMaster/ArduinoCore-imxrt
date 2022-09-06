@@ -629,14 +629,14 @@ void BOARD_InitPeripherals(void)
 
   /* Initialize components */
 
-  LPUART1_init();
-  CAN3_init();
-
 #ifdef USE_AICAMERA
   LPUART3_init();
   LPSPI3_init();
   GPIO1_init();
 #endif
+
+  LPUART1_init();
+  CAN3_init();
 
 }
 

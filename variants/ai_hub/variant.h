@@ -47,7 +47,7 @@ extern "C"
 /////////////////////////////////////////////////////
 ///                 UART
 /////////////////////////////////////////////////////
-#define UART_INTERFACES_COUNT 1
+#define UART_INTERFACES_COUNT 0
 
 #define PIN_UART1_RX      JP_1
 #define PIN_UART1_TX      JP_0

@@ -98,8 +98,6 @@ void UART::init(unsigned long baud, uint16_t config)
     _config.enableTx      = true;
     _config.enableRx      = true;
 
-    
-
     LPUART_Init(_lpuart_num, &_config, LPUART_CLK_FREQ);
 
     /* Enable RX interrupt. */
@@ -166,6 +164,7 @@ __attribute__((weak)) void UART1_HANDLER(void)
 }
 }
 #endif
+
 #if UART_INTERFACES_COUNT > 1
 UART Serial1(UART2_NUM, UART2_IRQn, PIN_UART2_RX, PIN_UART2_TX);
 extern "C"{  // IRQHandler must be compiled in C
@@ -175,6 +174,7 @@ void UART2_HANDLER(void)
 }
 }
 #endif
+
 #if UART_INTERFACES_COUNT > 2
 UART Serial2(UART3_NUM, UART3_IRQn, PIN_UART3_RX, PIN_UART3_TX);
 extern "C"{  // IRQHandler must be compiled in C

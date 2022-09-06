@@ -54,6 +54,7 @@ add_compile_flags(BOTH
             -DDEBUG_CONSOLE_TRANSFER_NON_BLOCKING 
             -DSD_ENABLED 
             -DDISABLE_WDOG 
+            -DUSE_AICAMERA
             -D__STARTUP_INITIALIZE_NONCACHEDATA 
             -mthumb -mapcs -mcpu=cortex-m7 -mfloat-abi=hard -mfpu=fpv5-d16 
         )
