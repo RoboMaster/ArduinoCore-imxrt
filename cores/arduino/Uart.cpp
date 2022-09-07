@@ -1,20 +1,20 @@
 /**
  * The MIT License (MIT)
- * 
+ *
  * Author: Hongtai Liu (lht856@foxmail.com)
- * 
- * Copyright (C) 2019  Seeed Technology Co.,Ltd. 
- * 
+ *
+ * Copyright (C) 2019  Seeed Technology Co.,Ltd.
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -27,8 +27,6 @@
 #include "wiring_private.h"
 
 #define LPUART_CLK_FREQ BOARD_DebugConsoleSrcFreq()
-
-
 
 /**
  * @description:
@@ -45,7 +43,6 @@ void UART::LPUART_IRQHandel(void)
         data = LPUART_ReadByte(_lpuart_num);
         _rb->store_char(data);
     }
-
 }
 
 /**
@@ -53,7 +50,7 @@ void UART::LPUART_IRQHandel(void)
  * @param {type}
  * @return:
  */
-UART::UART(LPUART_Type * uart_num_ , IRQn_Type uart_num_IRQ, int rx_pin_, int tx_pin_)
+UART::UART(LPUART_Type *uart_num_, IRQn_Type uart_num_IRQ, int rx_pin_, int tx_pin_)
 {
     _lpuart_num = uart_num_;
     _lpuart_num_IRQ = uart_num_IRQ;
@@ -76,10 +73,10 @@ void UART::begin(unsigned long baud, uint16_t config)
 
 void UART::init(unsigned long baud, uint16_t config)
 {
-     // IO MUX
+    // IO MUX
     pinPeripheral(_tx_pin, 0U, FUN_UART, 0x10B0U);
     pinPeripheral(_rx_pin, 0U, FUN_UART, 0x10B0U);
-  
+
     lpuart_config_t _config;
     /*
      * config.baudRate_Bps = 115200U;
@@ -91,12 +88,12 @@ void UART::init(unsigned long baud, uint16_t config)
      * config.enableRx = false;
      */
     LPUART_GetDefaultConfig(&_config);
-    _config.baudRate_Bps  = baud;
-    _config.parityMode    = (lpuart_parity_mode_t)(config & 0x0F);
+    _config.baudRate_Bps = baud;
+    _config.parityMode = (lpuart_parity_mode_t)(config & 0x0F);
     _config.dataBitsCount = (lpuart_data_bits_t)(config & 0x30);
-    _config.stopBitCount  = (lpuart_stop_bit_count_t)(config & 0xC0);
-    _config.enableTx      = true;
-    _config.enableRx      = true;
+    _config.stopBitCount = (lpuart_stop_bit_count_t)(config & 0xC0);
+    _config.enableTx = true;
+    _config.enableRx = true;
 
     LPUART_Init(_lpuart_num, &_config, LPUART_CLK_FREQ);
 
@@ -110,32 +107,46 @@ void UART::init(unsigned long baud, uint16_t config)
  * @param {type}
  * @return:
  */
-void UART::end() { delete _rb; }
+void UART::end()
+{
+    delete _rb;
+}
 
 /**
  * @description:
  * @param {type}
  * @return:
  */
-int UART::available(void) { return _rb->available(); }
+int UART::available(void)
+{
+    return _rb->available();
+}
 
 /**
  * @description:
  * @param {type}
  * @return:
  */
-int UART::peek(void) { return _rb->peek(); }
+int UART::peek(void)
+{
+    return _rb->peek();
+}
 
 /**
  * @description:
  * @param {type}
  * @return:
  */
-int UART::read(void) {
-    while (true) {
-        if (0 != _rb->available()) {
+int UART::read(void)
+{
+    while (true)
+    {
+        if (0 != _rb->available())
+        {
             return _rb->read_char();
-        } else {
+        }
+        else
+        {
             return -1;
         }
     }
@@ -146,28 +157,40 @@ int UART::read(void) {
  * @param {type}
  * @return:
  */
-void UART::flush(void) { _rb->clear(); }
+void UART::flush(void)
+{
+    _rb->clear();
+}
 
 /**
  * @description:
  * @param {type}
  * @return:
  */
-size_t UART::write(uint8_t c) { LPUART_WriteBlocking(_lpuart_num, &c, 1); return 1; }
+size_t UART::write(uint8_t c)
+{
+    LPUART_WriteBlocking(_lpuart_num, &c, 1);
+    return 1;
+}
 
 #if UART_INTERFACES_COUNT > 0
 UART Serial(UART1_NUM, UART1_IRQn, PIN_UART1_RX, PIN_UART1_TX);
-extern "C"{  // IRQHandler must be compiled in C
-__attribute__((weak)) void UART1_HANDLER(void)
+extern "C" { // IRQHandler must be compiled in C
+
+#ifndef USE_AICAMERA
+void UART1_HANDLER(void)
 {
     Serial.LPUART_IRQHandel();
 }
+#endif
+
 }
+
 #endif
 
 #if UART_INTERFACES_COUNT > 1
 UART Serial1(UART2_NUM, UART2_IRQn, PIN_UART2_RX, PIN_UART2_TX);
-extern "C"{  // IRQHandler must be compiled in C
+extern "C" { // IRQHandler must be compiled in C
 void UART2_HANDLER(void)
 {
     Serial1.LPUART_IRQHandel();
@@ -177,13 +200,10 @@ void UART2_HANDLER(void)
 
 #if UART_INTERFACES_COUNT > 2
 UART Serial2(UART3_NUM, UART3_IRQn, PIN_UART3_RX, PIN_UART3_TX);
-extern "C"{  // IRQHandler must be compiled in C
+extern "C" { // IRQHandler must be compiled in C
 void UART3_HANDLER(void)
 {
     Serial2.LPUART_IRQHandel();
 }
 }
 #endif
-
-
-

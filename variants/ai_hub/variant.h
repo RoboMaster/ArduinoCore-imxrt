@@ -18,17 +18,17 @@ extern "C"
 /////////////////////////////////////////////////////
 ///                 14PIN
 /////////////////////////////////////////////////////
-#define JP_0   7U           // UART3_TX
-#define JP_1   8U           // UART3_RX
-#define JP_2   9U           // SPI3_MISO
-#define JP_3   15U          // EXT_INT1 !!!!Deprecated
-#define JP_4   11U          // SPI3_CLK
+#define P0   7U           // UART3_TX
+#define P1   8U           // UART3_RX
+#define P2   9U           // SPI3_MISO
+#define P3   15U          // EXT_INT1 !!!!Deprecated
+#define P4   11U          // SPI3_CLK
 
-#define JP_5   13U          // I2C1_SCL
-#define JP_6   14U          // I2C1_SDA
-#define JP_7   10U          // SPI3_MOSI
-#define JP_8   16U          // EXT_INT0
-#define JP_9   12U          // SPI3_CS0
+#define P5   13U          // I2C1_SCL
+#define P6   14U          // I2C1_SDA
+#define P7   10U          // SPI3_MOSI
+#define P8   16U          // EXT_INT0
+#define P9   12U          // SPI3_CS0
 
 /////////////////////////////////////////////////////
 ///                 KEY
@@ -47,10 +47,10 @@ extern "C"
 /////////////////////////////////////////////////////
 ///                 UART
 /////////////////////////////////////////////////////
-#define UART_INTERFACES_COUNT 0
+#define UART_INTERFACES_COUNT 1
 
-#define PIN_UART1_RX      JP_1
-#define PIN_UART1_TX      JP_0
+#define PIN_UART1_RX      P1
+#define PIN_UART1_TX      P0
 #define UART1_NUM         LPUART3
 #define UART1_IRQn        LPUART3_IRQn
 #define UART1_HANDLER     LPUART3_IRQHandler
@@ -67,8 +67,8 @@ extern "C"
 // #define UART2_IRQn        LPUART8_IRQn
 // #define UART2_HANDLER     LPUART8_IRQHandler
 
-// #define PIN_UART3_RX      JP_1
-// #define PIN_UART3_TX      JP_0
+// #define PIN_UART3_RX      P1
+// #define PIN_UART3_TX      P0
 // #define UART3_NUM         LPUART3
 // #define UART3_IRQn        LPUART3_IRQn
 // #define UART3_HANDLER     LPUART3_IRQHandler
@@ -77,8 +77,8 @@ extern "C"
 ///                 I2C
 /////////////////////////////////////////////////////
 #define I2C1        LPI2C1
-#define I2C1_SCL    JP_5
-#define I2C1_SDA    JP_6
+#define I2C1_SCL    P5
+#define I2C1_SDA    P6
 // default I2C PORT
 #define SCL         I2C1_SCL
 #define SDA         I2C1_SDA
@@ -86,10 +86,10 @@ extern "C"
 /////////////////////////////////////////////////////
 ///                 SPI
 /////////////////////////////////////////////////////
-#define SPI3_MOSI   JP_7
-#define SPI3_MISO   JP_2
-#define SPI3_SCK    JP_4
-#define SPI3_CS     JP_9
+#define SPI3_MOSI   P7
+#define SPI3_MISO   P2
+#define SPI3_SCK    P4
+#define SPI3_CS     P9
 
 #define MOSI        SPI3_MOSI
 #define MISO        SPI3_MISO
@@ -99,14 +99,14 @@ extern "C"
 ///                 OTHER
 /////////////////////////////////////////////////////
 
-#define A0  JP_0
-#define A1  JP_1
-#define A2  JP_2
-#define A3  JP_4
-#define A4  JP_7
-#define A5  JP_9
+#define A0  P0
+#define A1  P1
+#define A2  P2
+#define A3  P4
+#define A4  P7
+#define A5  P9
 
-#define PWM0 JP_8
+#define PWM0 P8
 
 #ifdef __cplusplus
 }

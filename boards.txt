@@ -1,6 +1,6 @@
 # menu.flash=Flash
-menu.speed=CPU Speed
-menu.debug=Debug
+# menu.speed=CPU Speed
+# menu.debug=Debug
 menu.module=Use AI Camera
 
 # RM Expansion Module
@@ -33,11 +33,11 @@ rm_ai_hub.build.ldscript=MIMXRT1064_Arduino.ld
 # varitans文件夹的相对路径
 rm_ai_hub.build.variant=ai_hub 
 
-rm_ai_hub.menu.debug.off=Off
-rm_ai_hub.menu.debug.on=On
-rm_ai_hub.menu.debug.on.build.flags.debug=-g
-rm_ai_hub.menu.speed.600= 600 MHz (standard)
-rm_ai_hub.menu.speed.600.build.f_cpu=600000000L
+# rm_ai_hub.menu.debug.off=Off
+# rm_ai_hub.menu.debug.on=On
+# rm_ai_hub.menu.debug.on.build.flags.debug=-g
+# rm_ai_hub.menu.speed.600= 600 MHz (standard)
+# rm_ai_hub.menu.speed.600.build.f_cpu=600000000L
 
 rm_ai_hub.menu.module.off=Off
 rm_ai_hub.menu.module.on=On
