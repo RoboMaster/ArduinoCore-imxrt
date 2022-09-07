@@ -130,6 +130,9 @@ static void task_start(void const *argument)
     // osThreadDef(KeyTask, task_key, osPriorityNormal, 0, TASK_LED_STACK_SIZE);
     // task_key_handle = osThreadCreate(osThread(KeyTask), NULL);
 
+    // 等待1s Arduino loop线程先走
+    osDelay(1000);
+
     /* 初始化UsbVcpTask*/
     osThreadDef(UsbVcpTask, task_cdc_uvc, osPriorityNormal, 0, TASK_USB_VCP_STACK_SIZE);
     task_cdc_uvc_handle = osThreadCreate(osThread(UsbVcpTask), NULL);

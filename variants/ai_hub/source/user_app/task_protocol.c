@@ -94,6 +94,7 @@ static uint8_t can_port_idx;
 static uint8_t uart3_port_idx;
 extern sys_param_t g_sys_param;                        //系统参数
 
+uint8_t arduino_use_usb_serial = 0;
 
 /* Private function prototypes -----------------------------------------------*/
 static void unpacket_process(uint8_t port, uint8_t *buf, uint16_t len);
@@ -145,7 +146,11 @@ void task_protocol(void const * argument)
         if(last_usb_attach_status != cdc_vcp_is_attach() && cdc_vcp_is_attach())
         {
             last_usb_attach_status = cdc_vcp_is_attach();
-            open_proto_port_enable(usb_cdc_port_idx, 1);
+            // Arduino层兼容，Arduino层没用USB串口时，openProtocol才可用
+            if (arduino_use_usb_serial == 0 )
+            {
+                open_proto_port_enable(usb_cdc_port_idx, 1);   
+            }
         }
 
         if(osKernelSysTick() - last_send_ai_core_set_speed_time > 250)

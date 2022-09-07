@@ -108,6 +108,15 @@ void BOARD_InitPins(void) {
   GPIO_PinInit(GPIO1, 28U, &SPI3_CS0_config);
   /* Enable GPIO pin interrupt on GPIO_AD_B1_12 (pin H12) */
   GPIO_PortEnableInterrupts(GPIO1, 1U << 28U);
+
+  /* GPIO configuration of EXT_INT0 on GPIO_SD_B1_02 (pin M3) */
+  gpio_pin_config_t EXT_INT0_config = {
+      .direction = kGPIO_DigitalOutput,
+      .outputLogic = 1U,
+      .interruptMode = kGPIO_NoIntmode
+  };
+  /* Initialize GPIO functionality on GPIO_SD_B1_02 (pin M3) */
+  GPIO_PinInit(GPIO3, 2U, &EXT_INT0_config);
 #endif
 
 #ifdef USE_AICAMERA
@@ -125,6 +134,7 @@ void BOARD_InitPins(void) {
   IOMUXC_SetPinMux(IOMUXC_GPIO_SD_B0_03_USDHC1_DATA1, 0U);
   IOMUXC_SetPinMux(IOMUXC_GPIO_SD_B0_04_USDHC1_DATA2, 0U);
   IOMUXC_SetPinMux(IOMUXC_GPIO_SD_B0_05_USDHC1_DATA3, 0U);
+  IOMUXC_SetPinMux(IOMUXC_GPIO_SD_B1_02_GPIO3_IO02, 0U);
 #endif
   IOMUXC_SetPinMux(IOMUXC_GPIO_EMC_36_FLEXCAN3_TX, 0U);
   IOMUXC_SetPinMux(IOMUXC_GPIO_EMC_37_FLEXCAN3_RX, 0U);
@@ -189,14 +199,7 @@ void BOARD_InitPins(void) {
   // /* Initialize GPIO functionality on GPIO_B1_15 (pin B14) */
   // GPIO_PinInit(GPIO2, 31U, &USER_KEY_config);
 
-  // /* GPIO configuration of EXT_INT0 on GPIO_SD_B1_02 (pin M3) */
-  // gpio_pin_config_t EXT_INT0_config = {
-  //     .direction = kGPIO_DigitalOutput,
-  //     .outputLogic = 1U,
-  //     .interruptMode = kGPIO_NoIntmode
-  // };
-  // /* Initialize GPIO functionality on GPIO_SD_B1_02 (pin M3) */
-  // GPIO_PinInit(GPIO3, 2U, &EXT_INT0_config);
+
 
   // /* GPIO configuration of LED4 on GPIO_AD_B0_02 (pin M11) */
   // gpio_pin_config_t LED4_config = {

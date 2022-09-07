@@ -62,6 +62,7 @@ USB_DMA_NONINIT_DATA_ALIGN(USB_DATA_ALIGN_SIZE) uint8_t s_currSendBuf[DATA_BUFF_
 volatile uint32_t s_recvSize = 0;
 volatile uint32_t s_sendSize = 0;
 volatile static usb_device_composite_struct_t *g_deviceComposite;
+volatile static uint32_t s_waitForDataSend = 0;
 
 /*******************************************************************************
  * Code
@@ -105,13 +106,15 @@ usb_status_t USB_DeviceCdcVcomCallback(class_handle_t handle, uint32_t event, vo
                 {
                     /* User: add your own code for send complete event */
                     /* Schedule buffer for next receive event */
-                    error = USB_DeviceCdcAcmRecv(handle, USB_CDC_VCOM_BULK_OUT_ENDPOINT, s_currRecvBuf,
-                                                 g_UsbDeviceCdcVcomDicEndpoints[1].maxPacketSize);
+                    error = USB_DeviceCdcAcmRecv(handle, USB_CDC_VCOM_BULK_OUT_ENDPOINT, s_currRecvBuf,  g_UsbDeviceCdcVcomDicEndpoints[1].maxPacketSize);
                 }
             }
             else
             {
             }
+            // Arduino 接口
+            // 发送完成标志
+            s_waitForDataSend = 1;
         }
         break;
         case kUSB_DeviceCdcEventRecvResponse:
@@ -120,11 +123,14 @@ usb_status_t USB_DeviceCdcVcomCallback(class_handle_t handle, uint32_t event, vo
             {
                 s_recvSize = epCbParam->length;
 
+                // Arduino 接口
+                // USB接收处理
+                CDC_IRQHandel();
+
                 if (!s_recvSize)
                 {
                     /* Schedule buffer for next receive event */
-                    error = USB_DeviceCdcAcmRecv(handle, USB_CDC_VCOM_BULK_OUT_ENDPOINT, s_currRecvBuf,
-                                                 g_UsbDeviceCdcVcomDicEndpoints[1].maxPacketSize);
+                    error = USB_DeviceCdcAcmRecv(handle, USB_CDC_VCOM_BULK_OUT_ENDPOINT, s_currRecvBuf,  g_UsbDeviceCdcVcomDicEndpoints[1].maxPacketSize);
                 }
             }
         }
@@ -334,4 +340,65 @@ usb_status_t USB_DeviceCdcVcomInit(usb_device_composite_struct_t *deviceComposit
 {
     g_deviceComposite = deviceComposite;
     return kStatus_USB_Success;
+}
+
+// Arduino接口
+// 给USBCDC.CPP调用
+//////////////////////////////////////////////////////////////
+static void CDC_VCOM_BMEnterCritical(uint32_t *sr)
+{
+    *sr = DisableGlobalIRQ();
+}
+
+static void CDC_VCOM_BMExitCritical(uint32_t sr)
+{
+    EnableGlobalIRQ(sr);
+}
+
+// 由中断调用，将系统s_currRecvBuf中的数据读取出来传出去
+uint8_t vcom_get_recBuf(void *data)
+{
+    uint8_t length = 0;
+    uint32_t usbOsaCurrentSr;
+
+    if ((0 != s_recvSize) && (USB_CANCELLED_TRANSFER_LENGTH != s_recvSize))
+    {
+        // 进入临界区保证拷贝操作不会被打断
+        CDC_VCOM_BMEnterCritical(&usbOsaCurrentSr);
+        if ((0U != s_recvSize) && (USB_CANCELLED_TRANSFER_LENGTH != s_recvSize))
+        {
+            /* Copy Buffer to data */
+            memcpy(data, s_currRecvBuf, s_recvSize);
+            length = s_recvSize;
+            s_recvSize = 0;
+        }
+        CDC_VCOM_BMExitCritical(usbOsaCurrentSr);
+    }
+
+    return length;
+}
+
+// USBCDC::write 调用 通过CDC发送数据
+status_t vcom_write_buf(void *data, uint32_t size)
+{
+    if ((1 == g_deviceComposite->cdcVcom.attach) && (1 == g_deviceComposite->cdcVcom.startTransactions))
+    {
+        usb_status_t error = kStatus_USB_Error;
+
+        s_waitForDataSend = 0;
+
+        error = USB_DeviceCdcAcmSend(g_deviceComposite->cdcVcom.cdcAcmHandle, USB_CDC_VCOM_BULK_IN_ENDPOINT, (uint8_t *)data, size);
+        if (error != kStatus_USB_Success)
+        {
+            /* Failure to send Data Handling code here */
+            return 0;
+        }
+
+        // 等待本次发送完成，在发送中断中会将该标志位置1
+        // 没有该等待的话，内容会被覆盖导致发送不完成整
+        while (!s_waitForDataSend);
+
+        return 1;
+    }
+    return 0;
 }
