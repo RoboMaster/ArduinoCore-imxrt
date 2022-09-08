@@ -209,7 +209,10 @@ target_include_directories(arduinocore PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/tools/sdk/middleware/usb/device/source/ehci
     ${CMAKE_CURRENT_SOURCE_DIR}/tools/sdk/middleware/usb/include
     ${CMAKE_CURRENT_SOURCE_DIR}/tools/sdk/middleware/usb/phy
+    ${CMAKE_CURRENT_SOURCE_DIR}/tools/sdk/components/lists
+    ${CMAKE_CURRENT_SOURCE_DIR}/tools/sdk/components/osa
     ${CMAKE_CURRENT_SOURCE_DIR}/tools/sdk/components/serial_manager
+    ${CMAKE_CURRENT_SOURCE_DIR}/tools/sdk/components/silicon_id
     ${CMAKE_CURRENT_SOURCE_DIR}/tools/sdk/components/uart
     ${CMAKE_CURRENT_SOURCE_DIR}/tools/sdk/rtos/freertos/include
     ${CMAKE_CURRENT_SOURCE_DIR}/tools/sdk/rtos/freertos/portable/GCC/ARM_CM4F

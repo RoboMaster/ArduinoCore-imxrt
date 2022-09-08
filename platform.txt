@@ -59,13 +59,17 @@ compiler.preproc.include={compiler.cores.include} {compiler.sdk.include} {compil
 # ---------------------------------------------------------------
 # Compile variables
 # -----------------
-compiler.warning_flags=-w
+# -w 禁止所有warning
+# -Wall All Warning
+# -Wextra 额外的warning
+compiler.warning_flags=
+compiler.warning_flags.more=
+
 compiler.warning_flags.none=-w
 compiler.warning_flags.default=
-compiler.warning_flags.more=-Wall
 compiler.warning_flags.all=-Wall -Wextra
 
-compiler.path={runtime.tools.arm-none-eabi-gcc.path}/bin/
+compiler.path={runtime.tools.xpack-arm-none-eabi-gcc.path}/bin/
 compiler.c.cmd=arm-none-eabi-gcc
 compiler.c.flags=-mcpu={build.mcu} -mfpu={build.fpu} -c {compiler.warning_flags} {compiler.warning_flags.more} -mthumb -mapcs -mfloat-abi=hard -std=gnu99 -ffunction-sections -fdata-sections -fno-common -ffreestanding -fno-builtin -nostdlib --param max-inline-insns-single=500 -MMD -D__SKETCH_NAME__="""{build.project_name}"""
 compiler.c.elf.cmd=arm-none-eabi-gcc
@@ -94,7 +98,7 @@ build.flags.optimize=
 build.flags.maxspi=
 build.flags.maxqspi=
 build.flags.usbstack=
-build.flags.debug=
+# build.flags.debug=
 build.flags.flash=
 
 # These can be overridden in platform.local.txt

@@ -62,4 +62,6 @@ int __attribute__((weak)) main()
     xTaskCreate(loopTask, "loopTask", getArduinoLoopTaskStackSize(), NULL, ARDUINO_LOOP_TASK_PRIORITY, &loopTaskHandle);
 
     vTaskStartScheduler();
+
+    return 0;
 }
