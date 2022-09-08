@@ -72,7 +72,7 @@ static void yuyv2nv12(uint8_t *buff);
  *
  * @param argument
  */
-void task_cdc_uvc(void *argument)
+void task_cdc_uvc(void const *argument)
 {
     log_printf(g_log_sys, 0, LOG_INFO, "Start task: usb_vcp.");
 

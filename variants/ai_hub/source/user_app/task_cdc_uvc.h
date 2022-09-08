@@ -29,7 +29,7 @@
 /* Exported define -----------------------------------------------------------*/
 /* Exported typedef ----------------------------------------------------------*/
 /* Exported function prototypes ----------------------------------------------*/
-void task_cdc_uvc(void *argument);
+void task_cdc_uvc(void const *argument);
 void cdc_vcp_send(uint8_t *data, uint16_t size);
 uint16_t cdc_vcp_recv(uint8_t *buff, uint16_t buff_size);
 uint8_t cdc_vcp_is_attach(void);

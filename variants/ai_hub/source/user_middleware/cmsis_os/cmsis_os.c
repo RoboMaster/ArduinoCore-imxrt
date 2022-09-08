@@ -429,7 +429,7 @@ osTimerId osTimerCreate (const osTimerDef_t *timer_def, os_timer_type type, void
                       1, // period should be filled when starting the Timer using osTimerStart
                       (type == osTimerPeriodic) ? pdTRUE : pdFALSE,
                       (void *) argument,
-                      (TaskFunction_t)timer_def->ptimer);
+                      (TimerCallbackFunction_t)timer_def->ptimer);
 #endif
 
 #else 
