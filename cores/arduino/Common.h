@@ -109,6 +109,11 @@ typedef uint32_t pin_size_t;
 typedef uint8_t pin_size_t;
 #endif
 
+#define gpioTogglePin(pin)                                                            \
+  ({                                                                                  \
+    (digitalRead(pin) == HIGH) ? digitalWrite(pin, LOW) :  digitalWrite(pin, HIGH);   \
+  })
+
 void pinMode(pin_size_t pinNumber, PinMode pinMode);
 void digitalWrite(pin_size_t pinNumber, uint8_t status);
 PinStatus digitalRead(pin_size_t pinNumber);
