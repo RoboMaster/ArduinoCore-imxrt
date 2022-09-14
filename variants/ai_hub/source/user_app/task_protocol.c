@@ -52,10 +52,12 @@ typedef struct
 /* Private variables ---------------------------------------------------------*/
 static uint8_t proto_recv_buff[RECV_BUFF_LEN];
 
+extern void open_cmd_results(open_protocol_header_t *pack_desc);
 // Open Protocol 协议回调表
 const open_handler_keypair_t open_protocol_fun_req[] =
 {
     //{0xFFFE,                                open_cmd_default},
+    {0x0210,                                open_cmd_results},
     {OPEN_CMD_REBOOT,                       open_cmd_reboot},
     {OPEN_CMD_VERSION,                      open_cmd_ver},
     {OPEN_CMD_ECHO,                         open_cmd_echo},

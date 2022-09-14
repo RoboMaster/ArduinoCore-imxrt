@@ -1,0 +1,104 @@
+/**
+ * @file RMAI_Libs.cpp
+ * @author Leitao Yu (flame.yu@dji.com)
+ * @brief
+ * @version 0.1
+ * @date 2022-09-14
+ *
+ * @copyright Copyright (c) 2022 Dji.
+ *
+ */
+
+#include "open_protocol.h"
+#include <Arduino.h>
+#include <RMAI_Results.h>
+
+results_tag results[21];
+uint8_t result_num = 0;
+uint8_t result_avaliable = 0;
+
+OPEN_PROTOCOL_MUTEX_DECLARE(open_protocol_mutex);
+
+// 将AI模块小端存储的数据转换为大端存储
+uint16_t little2big(uint8_t first_num, uint8_t second_num)
+{
+    uint16_t result = 0;
+    result = (second_num << 8) + first_num;
+    return result;
+}
+
+RMAI_Results::RMAI_Results()
+{
+}
+
+RMAI_Results::~RMAI_Results()
+{
+}
+
+void RMAI_Results::begin()
+{
+    OPEN_PROTOCOL_MUTEX_INIT(open_protocol_mutex);
+}
+
+void RMAI_Results::setCallback(std::function<void(results_tag *, uint8_t)> func)
+{
+    this->_callback = func;
+}
+
+void RMAI_Results::run()
+{
+    OPEN_PROTOCOL_MUTEX_LOCK(open_protocol_mutex);
+
+    if (1U == result_avaliable)
+    {
+        this->_result_num = result_num;
+        memcpy(this->_results, results, this->_result_num * sizeof(results[0]));
+        result_avaliable = 0;
+
+        OPEN_PROTOCOL_MUTEX_UNLOCK(open_protocol_mutex);
+
+        //回调函数
+        this->_callback(this->_results, this->_result_num);
+    }
+    else
+    {
+        OPEN_PROTOCOL_MUTEX_UNLOCK(open_protocol_mutex);
+    }
+}
+
+extern "C" {
+void open_cmd_results(open_protocol_header_t *pack_desc)
+{
+    if (pack_desc->is_ack == 0)
+    {
+        //当命令码为0x0210时代表接受的数据是推理结果
+        if (pack_desc->cmd_id == 0x0210)
+        {
+            OPEN_PROTOCOL_MUTEX_LOCK(open_protocol_mutex);
+
+            //物体数量
+            result_num = pack_desc->data_len / 8;
+            //循环遍历data区的数据
+            for (int i = 0; i < result_num; i++)
+            {
+                // 识别到物体的id
+                results[i].id = pack_desc->data[0 + i * 8];
+                //识别到物体的x坐标,使用little2big()函数将小端转为大端
+                results[i].x = little2big(pack_desc->data[1 + i * 8], pack_desc->data[2 + i * 8]);
+                //识别到物体的y坐标
+                results[i].y = pack_desc->data[3 + i * 8];
+                //识别到物体的w宽度,使用little2big()函数将小端转为大端
+                results[i].w = little2big(pack_desc->data[4 + i * 8], pack_desc->data[5 + i * 8]);
+                //识别到物体的h高度
+                results[i].h = pack_desc->data[6 + i * 8];
+                //识别到物体的c置信度
+                results[i].c = pack_desc->data[8 + i * 8];
+            }
+
+            result_avaliable = 1;
+
+            OPEN_PROTOCOL_MUTEX_UNLOCK(open_protocol_mutex);
+        }
+    }
+}
+}
