@@ -1,6 +1,8 @@
 
 menu.debug=Generate Debug Info
 menu.features=Optional Features
+# menu.features1=Connect EP
+# menu.features2=Connect AI Camera
 
 # RM Expansion Module
 # ------------------------------
@@ -44,3 +46,13 @@ rm_ai_hub.menu.features.1.build.flags.features=-DEXT_FEATURE_MODE=1
 rm_ai_hub.menu.features.2.build.flags.features=-DEXT_FEATURE_MODE=2
 rm_ai_hub.menu.features.3.build.flags.features=-DEXT_FEATURE_MODE=3
 rm_ai_hub.menu.features.4.build.flags.features=-DEXT_FEATURE_MODE=4
+
+# rm_ai_hub.menu.features1.on=ON
+# rm_ai_hub.menu.features1.off=OFF
+# rm_ai_hub.menu.features1.on.build.flags.features1=
+# rm_ai_hub.menu.features1.off.build.flags.features1=
+
+# rm_ai_hub.menu.features2.on=ON
+# rm_ai_hub.menu.features2.off=OFF
+# rm_ai_hub.menu.features2.on.build.flags.features2=
+# rm_ai_hub.menu.features2.off.build.flags.features2=

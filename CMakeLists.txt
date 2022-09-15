@@ -53,8 +53,9 @@ FILE(GLOB_RECURSE ASSEMBLY_FILES
     )
 
 # 添加这些文件到编译列表中
-add_source_files(${CMAKE_CURRENT_SOURCE_DIR}/variants/${BOARD}/variant.c
-                 ${CMAKE_CURRENT_SOURCE_DIR}/variants/${BOARD}/board/*.c
+add_source_files(   ${CMAKE_CURRENT_SOURCE_DIR}/variants/${BOARD}/variant.c
+                    ${CMAKE_CURRENT_SOURCE_DIR}/variants/${BOARD}/RMAI_Results.cpp
+                    ${CMAKE_CURRENT_SOURCE_DIR}/variants/${BOARD}/board/*.c
                 )
 
             

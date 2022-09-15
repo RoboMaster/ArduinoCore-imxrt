@@ -628,11 +628,6 @@ void BOARD_InitPeripherals(void)
   EDMA_Init(DMA0_DMA_BASEADDR, &DMA0_config);
 
   /* Initialize components */
-
-#if (EXT_FEATURE_MODE == 2) || (EXT_FEATURE_MODE == 4)
-  CAN3_init();
-#endif
-
 #if (EXT_FEATURE_MODE == 3) || (EXT_FEATURE_MODE == 4)
   LPUART3_init();
   LPSPI3_init();
@@ -640,6 +635,10 @@ void BOARD_InitPeripherals(void)
 #endif
 
   LPUART1_init();
+
+#if (EXT_FEATURE_MODE == 2) || (EXT_FEATURE_MODE == 4)
+  CAN3_init();
+#endif
 }
 
 /***********************************************************************************************************************

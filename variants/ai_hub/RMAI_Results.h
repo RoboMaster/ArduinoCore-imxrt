@@ -43,7 +43,6 @@ class RMAI_Results
     void run();
 
   private:
-    uint8_t _available;
     std::function<void(results_tag *, uint8_t)> _callback;
     results_tag _results[21];
     uint8_t _result_num = 0;

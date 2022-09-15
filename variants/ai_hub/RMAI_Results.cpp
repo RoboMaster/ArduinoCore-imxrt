@@ -1,4 +1,4 @@
-/**
+/**result_num
  * @file RMAI_Libs.cpp
  * @author Leitao Yu (flame.yu@dji.com)
  * @brief
@@ -15,7 +15,8 @@
 
 results_tag results[21];
 uint8_t result_num = 0;
-uint8_t result_avaliable = 0;
+uint8_t _result_avaliable = 0;
+uint8_t _result_initialized = 0;
 
 OPEN_PROTOCOL_MUTEX_DECLARE(open_protocol_mutex);
 
@@ -38,6 +39,7 @@ RMAI_Results::~RMAI_Results()
 void RMAI_Results::begin()
 {
     OPEN_PROTOCOL_MUTEX_INIT(open_protocol_mutex);
+    _result_initialized = 1;
 }
 
 void RMAI_Results::setCallback(std::function<void(results_tag *, uint8_t)> func)
@@ -47,17 +49,20 @@ void RMAI_Results::setCallback(std::function<void(results_tag *, uint8_t)> func)
 
 void RMAI_Results::run()
 {
+    // 未初始化不能执行，没有初始化Mutex
+    if (1U != _result_initialized) return;
+
     OPEN_PROTOCOL_MUTEX_LOCK(open_protocol_mutex);
 
-    if (1U == result_avaliable)
+    if (1U == _result_avaliable)
     {
+        _result_avaliable = 0;
         this->_result_num = result_num;
         memcpy(this->_results, results, this->_result_num * sizeof(results[0]));
-        result_avaliable = 0;
 
         OPEN_PROTOCOL_MUTEX_UNLOCK(open_protocol_mutex);
 
-        //回调函数
+        //回调
         this->_callback(this->_results, this->_result_num);
     }
     else
@@ -69,6 +74,9 @@ void RMAI_Results::run()
 extern "C" {
 void open_cmd_results(open_protocol_header_t *pack_desc)
 {
+    // 未初始化不能执行，没有初始化Mutex
+    if (1U != _result_initialized) return;
+
     if (pack_desc->is_ack == 0)
     {
         //当命令码为0x0210时代表接受的数据是推理结果
@@ -95,7 +103,7 @@ void open_cmd_results(open_protocol_header_t *pack_desc)
                 results[i].c = pack_desc->data[8 + i * 8];
             }
 
-            result_avaliable = 1;
+            _result_avaliable = 1;
 
             OPEN_PROTOCOL_MUTEX_UNLOCK(open_protocol_mutex);
         }
