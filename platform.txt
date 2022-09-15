@@ -85,7 +85,7 @@ compiler.objcopy.eep.flags=-O ihex -j .eeprom --set-section-flags=.eeprom=alloc,
 compiler.elf2hex.flags=-O binary
 compiler.elf2hex.cmd=arm-none-eabi-objcopy
 
-# compiler.ldflags=-static 取消-static 让其从现编译的文件中链接
+# compiler.ldflags=-static
 compiler.ldflags=
 
 compiler.size.cmd=arm-none-eabi-size
@@ -98,8 +98,10 @@ build.flags.optimize=
 build.flags.maxspi=
 build.flags.maxqspi=
 build.flags.usbstack=
-# build.flags.debug=
-build.flags.flash=
+
+build.flags.debug=
+build.flags.features=
+build.flags.module=
 
 # These can be overridden in platform.local.txt
 compiler.c.extra_flags=
@@ -110,19 +112,11 @@ compiler.S.extra_flags=
 compiler.ar.extra_flags=
 compiler.elf2hex.extra_flags=
 
-#compiler.arm.cmsis.c.flags="-I{runtime.platform.path}/tools/sdk/CMSIS/Include/" 
-# compiler.arm.cmsis.c.flags="-I{runtime.platform.path}/tools/sdk/CMSIS/Core/Include/" 
-# compiler.arm.cmsis.c.flags="-I{runtime.platform.path}/tools/sdk/CMSIS/Core/Include/" 
 compiler.arm.cmsis.c.flags=
 
 #CMSIS/DSP/Lib/ARM/arm_cortexM7lfdp_math.lib
-# compiler.arm.cmsis.ldflags="-L{runtime.platform.path}/tools/sdk/CMSIS/Lib/GCC/"  -larm_cortexM7lfdp_math -larm_cortexM7lfsp_math
-# compiler.arm.cmsis.ldflags="-L{runtime.platform.path}/tools/sdk/CMSIS/DSP/Lib/GCC/"  -larm_cortexM7lfdp_math -larm_cortexM7lfsp_math
 compiler.arm.cmsis.ldflags="-L{compiler.sdk.path}/CMSIS/Lib/GCC/" -larm_cortexM7lfdp_math -larm_cortexM7lfsp_math
 
-# compiler.sdk.ldflags=-Wl,--whole-archive  "{runtime.platform.path}/tools/lib/{build.processor}/libfsl_usb_drivers.a"  "{runtime.platform.path}/tools/lib/{build.processor}/libfsl_bsp.a" -Wl,--no-whole-archive
-# 先取消使用库，看看缺少什么东西，先使用编译来做
-# compiler.sdk.ldflags=-Wl,--whole-archive  "{runtime.platform.path}/tools/lib/{build.processor}/libdriver_fsl.a"  "{runtime.platform.path}/tools/lib/{build.processor}/libdriver_usb.a" "{runtime.platform.path}/tools/lib/{build.processor}/libdriver_components.a" "{runtime.platform.path}/tools/lib/{build.processor}/libdriver_freertos.a" "{runtime.platform.path}/tools/lib/{build.processor}/libdriver_sys.a" -Wl,--no-whole-archive
 compiler.sdk.ldflags=-Wl,--whole-archive "{runtime.platform.path}/tools/lib/{build.processor}/libsdk_components.a"  "{runtime.platform.path}/tools/lib/{build.processor}/libsdk_devices.a" "{runtime.platform.path}/tools/lib/{build.processor}/libsdk_middleware.a" "{runtime.platform.path}/tools/lib/{build.processor}/libsdk_rtos.a" -Wl,--no-whole-archive
 
 
@@ -130,10 +124,10 @@ compiler.sdk.ldflags=-Wl,--whole-archive "{runtime.platform.path}/tools/lib/{bui
 # ----------------
 
 ## Compile c files
-recipe.c.o.pattern="{compiler.path}{compiler.c.cmd}" {compiler.c.flags} -DF_CPU={build.f_cpu} -DARDUINO={runtime.ide.version} -DARDUINO_{build.board} -DARDUINO_ARCH_{build.arch} {compiler.c.extra_flags} {build.extra_flags} {build.flags.debug} {build.flags.flash} {build.flags.module} {compiler.arm.cmsis.c.flags} {compiler.preproc.include} {includes} "{source_file}" -o "{object_file}"
+recipe.c.o.pattern="{compiler.path}{compiler.c.cmd}" {compiler.c.flags} -DF_CPU={build.f_cpu} -DARDUINO={runtime.ide.version} -DARDUINO_{build.board} -DARDUINO_ARCH_{build.arch} {compiler.c.extra_flags} {build.extra_flags} {build.flags.debug} {build.flags.features} {build.flags.module} {compiler.arm.cmsis.c.flags} {compiler.preproc.include} {includes} "{source_file}" -o "{object_file}"
 
 ## Compile c++ files
-recipe.cpp.o.pattern="{compiler.path}{compiler.cpp.cmd}" {compiler.cpp.flags} -DF_CPU={build.f_cpu} -DARDUINO={runtime.ide.version} -DARDUINO_{build.board} -DARDUINO_ARCH_{build.arch} {compiler.cpp.extra_flags} {build.extra_flags} {build.flags.debug} {build.flags.flash} {build.flags.module} {compiler.arm.cmsis.c.flags} {compiler.preproc.include} {includes} "{source_file}" -o "{object_file}"
+recipe.cpp.o.pattern="{compiler.path}{compiler.cpp.cmd}" {compiler.cpp.flags} -DF_CPU={build.f_cpu} -DARDUINO={runtime.ide.version} -DARDUINO_{build.board} -DARDUINO_ARCH_{build.arch} {compiler.cpp.extra_flags} {build.extra_flags} {build.flags.debug} {build.flags.features} {build.flags.module} {compiler.arm.cmsis.c.flags} {compiler.preproc.include} {includes} "{source_file}" -o "{object_file}"
 
 ## Compile S files
 recipe.S.o.pattern="{compiler.path}{compiler.S.cmd}" {compiler.S.flags} -DF_CPU={build.f_cpu} -DARDUINO={runtime.ide.version} -DARDUINO_{build.board} -DARDUINO_ARCH_{build.arch} {compiler.S.extra_flags}  {build.extra_flags} {build.cache_flags} {compiler.arm.cmsis.c.flags} {includes} "{source_file}" -o "{object_file}"
@@ -159,25 +153,8 @@ recipe.size.regex=\.text\s+([0-9]+).*
 # --------------
 
 #
-# BOSSA
-#
-
-# tools.bossac.path={runtime.tools.bossac.path}
-# tools.bossac.cmd=bossac
-# tools.bossac.cmd.windows=bossac.exe
-
-# tools.bossac.upload.params.verbose=-i -d
-# tools.bossac.upload.params.quiet=
-# tools.bossac.upload.pattern="{path}/{cmd}" --port={serial.port.file} -i -w -v "{build.path}/{build.project_name}.bin" -R
-
-# tools.bossac_remote.upload.pattern=/usr/bin/run-bossac  --port=ttyATH0 -w -v /tmp/sketch.bin -R
-# tools.bossac.network_cmd={runtime.tools.arduinoOTA.path}/bin/arduinoOTA
-# tools.bossac.upload.network_pattern="{network_cmd}" -address {serial.port} -port 65280 -username arduino -password "{network.password}" -sketch "{build.path}/{build.project_name}.bin" -upload /sketch -b
-
-#
 # RM AIHUB_UPGRADE_TOOL -> rmaut
 #
-
 tools.rmaut.path={runtime.tools.rmaut.path}
 tools.rmaut.cmd=rmaut
 tools.rmaut.cmd.windows=rmaut.exe
@@ -185,10 +162,3 @@ tools.rmaut.cmd.windows=rmaut.exe
 tools.rmaut.upload.params.verbose=-i -d
 tools.rmaut.upload.params.quiet=
 tools.rmaut.upload.pattern="{path}/{cmd}" -d -p {serial.port.file} -f "{build.path}/{build.project_name}.bin"
-#仅做测试，用固定路径 需要将rmaut工具放在 D盘根目录下面
-# tools.rmaut.upload.pattern="D:\rmaut.exe" -d -p {serial.port.file} -f "{build.path}/{build.project_name}.bin"
-
-
-# tools.rmaut_remote.upload.pattern=/usr/bin/run-bossac  --port=ttyATH0 -w -v /tmp/sketch.bin -R
-# tools.rmaut.network_cmd={runtime.tools.arduinoOTA.path}/bin/arduinoOTA
-# tools.rmaut.upload.network_pattern="{network_cmd}" -address {serial.port} -port 65280 -username arduino -password "{network.password}" -sketch "{build.path}/{build.project_name}.bin" -upload /sketch -b

@@ -79,7 +79,7 @@ void task_cdc_uvc(void const *argument)
     fifo_init(&usb_vcp_tx_fifo, usb_vcp_tx_fifo_buff, USB_VCP_TX_FIFO_SIZE);
     fifo_init(&usb_vcp_rx_fifo, usb_vcp_rx_fifo_buff, USB_VCP_RX_FIFO_SIZE);
 
-#ifdef USE_AICAMERA
+#if (EXT_FEATURE_MODE == 3) || (EXT_FEATURE_MODE == 4)
     spi3_slave_init();
     spi3_slave_receive_finish_handle_reg(spi_rx_complete);
     board_gpio_spi3_cs0_int_reg(spi_cs_falling);

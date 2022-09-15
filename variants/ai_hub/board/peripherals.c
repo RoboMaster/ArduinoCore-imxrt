@@ -629,15 +629,17 @@ void BOARD_InitPeripherals(void)
 
   /* Initialize components */
 
-#ifdef USE_AICAMERA
+#if (EXT_FEATURE_MODE == 2) || (EXT_FEATURE_MODE == 4)
+  CAN3_init();
+#endif
+
+#if (EXT_FEATURE_MODE == 3) || (EXT_FEATURE_MODE == 4)
   LPUART3_init();
   LPSPI3_init();
   GPIO1_init();
 #endif
 
   LPUART1_init();
-  CAN3_init();
-
 }
 
 /***********************************************************************************************************************

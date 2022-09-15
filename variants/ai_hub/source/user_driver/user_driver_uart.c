@@ -239,7 +239,7 @@ static void uart3_tx_edma_callback(LPUART_Type *base, lpuart_edma_handle_t *hand
 
 extern void LPUART3_DriverIRQHandler(void);
 
-#ifdef USE_AICAMERA
+#if (EXT_FEATURE_MODE == 3) || (EXT_FEATURE_MODE == 4)
 /**
  * @brief LPUART3中断处理函数
  *

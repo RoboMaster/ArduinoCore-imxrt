@@ -104,7 +104,7 @@ size_t UART::write(uint8_t c)
 UART Serial(UART1_NUM, UART1_IRQn, PIN_UART1_RX, PIN_UART1_TX);
 
 extern "C" {
-#ifndef USE_AICAMERA
+#if (EXT_FEATURE_MODE == 1) || (EXT_FEATURE_MODE == 2)
 void UART1_HANDLER(void)
 {
     Serial.LPUART_IRQHandel();

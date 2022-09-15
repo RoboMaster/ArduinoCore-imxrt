@@ -382,7 +382,7 @@ void board_gpio_spi3_cs0_int_enable(uint8_t enable)
     }
 }
 
-#ifdef USE_AICAMERA
+#if (EXT_FEATURE_MODE == 3) || (EXT_FEATURE_MODE == 4)
 /**
  * @brief GPIO1 16~31中断入口
  *

@@ -85,11 +85,13 @@ static void task_start(void const *argument)
     flash_init();
     // sd_file_init();
 
-#ifdef USE_AICAMERA
+#if (EXT_FEATURE_MODE == 3) || (EXT_FEATURE_MODE == 4)
     uart_init(LPUART3, 1500000, 512, 512);
 #endif
-
+#if (EXT_FEATURE_MODE == 2) || (EXT_FEATURE_MODE == 4)
     can3_init();
+#endif
+
     uart_init(LPUART1, 921600, 512, 512);
 
     /* 初始化Log模块 */
@@ -101,8 +103,8 @@ static void task_start(void const *argument)
     start_print();
     log_printf(g_log_sys, 0, LOG_INFO, "Logger initial complete.");
 
-#ifdef USE_AICAMERA
-    log_printf(g_log_sys, 0, LOG_INFO, "USE_AICAMERA.");
+#if defined(EXT_FEATURE_MODE)
+    log_printf(g_log_sys, 0, LOG_INFO, "EXT_FEATURE_MODE=:%d.", EXT_FEATURE_MODE);
 #endif
 
     // if(board_wdog_is_timeout_reset())

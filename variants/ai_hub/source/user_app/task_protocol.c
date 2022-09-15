@@ -96,8 +96,6 @@ static uint8_t can_port_idx;
 static uint8_t uart3_port_idx;
 extern sys_param_t g_sys_param;                        //系统参数
 
-uint8_t arduino_use_usb_serial = 0;
-
 /* Private function prototypes -----------------------------------------------*/
 static void unpacket_process(uint8_t port, uint8_t *buf, uint16_t len);
 static void uart3_send(uint8_t* data, uint16_t len);
@@ -118,15 +116,16 @@ void task_protocol(void const * argument)
     uint8_t last_usb_attach_status = 0;
     open_proto_init(g_sys_param.id | 0x0200);
 
+#if (EXT_FEATURE_MODE == 2) || (EXT_FEATURE_MODE == 4)
     usb_cdc_port_idx = open_proto_port_add("USB_CDC", cdc_vcp_send, cdc_vcp_recv);
-    can_port_idx = open_proto_port_add("CAN", can_send, can_receive);
-#ifdef USE_AICAMERA
-    uart3_port_idx = open_proto_port_add("UART3", uart3_send, uart3_receive);
-#endif
     open_proto_port_enable(usb_cdc_port_idx, 0);
     open_proto_static_route_add(0x0, 0x0, usb_cdc_port_idx, 252);
+    can_port_idx = open_proto_port_add("CAN", can_send, can_receive);
     open_proto_static_route_add(0x0, 0x0, can_port_idx, 253);
-#ifdef USE_AICAMERA
+#endif
+
+#if (EXT_FEATURE_MODE == 3) || (EXT_FEATURE_MODE == 4)
+    uart3_port_idx = open_proto_port_add("UART3", uart3_send, uart3_receive);
     open_proto_static_route_add(0x03FF, 0xFF00, uart3_port_idx, 2);
 #endif
 
@@ -145,22 +144,23 @@ void task_protocol(void const * argument)
     {
         open_proto_recv();
 
+#if (EXT_FEATURE_MODE == 2) || (EXT_FEATURE_MODE == 4)
         if(last_usb_attach_status != cdc_vcp_is_attach() && cdc_vcp_is_attach())
         {
             last_usb_attach_status = cdc_vcp_is_attach();
-            // Arduino层兼容，Arduino层没用USB串口时，openProtocol才可用
-            if (arduino_use_usb_serial == 0 )
-            {
-                open_proto_port_enable(usb_cdc_port_idx, 1);   
-            }
-        }
 
+            open_proto_port_enable(usb_cdc_port_idx, 1);   
+        }
+#endif
+
+#if (EXT_FEATURE_MODE == 3) || (EXT_FEATURE_MODE == 4)
         if(osKernelSysTick() - last_send_ai_core_set_speed_time > 250)
         {
             /* 定时发送设置波特率指令，维持AI核心板为高速串口模式 */
             last_send_ai_core_set_speed_time = osKernelSysTick();
             set_ai_core_uart_speed(1500000);
         }
+#endif
 
         osDelay(2);
     }

@@ -5,11 +5,9 @@
 extern "C" {
 extern void board_boot_1rd_pattern(void);
 extern uint32_t *stop_boot_app_flag;
-
-extern uint8_t arduino_use_usb_serial;
 }
 
-uint8_t temp[2];
+uint8_t cdc_reset_signal_buf[2];
 
 void CDC_IRQHandel()
 {
@@ -23,23 +21,27 @@ uint32_t CDC_available()
 
 void USBSerial::CDC_IRQHandel(void)
 {
-    if (arduino_use_usb_serial == 0) return;
-
     uint8_t data[64];
     uint32_t length;
     length = vcom_get_recBuf(data);
     for (uint8_t i = 0; i < length; i++)
     {
-        temp[0] = data[i];
-        // 收到重启信号
-        if (temp[0] == 0x55 && temp[1] == 0xaa)
+        // 重启信号检测
+        //-----------------------------------------
+        cdc_reset_signal_buf[0] = data[i];
+        if (cdc_reset_signal_buf[0] == 0x55 && cdc_reset_signal_buf[1] == 0xaa)
         {
             *stop_boot_app_flag = 0x1234abcd;
             board_boot_1rd_pattern();
         }
-        temp[1] = temp[0];
+        cdc_reset_signal_buf[1] = cdc_reset_signal_buf[0];
+        //-----------------------------------------
 
+        // 只有在单独使用或者配合AI使用时，USB作为调试端口使用
+#if (EXT_FEATURE_MODE == 1) || (EXT_FEATURE_MODE == 3)
         _rb->store_char(data[i]);
+#endif
+
     }
 }
 
@@ -52,14 +54,12 @@ void USBSerial::begin(unsigned long baud, uint16_t config)
     _rb = new RingBufferN<512>();
     _rb->clear();
     init(baud, config);
-    arduino_use_usb_serial = 1;
 }
 
 void USBSerial::begin(void)
 {
     _rb = new RingBufferN<512>();
     _rb->clear();
-    arduino_use_usb_serial = 1;
 }
 
 void USBSerial::init(unsigned long baud, uint16_t config)
@@ -69,7 +69,6 @@ void USBSerial::init(unsigned long baud, uint16_t config)
 void USBSerial::end()
 {
     delete _rb;
-    arduino_use_usb_serial = 0;
 }
 
 int USBSerial::available(void)
