@@ -14,7 +14,8 @@ rm_ai_hub.pid.1=0x802B
 
 rm_ai_hub.upload.tool=rmaut
 rm_ai_hub.upload.protocol=dji-rm-open-protocol
-rm_ai_hub.upload.maximum_size=8323072
+rm_ai_hub.upload.maximum_size=3145728
+rm_ai_hub.upload.maximum_data_size=1048576
 rm_ai_hub.upload.offset=0x10000
 rm_ai_hub.upload.use_1200bps_touch=false
 rm_ai_hub.upload.wait_for_upload_port=true

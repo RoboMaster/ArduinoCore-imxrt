@@ -149,7 +149,10 @@ recipe.output.save_file={build.project_name}.{build.variant}.bin
 
 ## Compute size
 recipe.size.pattern="{compiler.path}{compiler.size.cmd}" -A "{build.path}/{build.project_name}.elf"
-recipe.size.regex=\.text\s+([0-9]+).*
+#计算Flash
+recipe.size.regex=^(?:\.flash_config|\.ivt|\.interrupts|\.text|\.ARM|\.data)\s+([0-9]+).*
+#计算RAM
+recipe.size.regex.data=^(?:\.data|\.bss|\.ncache.init|\.ncache|\.heap|\.stack|\.m_data3)\s+([0-9]+).*
 
 # Uploader tools
 # --------------
