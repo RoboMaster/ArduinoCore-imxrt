@@ -1,8 +1,8 @@
 
 menu.debug=Generate Debug Info
-menu.features=Optional Features
-# menu.features1=Connect EP
-# menu.features2=Connect AI Camera
+# menu.features=Optional Features
+menu.feature1=Connect RoboMaster EP
+menu.feature2=Connect AI Camera
 
 # RM Expansion Module
 # ------------------------------
@@ -38,21 +38,21 @@ rm_ai_hub.menu.debug.off=OFF
 rm_ai_hub.menu.debug.on.build.flags.debug=-g3 -Og
 rm_ai_hub.menu.debug.off.build.flags.debug=-O0
 
-rm_ai_hub.menu.features.1=1 Standalone Use
-rm_ai_hub.menu.features.2=2 Cooperate With EP
-rm_ai_hub.menu.features.3=3 Cooperate With AI Camera
-rm_ai_hub.menu.features.4=4 Cooperate With EP + AI Camera
-rm_ai_hub.menu.features.1.build.flags.features=-DEXT_FEATURE_MODE=1
-rm_ai_hub.menu.features.2.build.flags.features=-DEXT_FEATURE_MODE=2
-rm_ai_hub.menu.features.3.build.flags.features=-DEXT_FEATURE_MODE=3
-rm_ai_hub.menu.features.4.build.flags.features=-DEXT_FEATURE_MODE=4
+# rm_ai_hub.menu.features.1=1 Standalone Use
+# rm_ai_hub.menu.features.2=2 Cooperate With EP
+# rm_ai_hub.menu.features.3=3 Cooperate With AI Camera
+# rm_ai_hub.menu.features.4=4 Cooperate With EP + AI Camera
+# rm_ai_hub.menu.features.1.build.flags.features=-DEXT_FEATURE_MODE=1
+# rm_ai_hub.menu.features.2.build.flags.features=-DEXT_FEATURE_MODE=2
+# rm_ai_hub.menu.features.3.build.flags.features=-DEXT_FEATURE_MODE=3
+# rm_ai_hub.menu.features.4.build.flags.features=-DEXT_FEATURE_MODE=4
 
-# rm_ai_hub.menu.features1.on=ON
-# rm_ai_hub.menu.features1.off=OFF
-# rm_ai_hub.menu.features1.on.build.flags.features1=
-# rm_ai_hub.menu.features1.off.build.flags.features1=
+rm_ai_hub.menu.feature1.on=ON
+rm_ai_hub.menu.feature1.off=OFF
+rm_ai_hub.menu.feature1.on.build.flags.feature1=-DCONNECT_EP
+rm_ai_hub.menu.feature1.off.build.flags.feature1=
 
-# rm_ai_hub.menu.features2.on=ON
-# rm_ai_hub.menu.features2.off=OFF
-# rm_ai_hub.menu.features2.on.build.flags.features2=
-# rm_ai_hub.menu.features2.off.build.flags.features2=
+rm_ai_hub.menu.feature2.on=ON
+rm_ai_hub.menu.feature2.off=OFF
+rm_ai_hub.menu.feature2.on.build.flags.feature2=-DCONNECT_AI_CAMERA
+rm_ai_hub.menu.feature2.off.build.flags.feature2=

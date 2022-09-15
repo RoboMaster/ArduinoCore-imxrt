@@ -116,7 +116,7 @@ void task_protocol(void const * argument)
     uint8_t last_usb_attach_status = 0;
     open_proto_init(g_sys_param.id | 0x0200);
 
-#if (EXT_FEATURE_MODE == 2) || (EXT_FEATURE_MODE == 4)
+#if defined(CONNECT_EP)
     usb_cdc_port_idx = open_proto_port_add("USB_CDC", cdc_vcp_send, cdc_vcp_recv);
     open_proto_port_enable(usb_cdc_port_idx, 0);
     open_proto_static_route_add(0x0, 0x0, usb_cdc_port_idx, 252);
@@ -124,7 +124,7 @@ void task_protocol(void const * argument)
     open_proto_static_route_add(0x0, 0x0, can_port_idx, 253);
 #endif
 
-#if (EXT_FEATURE_MODE == 3) || (EXT_FEATURE_MODE == 4)
+#if defined(CONNECT_AI_CAMERA)
     uart3_port_idx = open_proto_port_add("UART3", uart3_send, uart3_receive);
     open_proto_static_route_add(0x03FF, 0xFF00, uart3_port_idx, 2);
 #endif
@@ -144,7 +144,7 @@ void task_protocol(void const * argument)
     {
         open_proto_recv();
 
-#if (EXT_FEATURE_MODE == 2) || (EXT_FEATURE_MODE == 4)
+#if defined(CONNECT_EP)
         if(last_usb_attach_status != cdc_vcp_is_attach() && cdc_vcp_is_attach())
         {
             last_usb_attach_status = cdc_vcp_is_attach();
@@ -153,7 +153,7 @@ void task_protocol(void const * argument)
         }
 #endif
 
-#if (EXT_FEATURE_MODE == 3) || (EXT_FEATURE_MODE == 4)
+#if defined(CONNECT_AI_CAMERA)
         if(osKernelSysTick() - last_send_ai_core_set_speed_time > 250)
         {
             /* 定时发送设置波特率指令，维持AI核心板为高速串口模式 */

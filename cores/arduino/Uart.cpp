@@ -104,7 +104,8 @@ size_t UART::write(uint8_t c)
 UART Serial(UART1_NUM, UART1_IRQn, PIN_UART1_RX, PIN_UART1_TX);
 
 extern "C" {
-#if (EXT_FEATURE_MODE == 1) || (EXT_FEATURE_MODE == 2)
+// 使用AI相机时UART3被占用，此时Arduino层不能使用UART3
+#if !defined(CONNECT_AI_CAMERA)
 void UART1_HANDLER(void)
 {
     Serial.LPUART_IRQHandel();

@@ -85,10 +85,10 @@ static void task_start(void const *argument)
     flash_init();
     // sd_file_init();
 
-#if (EXT_FEATURE_MODE == 3) || (EXT_FEATURE_MODE == 4)
+#if defined(CONNECT_AI_CAMERA)
     uart_init(LPUART3, 1500000, 512, 512);
 #endif
-#if (EXT_FEATURE_MODE == 2) || (EXT_FEATURE_MODE == 4)
+#if defined(CONNECT_EP)
     can3_init();
 #endif
 
@@ -103,8 +103,11 @@ static void task_start(void const *argument)
     start_print();
     log_printf(g_log_sys, 0, LOG_INFO, "Logger initial complete.");
 
-#if defined(EXT_FEATURE_MODE)
-    log_printf(g_log_sys, 0, LOG_INFO, "EXT_FEATURE_MODE=:%d.", EXT_FEATURE_MODE);
+#if defined(CONNECT_AI_CAMERA)
+    log_printf(g_log_sys, 0, LOG_INFO, "CONNECT_AI_CAMERA");
+#endif
+#if defined(CONNECT_EP)
+    log_printf(g_log_sys, 0, LOG_INFO, "CONNECT_EP");
 #endif
 
     // if(board_wdog_is_timeout_reset())

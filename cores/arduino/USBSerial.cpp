@@ -37,8 +37,8 @@ void USBSerial::CDC_IRQHandel(void)
         cdc_reset_signal_buf[1] = cdc_reset_signal_buf[0];
         //-----------------------------------------
 
-        // 只有在单独使用或者配合AI使用时，USB作为调试端口使用
-#if (EXT_FEATURE_MODE == 1) || (EXT_FEATURE_MODE == 3)
+        // 连接EP会占用USB端口，Arduino层不能使用
+#if !defined(CONNECT_EP)
         _rb->store_char(data[i]);
 #endif
 

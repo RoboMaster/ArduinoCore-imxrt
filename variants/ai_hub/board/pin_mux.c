@@ -97,7 +97,7 @@ BOARD_InitPins:
 void BOARD_InitPins(void) {
   CLOCK_EnableClock(kCLOCK_Iomuxc);
 
-#if (EXT_FEATURE_MODE == 3) || (EXT_FEATURE_MODE == 4)
+#if defined(CONNECT_AI_CAMERA)
   /* GPIO configuration of SPI3_CS0 on GPIO_AD_B1_12 (pin H12) */
   gpio_pin_config_t SPI3_CS0_config = {
       .direction = kGPIO_DigitalInput,
@@ -119,7 +119,7 @@ void BOARD_InitPins(void) {
   GPIO_PinInit(GPIO3, 2U, &EXT_INT0_config);
 #endif
 
-#if (EXT_FEATURE_MODE == 3) || (EXT_FEATURE_MODE == 4)
+#if defined(CONNECT_AI_CAMERA)
   IOMUXC_SetPinMux(IOMUXC_GPIO_AD_B1_06_LPUART3_TX, 0U);
   IOMUXC_SetPinMux(IOMUXC_GPIO_AD_B1_07_LPUART3_RX, 0U);
   IOMUXC_SetPinMux(IOMUXC_GPIO_AD_B1_12_GPIO1_IO28, 0U); // SPI3_CS0
@@ -137,7 +137,7 @@ void BOARD_InitPins(void) {
   IOMUXC_SetPinMux(IOMUXC_GPIO_SD_B1_02_GPIO3_IO02, 0U);
 #endif
 
-#if (EXT_FEATURE_MODE == 2) || (EXT_FEATURE_MODE == 4)
+#if defined(CONNECT_EP)
   IOMUXC_SetPinMux(IOMUXC_GPIO_EMC_36_FLEXCAN3_TX, 0U);
   IOMUXC_SetPinMux(IOMUXC_GPIO_EMC_37_FLEXCAN3_RX, 0U);
 #endif
@@ -159,7 +159,7 @@ void BOARD_InitPins(void) {
       | IOMUXC_GPR_GPR28_GPIO_MUX3_GPIO_SEL(0x00U)
     );
 
-#if (EXT_FEATURE_MODE == 3) || (EXT_FEATURE_MODE == 4)
+#if defined(CONNECT_AI_CAMERA)
   IOMUXC_SetPinConfig(IOMUXC_GPIO_AD_B1_06_LPUART3_TX, 0x10F1U);
   IOMUXC_SetPinConfig(IOMUXC_GPIO_AD_B1_07_LPUART3_RX, 0x10F1U);
   IOMUXC_SetPinConfig(IOMUXC_GPIO_AD_B1_12_GPIO1_IO28, 0x90B1U);// SPI3_CS0
@@ -176,7 +176,7 @@ void BOARD_InitPins(void) {
   IOMUXC_SetPinConfig(IOMUXC_GPIO_SD_B0_05_USDHC1_DATA3, 0x7089U);
 #endif
 
-#if (EXT_FEATURE_MODE == 2) || (EXT_FEATURE_MODE == 4)
+#if defined(CONNECT_EP)
   IOMUXC_SetPinConfig(IOMUXC_GPIO_EMC_36_FLEXCAN3_TX, 0x1089U);
   IOMUXC_SetPinConfig(IOMUXC_GPIO_EMC_37_FLEXCAN3_RX, 0x1089U);
 #endif

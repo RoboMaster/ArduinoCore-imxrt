@@ -628,7 +628,7 @@ void BOARD_InitPeripherals(void)
   EDMA_Init(DMA0_DMA_BASEADDR, &DMA0_config);
 
   /* Initialize components */
-#if (EXT_FEATURE_MODE == 3) || (EXT_FEATURE_MODE == 4)
+#if defined(CONNECT_AI_CAMERA)
   LPUART3_init();
   LPSPI3_init();
   GPIO1_init();
@@ -636,7 +636,7 @@ void BOARD_InitPeripherals(void)
 
   LPUART1_init();
 
-#if (EXT_FEATURE_MODE == 2) || (EXT_FEATURE_MODE == 4)
+#if defined(CONNECT_EP)
   CAN3_init();
 #endif
 }
