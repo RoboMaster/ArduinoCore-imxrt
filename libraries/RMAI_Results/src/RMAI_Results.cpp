@@ -13,6 +13,14 @@
 #include <Arduino.h>
 #include <RMAI_Results.h>
 
+// 该库需要与AI模块配合使用
+// 如果没有定义 CONNECT_AI_CAMERA
+// 在编译阶段报错，避免后面的错误
+#if !defined(CONNECT_AI_CAMERA)
+#error "Your Using RMAI_Results Lib."
+#error "Please Open `Connect AI Camera` Switch !!!!!!!!!!!!"
+#endif
+
 results_tag results[21];
 uint8_t result_num = 0;
 uint8_t _result_avaliable = 0;

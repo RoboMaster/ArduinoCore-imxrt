@@ -53,6 +53,11 @@ typedef struct
 static uint8_t proto_recv_buff[RECV_BUFF_LEN];
 
 extern void open_cmd_results(open_protocol_header_t *pack_desc);
+
+void __attribute__((weak)) open_cmd_results(open_protocol_header_t *pack_desc)
+{
+}
+
 // Open Protocol 协议回调表
 const open_handler_keypair_t open_protocol_fun_req[] =
 {
