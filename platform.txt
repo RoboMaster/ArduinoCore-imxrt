@@ -62,7 +62,7 @@ compiler.preproc.include={compiler.cores.include} {compiler.sdk.include} {compil
 # -w 禁止所有warning
 # -Wall All Warning
 # -Wextra 额外的warning
-compiler.warning_flags=
+compiler.warning_flags=-Wno-unused-function
 compiler.warning_flags.more=
 
 compiler.warning_flags.none=-w
@@ -73,7 +73,7 @@ compiler.path={runtime.tools.xpack-arm-none-eabi-gcc.path}/bin/
 compiler.c.cmd=arm-none-eabi-gcc
 compiler.c.flags=-mcpu={build.mcu} -mfpu={build.fpu} -c {compiler.warning_flags} {compiler.warning_flags.more} -mthumb -mapcs -mfloat-abi=hard -std=gnu99 -ffunction-sections -fdata-sections -fno-common -ffreestanding -fno-builtin -nostdlib --param max-inline-insns-single=500 -MMD -D__SKETCH_NAME__="""{build.project_name}"""
 compiler.c.elf.cmd=arm-none-eabi-gcc
-compiler.c.elf.flags= -mcpu={build.mcu} -mfpu={build.fpu} -mfloat-abi=hard -Wall -fno-common -ffunction-sections -fdata-sections -ffreestanding -fno-builtin -mthumb -mapcs -std=gnu99 -MMD -MP --specs=nano.specs --specs=nosys.specs -Xlinker --gc-sections  -static -z muldefs  
+compiler.c.elf.flags=-mcpu={build.mcu} -mfpu={build.fpu} -mfloat-abi=hard -Wall -fno-common -ffunction-sections -fdata-sections -ffreestanding -fno-builtin -mthumb -mapcs -std=gnu99 -MMD -MP --specs=nano.specs --specs=nosys.specs -Xlinker --gc-sections -Xlinker -static -Xlinker -z -Xlinker muldefs  
 compiler.S.cmd=arm-none-eabi-gcc
 compiler.S.flags=-c -g -x assembler-with-cpp -MMD
 compiler.cpp.cmd=arm-none-eabi-g++
@@ -115,12 +115,11 @@ compiler.ar.extra_flags=
 compiler.elf2hex.extra_flags=
 
 compiler.arm.cmsis.c.flags=
+compiler.libraries.ldflags=
 
-#CMSIS/DSP/Lib/ARM/arm_cortexM7lfdp_math.lib
 compiler.arm.cmsis.ldflags="-L{compiler.sdk.path}/CMSIS/Lib/GCC/" -larm_cortexM7lfdp_math -larm_cortexM7lfsp_math
 
-compiler.sdk.ldflags=-Wl,--whole-archive "{runtime.platform.path}/tools/lib/{build.processor}/libsdk_components.a"  "{runtime.platform.path}/tools/lib/{build.processor}/libsdk_devices.a" "{runtime.platform.path}/tools/lib/{build.processor}/libsdk_middleware.a" "{runtime.platform.path}/tools/lib/{build.processor}/libsdk_rtos.a" -Wl,--no-whole-archive
-
+compiler.sdk.ldflags=-Wl,--whole-archive {compiler.libraries.ldflags} "{runtime.platform.path}/tools/lib/{build.processor}/libsdk_components.a"  "{runtime.platform.path}/tools/lib/{build.processor}/libsdk_devices.a" "{runtime.platform.path}/tools/lib/{build.processor}/libsdk_middleware.a" "{runtime.platform.path}/tools/lib/{build.processor}/libsdk_rtos.a" -Wl,--no-whole-archive
 
 # Compile patterns
 # ----------------
@@ -138,7 +137,7 @@ recipe.S.o.pattern="{compiler.path}{compiler.S.cmd}" {compiler.S.flags} -DF_CPU=
 recipe.ar.pattern="{compiler.path}{compiler.ar.cmd}" {compiler.ar.flags} {compiler.ar.extra_flags} "{archive_file_path}" "{object_file}"
 
 ## Combine gc-sections, archives, and objects
-recipe.c.combine.pattern="{compiler.path}{compiler.c.elf.cmd}"  "-L{build.path}" {compiler.c.elf.flags} {compiler.c.elf.extra_flags} "-T{build.variant.path}/starup/{build.ldscript}" "-Wl,-Map,{build.path}/{build.project_name}.map" {compiler.ldflags} -o "{build.path}/{build.project_name}.elf" {object_files} -Wl,--start-group {compiler.arm.cmsis.ldflags} "-L{build.variant.path}" -lm "{build.path}/{archive_file}" {compiler.sdk.ldflags} -Wl,--end-group
+recipe.c.combine.pattern="{compiler.path}{compiler.c.elf.cmd}"  "-L{build.path}" {compiler.c.elf.flags} {compiler.c.elf.extra_flags} "-T{build.variant.path}/starup/{build.ldscript}" {compiler.ldflags} "-Wl,-Map,{build.path}/{build.project_name}.map" -o "{build.path}/{build.project_name}.elf" {object_files} -Wl,--start-group {compiler.arm.cmsis.ldflags} "-L{build.variant.path}" -lm "{build.path}/{archive_file}" {compiler.sdk.ldflags} -Wl,--end-group
 
 ## Create output (bin file)
 recipe.objcopy.bin.pattern="{compiler.path}{compiler.elf2hex.cmd}" {compiler.elf2hex.flags} {compiler.elf2hex.extra_flags} "{build.path}/{build.project_name}.elf" "{build.path}/{build.project_name}.bin"

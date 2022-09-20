@@ -18,6 +18,7 @@
                 "__USE_CMSIS",
                 "__MCUXPRESSO",
                 "MCUXPRESSO_SDK",
+                "ARDUINO",
                 "SDK_OS_FREE_RTOS"
             ],
             "compilerPath": "E://GNUTools//gcc-arm-none-eabi//bin//arm-none-eabi-gcc.exe",

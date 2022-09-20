@@ -1,59 +1,49 @@
 
 menu.debug=Generate Debug Info
-# menu.features=Optional Features
 menu.feature1=Connect RoboMaster EP
 menu.feature2=Connect AI Camera
 
 # RM Expansion Module
 # ------------------------------
-rm_ai_hub.name=RM Expansion Module (RMEM01)
-rm_ai_hub.vid.0=0x2886
-rm_ai_hub.pid.0=0x002B
-rm_ai_hub.vid.1=0x2886
-rm_ai_hub.pid.1=0x802B
+ai_hub.name=RM Expansion Module (RMEM01)
+ai_hub.vid.0=0x2CA3U
+ai_hub.pid.0=0x6001U
+ai_hub.vid.1=0x2CA3U
+ai_hub.pid.1=0x6001U
 
-rm_ai_hub.upload.tool=rmaut
-rm_ai_hub.upload.protocol=dji-rm-open-protocol
-rm_ai_hub.upload.maximum_size=3145728
-rm_ai_hub.upload.maximum_data_size=1048576
-rm_ai_hub.upload.offset=0x10000
-rm_ai_hub.upload.use_1200bps_touch=false
-rm_ai_hub.upload.wait_for_upload_port=true
-rm_ai_hub.upload.native_usb=true
+ai_hub.upload.tool=rmaut
+ai_hub.upload.protocol=open-protocol
+ai_hub.upload.maximum_size=3145728
+ai_hub.upload.maximum_data_size=1048576
+ai_hub.upload.offset=0x10000
+ai_hub.upload.use_1200bps_touch=false
+ai_hub.upload.wait_for_upload_port=true
+ai_hub.upload.native_usb=true
 
-rm_ai_hub.build.mcu=cortex-m7
-rm_ai_hub.build.fpu=fpv5-d16
-rm_ai_hub.build.f_cpu=600000000L
-rm_ai_hub.build.usb_product="Ai Hub"
-rm_ai_hub.build.usb_manufacturer="Dji"
+ai_hub.build.mcu=cortex-m7
+ai_hub.build.fpu=fpv5-d16
+ai_hub.build.f_cpu=600000000L
+ai_hub.build.usb_product="Ai Hub"
+ai_hub.build.usb_manufacturer="Dji"
 
-rm_ai_hub.build.board=RM_AI_HUB 
-rm_ai_hub.build.processor=MIMXRT1064
-rm_ai_hub.build.core=arduino
-rm_ai_hub.build.extra_flags=-DCPU_MIMXRT1064DVL6A -DCPU_MIMXRT1064DVL6A_cm7 -DXIP_EXTERNAL_FLASH=1 -DXIP_BOOT_HEADER_ENABLE=1 -DUSB_STACK_BM -DSERIAL_PORT_TYPE_UART=1 -DSDK_DEBUGCONSOLE=1 -DSDK_OS_FREE_RTOS -DMCUXPRESSO_SDK -DCR_INTEGER_PRINTF -DPRINTF_FLOAT_ENABLE=0 -D__USE_CMSIS -DDEBUG -DDEBUG_CONSOLE_TRANSFER_NON_BLOCKING -DSD_ENABLED -DDISABLE_WDOG -D__STARTUP_INITIALIZE_NONCACHEDATA
-rm_ai_hub.build.ldscript=MIMXRT1064_Arduino.ld
-rm_ai_hub.build.variant=ai_hub 
+ai_hub.build.board=ai_hub 
+ai_hub.build.processor=MIMXRT1064
+ai_hub.build.core=arduino
+ai_hub.build.extra_flags=-DCPU_MIMXRT1064DVL6A -DCPU_MIMXRT1064DVL6A_cm7 -DXIP_EXTERNAL_FLASH=1 -DXIP_BOOT_HEADER_ENABLE=1 -DUSB_STACK_BM -DSERIAL_PORT_TYPE_UART=1 -DSDK_DEBUGCONSOLE=1 -DSDK_OS_FREE_RTOS -DMCUXPRESSO_SDK -DCR_INTEGER_PRINTF -DPRINTF_FLOAT_ENABLE=0 -D__USE_CMSIS -DDEBUG -DDEBUG_CONSOLE_TRANSFER_NON_BLOCKING -DSD_ENABLED -DDISABLE_WDOG -D__STARTUP_INITIALIZE_NONCACHEDATA -DI2C_RETRY_TIMES=10
+ai_hub.build.ldscript=MIMXRT1064_Arduino.ld
+ai_hub.build.variant=ai_hub 
 
-rm_ai_hub.menu.debug.on=ON
-rm_ai_hub.menu.debug.off=OFF
-rm_ai_hub.menu.debug.on.build.flags.debug=-g3 -Og
-rm_ai_hub.menu.debug.off.build.flags.debug=-O0
+ai_hub.menu.debug.off=OFF
+ai_hub.menu.debug.on=ON
+ai_hub.menu.debug.off.build.flags.debug=-O0
+ai_hub.menu.debug.on.build.flags.debug=-Og -g3
 
-# rm_ai_hub.menu.features.1=1 Standalone Use
-# rm_ai_hub.menu.features.2=2 Cooperate With EP
-# rm_ai_hub.menu.features.3=3 Cooperate With AI Camera
-# rm_ai_hub.menu.features.4=4 Cooperate With EP + AI Camera
-# rm_ai_hub.menu.features.1.build.flags.features=-DEXT_FEATURE_MODE=1
-# rm_ai_hub.menu.features.2.build.flags.features=-DEXT_FEATURE_MODE=2
-# rm_ai_hub.menu.features.3.build.flags.features=-DEXT_FEATURE_MODE=3
-# rm_ai_hub.menu.features.4.build.flags.features=-DEXT_FEATURE_MODE=4
+ai_hub.menu.feature1.off=OFF
+ai_hub.menu.feature1.on=ON
+ai_hub.menu.feature1.off.build.flags.feature1=
+ai_hub.menu.feature1.on.build.flags.feature1=-DCONNECT_EP
 
-rm_ai_hub.menu.feature1.on=ON
-rm_ai_hub.menu.feature1.off=OFF
-rm_ai_hub.menu.feature1.on.build.flags.feature1=-DCONNECT_EP
-rm_ai_hub.menu.feature1.off.build.flags.feature1=
-
-rm_ai_hub.menu.feature2.on=ON
-rm_ai_hub.menu.feature2.off=OFF
-rm_ai_hub.menu.feature2.on.build.flags.feature2=-DCONNECT_AI_CAMERA
-rm_ai_hub.menu.feature2.off.build.flags.feature2=
+ai_hub.menu.feature2.off=OFF
+ai_hub.menu.feature2.on=ON
+ai_hub.menu.feature2.off.build.flags.feature2=
+ai_hub.menu.feature2.on.build.flags.feature2=-DCONNECT_AI_CAMERA

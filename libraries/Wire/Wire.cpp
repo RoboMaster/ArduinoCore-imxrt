@@ -189,8 +189,6 @@ uint8_t TwoWire::endTransmission(bool stopBit)
         return 2;
     }
 
-    delayMicroseconds(400); // wait 400 us for get a ack flag
-
     if (lpi2c->MSR & kLPI2C_MasterNackDetectFlag)
     {
         return 2;

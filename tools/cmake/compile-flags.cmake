@@ -1,24 +1,13 @@
 add_compile_flags(LD 
-        -DXIP_EXTERNAL_FLASH=1 
-        -DXIP_BOOT_HEADER_ENABLE=1 
-        -DNDEBUG 
-        -DCPU_${CPU} 
-        -Os 
-        -Wall 
-        -fno-common 
-        -ffunction-sections 
-        -fdata-sections 
-        -ffreestanding 
-        -fno-builtin -mthumb -mapcs 
-        -std=gnu99 -mcpu=cortex-m7 -mfloat-abi=hard -mfpu=fpv5-d16 -MMD -MP   
-        --specs=nano.specs --specs=nosys.specs 
-        -Wall -fno-common -ffunction-sections 
-        -fdata-sections -ffreestanding 
-        -fno-builtin -mthumb -mapcs -Xlinker 
-        --gc-sections -Xlinker -static 
-        -Xlinker -z -Xlinker muldefs -Xlinker -Map=output.map 
         -mcpu=cortex-m7 -mfloat-abi=hard -mfpu=fpv5-d16
-        -T ${CMAKE_CURRENT_SOURCE_DIR}/variants/${BOARD}/starup/MIMXRT1064_Arduino.ld -static
+        -Wall -fno-common -ffunction-sections 
+        -fdata-sections -ffreestanding -fno-builtin 
+        -mthumb -mapcs 
+        -std=gnu99  -MMD -MP   
+        --specs=nano.specs --specs=nosys.specs 
+        -Xlinker --gc-sections -Xlinker -static -Xlinker -z -Xlinker muldefs -Xlinker -Map=output.map 
+        -T ${CMAKE_CURRENT_SOURCE_DIR}/variants/${BOARD}/starup/MIMXRT1064_Arduino.ld 
+        -static
         # -Wl,--start-group 
         # -lm -lc -lgcc -lnosys   libfsl_bsp.a libarduinocore.a libfsl_xip_drivers.a libfsl_usb_drivers.a
         # -Wl,--end-group 
@@ -56,6 +45,7 @@ add_compile_flags(BOTH
             -DDISABLE_WDOG 
             -DCONNECT_AI_CAMERA
             -DCONNECT_EP
+            -DARDUINO
             -D__STARTUP_INITIALIZE_NONCACHEDATA 
             -mthumb -mapcs -mcpu=cortex-m7 -mfloat-abi=hard -mfpu=fpv5-d16 
         )
