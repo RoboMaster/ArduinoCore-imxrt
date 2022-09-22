@@ -1,5 +1,15 @@
-#ifndef Servo_h
-#define Servo_h
+/*
+ * Copyright (C) 2022 DJI.
+ *
+ * SPDX-License-Identifier: MIT
+ *
+ * Change Logs:
+ * Date           Author       Notes
+ * 2022-09-18     robomaster   first version
+ */
+
+#ifndef _SERVO_H
+#define _SERVO_H
 
 #include <inttypes.h>
 

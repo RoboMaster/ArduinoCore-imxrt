@@ -1,13 +1,13 @@
-/**
- * @file RMAI_Libs.h
- * @author Leitao Yu (flame.yu@dji.com)
- * @brief
- * @version 0.1
- * @date 2022-09-14
+/*
+ * Copyright (C) 2022 DJI.
  *
- * @copyright Copyright (c) 2022 Dji.
+ * SPDX-License-Identifier: MIT
  *
+ * Change Logs:
+ * Date           Author       Notes
+ * 2022-09-18     robomaster   first version
  */
+
 #ifndef _RMAI_LIBS_INCLUDED
 #define _RMAI_LIBS_INCLUDED
 

@@ -1,13 +1,12 @@
-/**
-* @file can.c
-* @author Zhenling Pan (ryan.pan@dji.com)
-* @brief
-* @version 0.1
-* @date 2021-12-01
-*
-* @copyright Copyright (c) DJI 2021
-*
-*/
+/*
+ * Copyright (C) 2022 DJI.
+ *
+ * SPDX-License-Identifier: MIT
+ *
+ * Change Logs:
+ * Date           Author       Notes
+ * 2022-09-27     robomaster   first version
+ */
 
 #include "can.h"
 

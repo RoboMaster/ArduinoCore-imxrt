@@ -1,17 +1,15 @@
-/**
- * @file ReadResults.ino
- * @author Leitao Yu (flame.yu@dji.com)
- * @brief 
- * @version 0.1
- * @date 2022-09-15
- * 
- * @copyright Copyright (c) 2022 Dji.
- * 
- * 
- * @attention   该库与AI相机模块通信获取数据，对底层有依赖
- *              请使用前在ArduinoIDE中打开 "Connect AI Camera" 开关
- * 
+/*
+ * Copyright (C) 2022 DJI.
+ *
+ * SPDX-License-Identifier: MIT
+ *
+ * Change Logs:
+ * Date           Author       Notes
+ * 2022-09-15     robomaster   first version
  */
+
+// 该库与AI相机模块通信获取数据，对底层有依赖
+// 请使用前在ArduinoIDE中打开 "Connect AI Camera" 开关
 
 #include <Arduino.h>
 #include <RMAI_Results.h>

@@ -1,14 +1,12 @@
-/**
-  ******************************************************************************
-  * File Name          : log.c
-  * Author             : Zhenling Pan
-  * Create Data        : 2019-Apr-4
-  * Description        : N/A.
-  ******************************************************************************
-  * Copyright (c) 2019
-  * All rights reserved.
-  ******************************************************************************
-  */
+/*
+ * Copyright (C) 2022 DJI.
+ *
+ * SPDX-License-Identifier: MIT
+ *
+ * Change Logs:
+ * Date           Author       Notes
+ * 2022-09-27     robomaster   first version
+ */
 
 #include "log.h"
 #include "cmsis_os.h"

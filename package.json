@@ -2,5 +2,5 @@
     "name": "framework-arduinoimxrt",
     "description": "Arduino Wiring-based Framework (i.MX RT Cores)",
     "version": "1.0.0",
-    "url": "https://github.com/RoboMaster/Arduino_Core_Imxrt"
+    "url": "https://github.com/RoboMaster/ArduinoCore-imxrt"
 }

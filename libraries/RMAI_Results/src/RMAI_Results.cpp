@@ -1,12 +1,11 @@
-/**result_num
- * @file RMAI_Libs.cpp
- * @author Leitao Yu (flame.yu@dji.com)
- * @brief
- * @version 0.1
- * @date 2022-09-14
+/*
+ * Copyright (C) 2022 DJI.
  *
- * @copyright Copyright (c) 2022 Dji.
+ * SPDX-License-Identifier: MIT
  *
+ * Change Logs:
+ * Date           Author       Notes
+ * 2022-09-14     robomaster   first version
  */
 
 #include "open_protocol.h"

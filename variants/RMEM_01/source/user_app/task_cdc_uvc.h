@@ -1,8 +1,11 @@
 /*
- * task_cdc_uvc.h
+ * Copyright (C) 2022 DJI.
  *
- *  Created on: 2021年12月3日
- *      Author: ryan.pan
+ * SPDX-License-Identifier: MIT
+ *
+ * Change Logs:
+ * Date           Author       Notes
+ * 2022-09-27     robomaster   first version
  */
 
 #ifndef _TASK_CDC_UVC_H_

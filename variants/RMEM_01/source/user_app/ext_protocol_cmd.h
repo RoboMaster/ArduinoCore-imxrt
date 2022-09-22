@@ -1,3 +1,12 @@
+/*
+ * Copyright (C) 2022 DJI.
+ *
+ * SPDX-License-Identifier: MIT
+ *
+ * Change Logs:
+ * Date           Author       Notes
+ * 2022-09-27     robomaster   first version
+ */
 
 #ifndef __EXT_PROTOCOL_COMMON_H__
 #define __EXT_PROTOCOL_COMMON_H__
@@ -8,7 +17,7 @@
 
 #pragma pack(push, 1)
 
-/* ¸´Î» */
+/* ï¿½ï¿½Î» */
 #define EXT_CMD_REBOOT_REQ        (0x0002)
 
 #define EXT_CMD_REBOOT_RSP        (0x0003)
@@ -18,7 +27,7 @@ typedef struct
 }ext_cmd_reboot_rsp_t;
 
 
-/* ²éÑ¯°æ±¾ */
+/* ï¿½ï¿½Ñ¯ï¿½æ±¾ */
 #define EXT_CMD_VERSION_REQ        (0x0004)
 
 #define EXT_CMD_VERSION_RSP        (0x0005)
@@ -31,7 +40,7 @@ typedef struct
 }ext_cmd_version_rsp_t;
 
 
-/* SPIÊÓÆµ¿ª¹Ø */
+/* SPIï¿½ï¿½Æµï¿½ï¿½ï¿½ï¿½ */
 #define EXT_SPI_VEDIO_STREAM_REQ        (0x0008)
 typedef struct
 {
@@ -44,20 +53,20 @@ typedef struct
     uint8_t error;
 }ext_spi_vedio_rsp_t;
 
-/* AIÄ¿±êÊ¶±ð½á¹û */
+/* AIÄ¿ï¿½ï¿½Ê¶ï¿½ï¿½ï¿½ï¿½ */
 #define EXT_CMD_DETECT_TAG_PUSH         (0x0101)
 typedef struct
 {
-    uint8_t  id;    /*!< Ä¿±êIDÖµ  */
-    uint16_t x;     /*!< Ä¿±êÔÚÍ¼ÏñÖÐµÄxÖá×ø±ê  */
-    uint8_t  y;     /*!< Ä¿±êÔÚÍ¼ÏñÖÐµÄyÖá×ø±ê  */
-    uint16_t w;     /*!< Ä¿±êÔÚÍ¼ÏñÖÐµÄ¿í¶È  */
-    uint8_t  h;     /*!< Ä¿±êÔÚÍ¼ÏñÖÐµÄ¸ß¶È  */
-    uint8_t  C;     /*!< Ê¶±ðÖÃÐÅ¶È 0~100 */
+    uint8_t  id;    /*!< Ä¿ï¿½ï¿½IDÖµ  */
+    uint16_t x;     /*!< Ä¿ï¿½ï¿½ï¿½ï¿½Í¼ï¿½ï¿½ï¿½Ðµï¿½xï¿½ï¿½ï¿½ï¿½ï¿½ï¿½  */
+    uint8_t  y;     /*!< Ä¿ï¿½ï¿½ï¿½ï¿½Í¼ï¿½ï¿½ï¿½Ðµï¿½yï¿½ï¿½ï¿½ï¿½ï¿½ï¿½  */
+    uint16_t w;     /*!< Ä¿ï¿½ï¿½ï¿½ï¿½Í¼ï¿½ï¿½ï¿½ÐµÄ¿ï¿½ï¿½ï¿½  */
+    uint8_t  h;     /*!< Ä¿ï¿½ï¿½ï¿½ï¿½Í¼ï¿½ï¿½ï¿½ÐµÄ¸ß¶ï¿½  */
+    uint8_t  C;     /*!< Ê¶ï¿½ï¿½ï¿½ï¿½ï¿½Å¶ï¿½ 0~100 */
 }ext_comm_detect_tag_t;
 
 
-/* ºËÐÄ°å¹Ì¼þÉý¼¶ Step1: ½øÈëLoader */
+/* ï¿½ï¿½ï¿½Ä°ï¿½Ì¼ï¿½ï¿½ï¿½ï¿½ï¿½ Step1: ï¿½ï¿½ï¿½ï¿½Loader */
 #define EXT_CMD_ENTER_BOOTLOADER_REQ        (0x0402)
 typedef struct
 {
@@ -70,7 +79,7 @@ typedef struct
     uint8_t error;
 }ext_cmd_enter_bootloader_rsp_t;
 
-/* ºËÐÄ°å¹Ì¼þÉý¼¶ Step2: ·¢ËÍ´ýÉý¼¶¹Ì¼þÐÅÏ¢*/
+/* ï¿½ï¿½ï¿½Ä°ï¿½Ì¼ï¿½ï¿½ï¿½ï¿½ï¿½ Step2: ï¿½ï¿½ï¿½Í´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì¼ï¿½ï¿½ï¿½Ï¢*/
 #define EXT_CMD_UPGRADE_FIRMWARE_INFO_REQ   (0x0404)
 typedef struct
 {
@@ -85,7 +94,7 @@ typedef struct
 }ext_cmd_upgrade_firmware_info_rsp_t;
 
 
-/* ºËÐÄ°å¹Ì¼þÉý¼¶ Step3: ´«Êä¹Ì¼þÊý¾Ý*/
+/* ï¿½ï¿½ï¿½Ä°ï¿½Ì¼ï¿½ï¿½ï¿½ï¿½ï¿½ Step3: ï¿½ï¿½ï¿½ï¿½Ì¼ï¿½ï¿½ï¿½ï¿½ï¿½*/
 #define EXT_CMD_UPGRADE_FIRMWARE_DATA_REQ   (0x0406)
 typedef struct
 {
@@ -102,7 +111,7 @@ typedef struct
 }ext_cmd_upgrade_firmware_data_rsp_t;
 
 
-/* ºËÐÄ°å¹Ì¼þÉý¼¶ Step4: ¹Ì¼þ´«ÊäÍê³É*/
+/* ï¿½ï¿½ï¿½Ä°ï¿½Ì¼ï¿½ï¿½ï¿½ï¿½ï¿½ Step4: ï¿½Ì¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½*/
 #define EXT_CMD_UPGRADE_FIRMWARE_END_REQ    (0x0408)
 typedef struct
 {

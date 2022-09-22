@@ -1,17 +1,15 @@
-/**
- * @file fifo.c
- * @author Zhenling Pan (ryan.pan@dji.com)
- * @brief
- * @version 0.1
- * @date 2021-07-08
+/*
+ * Copyright (C) 2022 DJI.
  *
- * @copyright Copyright (c) 2021
+ * SPDX-License-Identifier: MIT
  *
+ * Change Logs:
+ * Date           Author       Notes
+ * 2022-09-27     robomaster   first version
  */
 
 #include <user_libs/fifo.h>
 #include "string.h"
-
 
 int fifo_init(fifo_t* p_fifo, void* p_base_addr, int uint_cnt)
 {

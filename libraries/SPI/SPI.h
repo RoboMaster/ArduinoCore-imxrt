@@ -30,10 +30,6 @@
 #include "fsl_lpspi.h"
 #include <Arduino.h>
 
-// #if ( defined(USE_AICAMERA) )
-//     #error "AI Camera and Spi3 Can Not Use Sametime !!!!!!!!!!!!"
-// #endif
-
 // SPI_HAS_TRANSACTION means SPI has
 //   - beginTransaction()
 //   - endTransaction()

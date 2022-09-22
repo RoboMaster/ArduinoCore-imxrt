@@ -1,12 +1,11 @@
-/**
- * @file task_protocol.h
- * @author Zhenling Pan (ryan.pan@dji.com)
- * @brief
- * @version 0.1
- * @date 2021-07-08
+/*
+ * Copyright (C) 2022 DJI.
  *
- * @copyright Copyright (c) 2021
+ * SPDX-License-Identifier: MIT
  *
+ * Change Logs:
+ * Date           Author       Notes
+ * 2022-09-27     robomaster   first version
  */
 
 #ifndef __TASK_PROCOTOL_H__

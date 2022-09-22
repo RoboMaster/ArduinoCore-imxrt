@@ -1,3 +1,15 @@
+/*
+ * Copyright (C) 2022 DJI.
+ *
+ * SPDX-License-Identifier: MIT
+ *
+ * Change Logs:
+ * Date           Author       Notes
+ * 2022-09-22     robomaster   first version
+ */
+
+//============================================================================
+
 /**
  * The MIT License (MIT)
  *

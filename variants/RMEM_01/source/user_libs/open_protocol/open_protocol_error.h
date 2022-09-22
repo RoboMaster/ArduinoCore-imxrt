@@ -1,12 +1,11 @@
-/**
- * @file open_protocol_error.h
- * @author Zhenling Pan (ryan.pan@dji.com)
- * @brief
- * @version 0.1
- * @date 2022-01-04
+/*
+ * Copyright (C) 2022 DJI.
  *
- * @copyright Copyright (c) 2022
+ * SPDX-License-Identifier: MIT
  *
+ * Change Logs:
+ * Date           Author       Notes
+ * 2022-09-27     robomaster   first version
  */
 
 #ifndef _OPEN_PROTOCOL_ERROR_H_

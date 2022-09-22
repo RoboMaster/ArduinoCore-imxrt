@@ -42,7 +42,6 @@
 #include "HardwareSerial.h"
 #include "Uart.h"
 #include "USBSerial.h"
-// #include "Interrupts.h"
 #include "IPAddress.h"
 #include "Print.h"
 #include "Printable.h"

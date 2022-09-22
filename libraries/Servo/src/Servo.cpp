@@ -1,3 +1,12 @@
+/*
+ * Copyright (C) 2022 DJI.
+ *
+ * SPDX-License-Identifier: MIT
+ *
+ * Change Logs:
+ * Date           Author       Notes
+ * 2022-09-18     robomaster   first version
+ */
 
 #include "Common.h"
 #include <Arduino.h>

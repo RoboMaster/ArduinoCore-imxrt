@@ -1,17 +1,13 @@
-/**
- * @file open_protocol.c
- * @author Zhenling Pan (ryan.pan@dji.com)
- * @brief
- * @warning 注意:(1)本文件包含非对其操作.
- *               (2)发送和接收函数的缓冲区在栈上分配，发送较长包时需调用发送函数
- *                  的任务有足有的栈剩余空间.
+/*
+ * Copyright (C) 2022 DJI.
  *
- * @version 0.1
- * @date 2021-11-29
+ * SPDX-License-Identifier: MIT
  *
- * @copyright Copyright (c) 2021
- *
+ * Change Logs:
+ * Date           Author       Notes
+ * 2022-09-27     robomaster   first version
  */
+
 #include "open_protocol.h"
 #include "crc.h"
 

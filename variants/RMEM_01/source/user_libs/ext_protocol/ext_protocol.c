@@ -1,14 +1,13 @@
-/**
- * @file ext_protocol.c
- * @author Zhenling Pan (ryan.pan@dji.com)
- * @brief
- * @warning 注意：本文件包含非对其操作
- * @version 0.1
- * @date 2021-04-28
+/*
+ * Copyright (C) 2022 DJI.
  *
- * @copyright Copyright (c) 2021
+ * SPDX-License-Identifier: MIT
  *
+ * Change Logs:
+ * Date           Author       Notes
+ * 2022-09-27     robomaster   first version
  */
+
 #include "ext_protocol.h"
 
 #include <stdlib.h>

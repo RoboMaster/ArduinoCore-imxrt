@@ -1,3 +1,37 @@
+#
+# Copyright (C) 2022 DJI.
+#
+# SPDX-License-Identifier: MIT
+#
+# Change Logs:
+# Date           Author       Notes
+# 2022-09-27     robomaster   first version
+#
+
+# =============================================================================
+
+# The MIT License (MIT)
+
+# Copyright (c) 2019 Seeed Technology Inc.
+
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+# THE SOFTWARE.
+
 
 name=RoboMaster Education Series Boards
 version=1.0.0
@@ -88,7 +122,7 @@ compiler.libraries.ldflags=
 
 compiler.arm.cmsis.ldflags="-L{compiler.sdk.path}/CMSIS/Lib/GCC/" -larm_cortexM7lfdp_math -larm_cortexM7lfsp_math
 
-compiler.sdk.ldflags=-Wl,--whole-archive {compiler.libraries.ldflags} {build.flags.speedup} "{runtime.platform.path}/tools/lib/{build.processor}/libsdk_components.a"  "{runtime.platform.path}/tools/lib/{build.processor}/libsdk_devices.a" "{runtime.platform.path}/tools/lib/{build.processor}/libsdk_middleware.a" "{runtime.platform.path}/tools/lib/{build.processor}/libsdk_rtos.a" -Wl,--no-whole-archive
+compiler.sdk.ldflags= {compiler.libraries.ldflags} {build.flags.speedup} "{runtime.platform.path}/tools/lib/{build.processor}/libsdk_components.a"  "{runtime.platform.path}/tools/lib/{build.processor}/libsdk_devices.a" "{runtime.platform.path}/tools/lib/{build.processor}/libsdk_middleware.a" "{runtime.platform.path}/tools/lib/{build.processor}/libsdk_rtos.a"
 
 # Compile patterns
 # ----------------
@@ -106,7 +140,7 @@ recipe.S.o.pattern="{compiler.path}{compiler.S.cmd}" {compiler.S.flags} -DF_CPU=
 recipe.ar.pattern="{compiler.path}{compiler.ar.cmd}" {compiler.ar.flags} {compiler.ar.extra_flags} "{archive_file_path}" "{object_file}"
 
 ## Combine gc-sections, archives, and objects
-recipe.c.combine.pattern="{compiler.path}{compiler.c.elf.cmd}"  "-L{build.path}" {compiler.c.elf.flags} {compiler.c.elf.extra_flags} "-T{build.variant.path}/starup/{build.ldscript}" {compiler.ldflags} "-Wl,-Map,{build.path}/{build.project_name}.map" -o "{build.path}/{build.project_name}.elf" {object_files} -Wl,--start-group {compiler.arm.cmsis.ldflags} "-L{build.variant.path}" -lm "{build.path}/{archive_file}" {compiler.sdk.ldflags} -Wl,--end-group
+recipe.c.combine.pattern="{compiler.path}{compiler.c.elf.cmd}"  "-L{build.path}" {compiler.c.elf.flags} {compiler.c.elf.extra_flags} "-T{build.variant.path}/starup/{build.ldscript}" {compiler.ldflags} "-Wl,-Map,{build.path}/{build.project_name}.map" -o "{build.path}/{build.project_name}.elf" {object_files} -Wl,--start-group {compiler.arm.cmsis.ldflags} "-L{build.variant.path}" -Wl,--whole-archive -lm "{build.path}/{archive_file}" {compiler.sdk.ldflags} -Wl,--no-whole-archive -Wl,--end-group
 
 ## Create output (bin file)
 recipe.objcopy.bin.pattern="{compiler.path}{compiler.elf2hex.cmd}" {compiler.elf2hex.flags} {compiler.elf2hex.extra_flags} "{build.path}/{build.project_name}.elf" "{build.path}/{build.project_name}.bin"

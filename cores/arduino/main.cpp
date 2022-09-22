@@ -1,3 +1,13 @@
+/*
+ * Copyright (C) 2022 DJI.
+ *
+ * SPDX-License-Identifier: MIT
+ *
+ * Change Logs:
+ * Date           Author       Notes
+ * 2022-09-27     robomaster   first version
+ */
+
 #include "Arduino.h"
 
 #include "FreeRTOS.h"
@@ -39,19 +49,7 @@ void loopTask(void *pvParameters)
 
     for (;;)
     {
-        // #if CONFIG_FREERTOS_UNICORE
-        //     yieldIfNecessary();
-        // #endif
-        //     if (loopTaskWDTEnabled)
-        //     {
-        //       esp_task_wdt_reset();
-        //     }
-
         loop();
-
-        //   if (serialEventRun)
-        //     serialEventRun();
-        // }
     }
 }
 

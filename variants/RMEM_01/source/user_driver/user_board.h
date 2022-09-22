@@ -1,12 +1,11 @@
-/**
- * @file user_board.h
- * @author Zhenling Pan (ryan.pan@dji.com)
- * @brief
- * @version 0.1
- * @date 2021-12-5
+/*
+ * Copyright (C) 2022 DJI.
  *
- * @copyright Copyright (c) 2021, DJI
+ * SPDX-License-Identifier: MIT
  *
+ * Change Logs:
+ * Date           Author       Notes
+ * 2022-09-27     robomaster   first version
  */
 
 #ifndef __USER_BOARD_H__

@@ -1,8 +1,11 @@
 /*
- * uart.h
+ * Copyright (C) 2022 DJI.
  *
- *  Created on: 2021年11月17日
- *      Author: Pzhen
+ * SPDX-License-Identifier: MIT
+ *
+ * Change Logs:
+ * Date           Author       Notes
+ * 2022-09-27     robomaster   first version
  */
 
 #ifndef USER_DRIVER_UART_H_

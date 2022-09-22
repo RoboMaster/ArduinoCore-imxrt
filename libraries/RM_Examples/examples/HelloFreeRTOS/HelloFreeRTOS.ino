@@ -1,12 +1,11 @@
-/**
- * @file HelloFreeRTOS.ino
- * @author Leitao Yu (flame.yu@dji.com)
- * @brief 
- * @version 0.1
- * @date 2022-09-21
- * 
- * @copyright Copyright (c) 2022 Dji.
- * 
+/*
+ * Copyright (C) 2022 DJI.
+ *
+ * SPDX-License-Identifier: MIT
+ *
+ * Change Logs:
+ * Date           Author       Notes
+ * 2022-09-27     robomaster   first version
  */
 
 #include <Arduino.h>

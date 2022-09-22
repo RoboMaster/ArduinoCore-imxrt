@@ -1,12 +1,11 @@
-/**
- * @file spi.h
- * @author Ryan Pan (ryan.pan@dji.com)
- * @brief
- * @version 0.1
- * @date 2022-03-01
+/*
+ * Copyright (C) 2022 DJI.
  *
- * @copyright Copyright (c) 2022
+ * SPDX-License-Identifier: MIT
  *
+ * Change Logs:
+ * Date           Author       Notes
+ * 2022-09-27     robomaster   first version
  */
 
 #ifndef __SPI_H__

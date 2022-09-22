@@ -1,30 +1,22 @@
-// /*
-//   Copyright (c) 2011-2012 Arduino.  All right reserved.
+/*
+ * Copyright (C) 2022 DJI.
+ *
+ * SPDX-License-Identifier: MIT
+ *
+ * Change Logs:
+ * Date           Author       Notes
+ * 2022-09-27     robomaster   first version
+ */
 
-//   This library is free software; you can redistribute it and/or
-//   modify it under the terms of the GNU Lesser General Public
-//   License as published by the Free Software Foundation; either
-//   version 2.1 of the License, or (at your option) any later version.
+#ifndef _WIRING_INTERRUPTS_
+#define _WIRING_INTERRUPTS_
 
-//   This library is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-//   See the GNU Lesser General Public License for more details.
+#include <stdint.h>
+#include <functional>
 
-//   You should have received a copy of the GNU Lesser General Public
-//   License along with this library; if not, write to the Free Software
-//   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-// */
+typedef std::function<void(void)> callback_function_t;
 
-// #ifndef _WIRING_INTERRUPTS_
-// #define _WIRING_INTERRUPTS_
+void attachInterrupt(uint32_t pin, callback_function_t callback, uint32_t mode);
+void detachInterrupt(uint32_t pin);
 
-// #include <stdint.h>
-// #include <functional>
-
-// typedef std::function<void(void)> callback_function_t;
-
-// void attachInterrupt(uint32_t pin, callback_function_t callback, uint32_t mode);
-// void detachInterrupt(uint32_t pin);
-
-// #endif /* _WIRING_INTERRUPTS_ */
+#endif /* _WIRING_INTERRUPTS_ */

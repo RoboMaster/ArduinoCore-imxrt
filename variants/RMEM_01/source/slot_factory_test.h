@@ -1,16 +1,12 @@
-/**
- * @file slot_factory_test.h
- * @author Zhenling Pan(ryan.pan@dji.com)
- * @brief 14Pin插座和100Pin插座工厂测试用,将IO成对测试,
- *        一发一收测试.
- * @version 0.1
- * @date 2021-12-14
+/*
+ * Copyright (C) 2022 DJI.
  *
- * @copyright Copyright (c) 2021
+ * SPDX-License-Identifier: MIT
  *
+ * Change Logs:
+ * Date           Author       Notes
+ * 2022-09-27     robomaster   first version
  */
-
-
 
 #ifndef __SOLT_FACTORY_TEST_H__
 #define __SOLT_FACTORY_TEST_H__
