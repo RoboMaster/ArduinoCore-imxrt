@@ -1,3 +1,4 @@
 build/
-examples/
 devel/
+dist/
+__pycache__/

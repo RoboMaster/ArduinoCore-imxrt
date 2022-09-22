@@ -1,70 +1,38 @@
 
-# For more info:
-# https://github.com/arduino/Arduino/wiki/Arduino-IDE-1.5-3rd-party-Hardware-specification
-# https://github.com/arduino/Arduino/wiki/Arduino-IDE-1.6.x-package_index.json-format-specification
-
-
 name=RoboMaster Education Series Boards
-version=0.0.1
-
-# {build.system.path}
-# compiler include path
-#----------------------
-# compiler.sdk.path={runtime.platform.path}/tools/sdk/devices/{build.processor}
-
-# compiler.cores.deprecated.path={runtime.platform.path}/cores/arduino/deprecated/
-# compiler.cores.deprecated-avr-comp.path={runtime.platform.path}/cores/arduino/deprecated-avr-comp/
+version=1.0.0
 
 # ---------------------------------------------------------------
-#                   第一部分 参数宏定义
+#                   Part One Macros
 # ---------------------------------------------------------------
-# ### cores 文件夹
+# ### cores folder
 compiler.cores.path={runtime.platform.path}/cores/arduino
-# 综合本部分
 compiler.cores.include=-I{compiler.cores.path} -I{compiler.cores.path}/imxrt
-
-#                   使用 system 目录
-# ---------------------------------------------------------------
-# ### system 文件夹
-# compiler.system.CMSIS.include=-I{build.system.path}/CMSIS
-# compiler.system.components.include=-I{build.system.path}/components/lists -I{build.system.path}/components/osa -I{build.system.path}/components/serial_manager -I{build.system.path}/components/silicon_id -I{build.system.path}/components/uart
-# compiler.system.devices.include=-I{build.system.path}/devices/MIMXRT1064 -I{build.system.path}/devices/MIMXRT1064/drivers -I{build.system.path}/devices/MIMXRT1064/xip
-# compiler.system.middleware.include=-I{build.system.path}/middleware/usb/device/class -I{build.system.path}/middleware/usb/device/class/cdc -I{build.system.path}/middleware/usb/device/class/video -I{build.system.path}/middleware/usb/device/include -I{build.system.path}/middleware/usb/device/source -I{build.system.path}/middleware/usb/device/source/ehci -I{build.system.path}/middleware/usb/include -I{build.system.path}/middleware/usb/phy
-# compiler.system.rtos.include=-I{build.system.path}/rtos/freertos/include -I{build.system.path}/rtos/freertos/portable/GCC/ARM_CM4F
-# # 综合本部分
-# compiler.system.include={compiler.system.CMSIS.include} {compiler.system.components.include} {compiler.system.devices.include} {compiler.system.middleware.include} {compiler.system.rtos.include}
-#                   使用 sdk 目录
-# ---------------------------------------------------------------
+# ### sdk folder
 compiler.sdk.path={runtime.platform.path}/tools/sdk
 compiler.sdk.CMSIS.include=-I{compiler.sdk.path}/CMSIS/Include
 compiler.sdk.components.include=-I{compiler.sdk.path}/components/lists -I{compiler.sdk.path}/components/osa -I{compiler.sdk.path}/components/serial_manager -I{compiler.sdk.path}/components/silicon_id -I{compiler.sdk.path}/components/uart
 compiler.sdk.devices.include=-I{compiler.sdk.path}/devices/MIMXRT1064 -I{compiler.sdk.path}/devices/MIMXRT1064/drivers -I{compiler.sdk.path}/devices/MIMXRT1064/xip -I{compiler.sdk.path}/devices/MIMXRT1064/utilities -I{compiler.sdk.path}/devices/MIMXRT1064/utilities/debug_console -I{compiler.sdk.path}/devices/MIMXRT1064/str
 compiler.sdk.middleware.include=-I{compiler.sdk.path}/middleware/usb/device/class -I{compiler.sdk.path}/middleware/usb/device/class/cdc -I{compiler.sdk.path}/middleware/usb/device/class/video -I{compiler.sdk.path}/middleware/usb/device/include -I{compiler.sdk.path}/middleware/usb/device/source -I{compiler.sdk.path}/middleware/usb/device/source/ehci -I{compiler.sdk.path}/middleware/usb/include -I{compiler.sdk.path}/middleware/usb/phy
 compiler.sdk.rtos.include=-I{compiler.sdk.path}/rtos/freertos/include -I{compiler.sdk.path}/rtos/freertos/portable/GCC/ARM_CM4F
-# 综合本部分
 compiler.sdk.include={compiler.sdk.CMSIS.include} {compiler.sdk.components.include} {compiler.sdk.devices.include} {compiler.sdk.middleware.include} {compiler.sdk.rtos.include}
-
-# ### variants 文件夹
+# ### variants folder
 compiler.variant.include=-I{build.variant.path} -I{build.variant.path}/board
-
-# ### 新增的用户文件
+# ### 
 compiler.user.include=-I{build.variant.path}/drivers -I{build.variant.path}/source -I{build.variant.path}/source/user_app -I{build.variant.path}/source/user_driver -I{build.variant.path}/source/user_libs -I{build.variant.path}/source/user_libs/crc -I{build.variant.path}/source/user_libs/ext_protocol -I{build.variant.path}/source/user_libs/log -I{build.variant.path}/source/user_libs/open_protocol -I{build.variant.path}/source/user_libs/open_protocol/crc -I{build.variant.path}/source/user_middleware/cmsis_os -I{build.variant.path}/source/user_usb 
-
-# ################## 综合以上所有
+# ################## all
 compiler.preproc.include={compiler.cores.include} {compiler.sdk.include} {compiler.variant.include} {compiler.user.include} 
 
-
 # ---------------------------------------------------------------
-#                   第二部分 编译参数汇总
+#                   Part Two Compiler
 # ---------------------------------------------------------------
 # Compile variables
 # -----------------
-# -w 禁止所有warning
+# -w no warning
 # -Wall All Warning
-# -Wextra 额外的warning
+# -Wextra extra warning
 compiler.warning_flags=-Wno-unused-function
 compiler.warning_flags.more=
-
 compiler.warning_flags.none=-w
 compiler.warning_flags.default=
 compiler.warning_flags.all=-Wall -Wextra
@@ -104,6 +72,7 @@ build.flags.features=
 build.flags.module=
 build.flags.feature1=
 build.flags.feature2=
+build.flags.speedup=
 
 # These can be overridden in platform.local.txt
 compiler.c.extra_flags=
@@ -119,7 +88,7 @@ compiler.libraries.ldflags=
 
 compiler.arm.cmsis.ldflags="-L{compiler.sdk.path}/CMSIS/Lib/GCC/" -larm_cortexM7lfdp_math -larm_cortexM7lfsp_math
 
-compiler.sdk.ldflags=-Wl,--whole-archive {compiler.libraries.ldflags} "{runtime.platform.path}/tools/lib/{build.processor}/libsdk_components.a"  "{runtime.platform.path}/tools/lib/{build.processor}/libsdk_devices.a" "{runtime.platform.path}/tools/lib/{build.processor}/libsdk_middleware.a" "{runtime.platform.path}/tools/lib/{build.processor}/libsdk_rtos.a" -Wl,--no-whole-archive
+compiler.sdk.ldflags=-Wl,--whole-archive {compiler.libraries.ldflags} {build.flags.speedup} "{runtime.platform.path}/tools/lib/{build.processor}/libsdk_components.a"  "{runtime.platform.path}/tools/lib/{build.processor}/libsdk_devices.a" "{runtime.platform.path}/tools/lib/{build.processor}/libsdk_middleware.a" "{runtime.platform.path}/tools/lib/{build.processor}/libsdk_rtos.a" -Wl,--no-whole-archive
 
 # Compile patterns
 # ----------------
@@ -148,9 +117,9 @@ recipe.output.save_file={build.project_name}.{build.variant}.bin
 
 ## Compute size
 recipe.size.pattern="{compiler.path}{compiler.size.cmd}" -A "{build.path}/{build.project_name}.elf"
-#计算Flash
+#Calc Flash
 recipe.size.regex=^(?:\.flash_config|\.ivt|\.interrupts|\.text|\.ARM|\.data)\s+([0-9]+).*
-#计算RAM
+#Calc RAM
 recipe.size.regex.data=^(?:\.data|\.bss|\.ncache.init|\.ncache|\.heap|\.stack|\.m_data3)\s+([0-9]+).*
 
 # Uploader tools

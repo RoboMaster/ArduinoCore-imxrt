@@ -7,7 +7,7 @@ extern void board_boot_1rd_pattern(void);
 extern uint32_t *stop_boot_app_flag;
 }
 
-uint8_t cdc_reset_signal_buf[2];
+uint8_t cdc_reset_signal_buf[2] = {0, 0};
 
 void CDC_IRQHandel()
 {
@@ -41,7 +41,6 @@ void USBSerial::CDC_IRQHandel(void)
 #if !defined(CONNECT_EP)
         _rb->store_char(data[i]);
 #endif
-
     }
 }
 
