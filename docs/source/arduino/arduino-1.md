@@ -23,8 +23,7 @@
 在 `附加开发板管理器网址`（*Additional Boards Managers URLs*）选项框中添加以下字段：
 
 ```
-！！！Realse版本需修改
-https://github.com/stm32duino/BoardManagerFiles/raw/main/package_stmicroelectronics_index.json
+https://raw.githubusercontent.com/RoboMaster/ArduinoCore-imxrt/index_file/package_robomaster_index.json
 ```
 
 2 回到ArduinoIDE中，单击`工具（tools）`,然后选择`开发板（Board）`>`开发板管理器（Boards Manager）`。
