@@ -10,7 +10,7 @@
 			},
 			"platforms": [
 				{
-					"name": "RoboMaster Education Boards (NXP IMX.RT Based)",
+					"name": "RoboMaster Education Boards (NXP IMX.RT Based) (Develop)",
 					"architecture": "imxrt",
 					"category": "Contributed",
 					"version": "1.0.0",
