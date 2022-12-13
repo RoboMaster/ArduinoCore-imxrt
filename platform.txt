@@ -162,7 +162,7 @@ recipe.size.regex.data=^(?:\.data|\.bss|\.ncache.init|\.ncache|\.heap|\.stack|\.
 #
 # RM AIHUB_UPGRADE_TOOL -> rmaut
 #
-tools.rmaut.path={runtime.tools.rmaut.path}
+tools.rmaut.path={runtime.platform.path}/tools/Uploader
 tools.rmaut.cmd=rmaut
 tools.rmaut.cmd.windows=rmaut.exe
 
