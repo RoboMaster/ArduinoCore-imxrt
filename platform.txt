@@ -33,7 +33,7 @@
 # THE SOFTWARE.
 
 
-name=RoboMaster Education Series Boards
+name=RoboMaster Education Boards
 version=1.0.0
 
 # ---------------------------------------------------------------

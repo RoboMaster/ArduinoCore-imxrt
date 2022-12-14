@@ -20,7 +20,7 @@
 
 ![arduino0001](arduino-1.assets/arduino0001.PNG)
 
-在 `附加开发板管理器网址`（*Additional Boards Managers URLs*）选项框中添加以下字段：
+在 `附加开发板管理器网址`（*Additional Boards Managers URLs*）选项框中添加开发板索引：
 
 ```
 https://raw.githubusercontent.com/RoboMaster/ArduinoCore-imxrt/index_file/package_robomaster_index.json
@@ -30,15 +30,15 @@ https://raw.githubusercontent.com/RoboMaster/ArduinoCore-imxrt/index_file/packag
 
 ![arduino0002](arduino-1.assets/arduino0002.PNG)
 
-打开开发板管理器后，等待索引更新完成，向下拉找到`Robomaster Education Module`栏目，单击`安装（Install）`，等待安装完成后，关闭开发板管理器。
+打开开发板管理器后，等待索引更新完成（如失败，请检查您与Github之间的网络是否通畅），向下拉找到`Robomaster Education Boards`栏目，单击`安装（Install）`，等待安装完成，关闭开发板管理器。
 
 ![arduino0003](arduino-1.assets/arduino0003.PNG)
 
-再次打开`工具（tools）`->`开发板（Board）`，可以看到刚刚安装好的开发板`RoboMaster Education Series Boards`，选择所需的开发板`RM Expansion Module(RMEM01)`。
+再次打开`工具（tools）`->`开发板（Board）`，可以看到刚刚安装好的开发板`RoboMaster Education Boards`，选择所需的开发板，例如`RM Expansion Module(RMEM01)`。
 
 ![arduino0004](arduino-1.assets/arduino0004.PNG)
 
-至此，您已成功安装开发板支持！
+至此，您已成功安装开发板支持包！
 
 ## 1.3 创建第一个草图
 

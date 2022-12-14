@@ -12,9 +12,10 @@
 
 ### 手册
 
-- [用户手册](https://dl.djicdn.com/downloads/DJI_AI_Module/RM_Expansion_Module_Quick_Start_Guide.pdf)
+- [快速入门指南](https://dl.djicdn.com/downloads/DJI_AI_Module/RM_Expansion_Module_Quick_Start_Guide.pdf)
 
-- [快速入门指南](https://dl.djicdn.com/downloads/DJI_AI_Module/RM_Expansion_Module_User_Manual_v1.0_cn.pdf)
+
+- [用户手册](https://dl.djicdn.com/downloads/DJI_AI_Module/RM_Expansion_Module_User_Manual_v1.0_cn.pdf)
 
 
 
@@ -22,3 +23,6 @@
 
 - [资料下载页面](https://www.dji.com/cn/ai-module/downloads)
 
+### Arduino支持
+
+- [https://github.com/RoboMaster/ArduinoCore-imxrt](https://github.com/RoboMaster/ArduinoCore-imxrt)
