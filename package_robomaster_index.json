@@ -2,13 +2,35 @@
 	"packages": [
 		{
 			"name": "RoboMaster",
-			"websiteURL": "https://www.robomaster.com/",
+			"websiteURL": "https://github.com/RoboMaster/ArduinoCore-imxrt",
 			"maintainer": "RoboMaster",
 			"email": "robomaster@dji.com",
 			"help": {
 				"online": "https://www.robomaster.com/"
 			},
 			"platforms": [
+				{
+					"name": "RoboMaster Education Boards (NXP IMX.RT Based)",
+					"architecture": "imxrt",
+					"category": "Contributed",
+					"version": "1.0.1",
+					"url": "https://github.com/RoboMaster/ArduinoCore-imxrt/releases/download/v1.0.1/ArduinoCore-imxrt-1.0.1.zip",
+					"archiveFileName": "ArduinoCore-imxrt-1.0.1.zip",
+					"checksum": "SHA-256:8CAEA1FB9E232F9FDEEE52AE4690182296A86180C94CFE25D9159F151930CE3D",
+					"size": "22921216",
+					"boards": [
+						{
+							"name": "RM Expansion Module (RMEM01)"
+						}
+					],
+					"toolsDependencies": [
+						{
+							"packager": "RoboMaster",
+							"name": "xpack-arm-none-eabi-gcc",
+							"version": "10.3.1-2.3"
+						}
+					]
+				},
 				{
 					"name": "RoboMaster Education Boards (NXP IMX.RT Based)",
 					"architecture": "imxrt",
