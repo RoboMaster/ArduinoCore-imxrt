@@ -2,7 +2,7 @@
 
 ## 1.1 简介
 
-![image-20220921203219873](_static/image-20220921203219873.png)
+![image-20220921203219873](_static/cover.png)
 
 机甲大师通用拓展模块可配合 AI 人工智能教育套件安装在RoboMaster EP 上使用。用户可借助大疆教育平台的 Rogram 编程平台进行 Block 编程，或借助 Python SDK 进行代码编程，以使 RoboMaster EP 实现丰富多彩的人工智能应用。
 

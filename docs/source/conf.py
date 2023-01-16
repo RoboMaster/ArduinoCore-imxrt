@@ -6,10 +6,10 @@
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = '机甲大师扩展模块 用户指南'
+project = '机甲大师扩展模块 开发指南'
 copyright = '2022, Dji RoboMaster Team'
 author = 'Dji RoboMaster Team'
-release = '1.0.0'
+release = '1.0.1'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration

@@ -3,9 +3,9 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-.. image:: _static/image-20220921203219873.png
+.. image:: _static/cover.png
 
-RoboMaster扩展模块 用户指南
+RoboMaster扩展模块 开发指南
 ===========================================
 
 .. toctree::
@@ -22,6 +22,7 @@ RoboMaster扩展模块 用户指南
    arduino/arduino-2
    arduino/arduino-3
    arduino/arduino-4
+   arduino/arduino-5
 
 
 Indices and tables
